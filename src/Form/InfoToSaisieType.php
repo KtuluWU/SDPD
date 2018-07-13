@@ -14,12 +14,12 @@ class InfoToSaisieType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('siren', null, array('translation_domain' => 'IFG'))
-            ->add('numdepot', null, array('translation_domain' => 'IFG'))
+            ->add('siren', null, array('label' => 'InfoToSaisie.siren','translation_domain' => 'IFG'))
+            ->add('numdepot', null, array('label' => 'InfoToSaisie.numdepot','translation_domain' => 'IFG'))
             ->add('datedepot', DateType::class, array(
+                'label' => 'InfoToSaisie.datedepot',
                 'widget' => 'single_text',
-                'years'  =>  range(1940,2200),
-                'attr' => ['class' => 'js-datepicker'],
+                'attr' => ['min' => '1940-01-01', 'max' => '2200-12-31'],
                 'translation_domain' => 'IFG'
                 ))
             ;
