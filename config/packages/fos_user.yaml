@@ -1,0 +1,15 @@
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: App\Entity\User
+    from_email:
+        address: "no-reply@yunkun.org"
+        sender_name: "Datainfogreffe"
+    use_listener: false
+    profile:
+        form:
+            type: App\Form\ProfileType
+    service:
+        mailer: fos_user.mailer.default
+        email_canonicalizer:  fos_user.util.canonicalizer.default
+        token_generator:      fos_user.util.token_generator.default
