@@ -1,0 +1,89 @@
+@import '../variables';
+@import "../mixins";
+.header {
+    .logo {
+        height: 60px;
+    }
+    .mainmenu {
+        align-self: start;
+        display: flex;
+        height: 60px;
+        padding: 0;
+    }
+    
+    .mainmenu li {
+        align-items: center;
+        display: flex;
+        cursor: pointer;
+        // margin: 0 16px;
+        padding: 0 25px;
+        transition: .7s;
+        &:hover {
+            border-radius: $main-radius;
+            background-color: $main-blue-light;
+            .drop_a {
+                color: #141414 !important;
+            }
+            a {
+                color: #fff !important;
+            }
+        }
+    }
+    
+    .mainmenu>li {
+        a {
+            align-items: center;
+            align-self: stretch;
+            color: #141414 !important;
+            display: flex;
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            &:hover {
+                color: $main-blue-light;
+            }
+        }
+    }
+    .mainmenu {
+        li {
+            &.drop {
+                position: relative;
+                ul {
+                    &.dropdown {
+                        border: 1px solid #eeee;
+                        box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
+                        left: 0;
+                        list-style: outside none none;
+                        margin: 0;
+                        opacity: 0;
+                        padding: 0;
+                        position: absolute;
+                        top: 56px;
+                        transition: all 0.5s ease 0s;
+                        visibility: hidden;
+                        width: 220px;
+                        z-index: 9;
+                        background: #fff;
+                        li {
+                            border-top: 1px solid #eee;
+                            margin: 0;
+                            a {
+                                padding: 8px 12px;
+                                color: #141414;
+                                transition: 0.3s;
+                                &:hover {
+                                    color: $main-blue-light;
+                                }
+                            }
+                        }
+                    }
+                }
+                &:hover ul.dropdown {
+                    opacity: 1;
+                    top: 100%;
+                    visibility: visible;
+                }
+            }
+        }
+    }
+}

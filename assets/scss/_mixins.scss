@@ -1,0 +1,63 @@
+// Transform
+@mixin transform($value...){
+	-webkit-transform: $value;
+	-moz-transform: $value;
+	-ms-transform: $value;
+	-o-transform: $value;
+	transform: $value;
+}
+
+// Transform Origin
+@mixin transform-origin($transform-origin...) {
+	-webkit-transform-origin : $transform-origin ;
+	-moz-transform-origin : $transform-origin ;
+	-ms-transform-origin : $transform-origin ;
+	-o-transform-origin : $transform-origin ;
+	transform-origin : $transform-origin ;
+}
+
+// Animation
+@mixin animation($value...){
+	-webkit-animation: $value;
+	-moz-animation: $value;
+	-ms-animation: $value;
+	-o-animation: $value;
+	animation: $value;
+}
+
+// background gradient
+@mixin background($value...){
+	-webkit-background: $value;
+	-moz-background: $value;
+	-ms-background: $value;
+	-o-background: $value;
+	background: $value;
+}
+
+// Box shadow
+@mixin box-shadow($bs-value...){
+	-webkit-box-shadow: $bs-value;
+	-moz-box-shadow: $bs-value;
+	-ms-box-shadow: $bs-value;
+	-o-box-shadow: $bs-value;
+	box-shadow: $bs-value;
+}
+
+// Transition
+@mixin transition($transition...) {
+	-webkit-transition: $transition;
+	-moz-transition: $transition;
+	-ms-transition: $transition;
+	-o-transition: $transition;
+	transition: $transition;
+}
+
+// Box sizing
+
+@mixin box-sizing($bz-value...){
+	-webkit-box-sizing: $bz-value;
+	-moz-box-sizing: $bz-value;
+	-ms-box-sizing: $bz-value;
+	-o-box-sizing: $bz-value;
+	box-sizing: $bz-value;
+}
