@@ -1,12 +1,64 @@
+{% trans_default_domain 'FOSUserBundle' %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Suivi de Production des DIBE{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Suivi de Production des DIBE{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('data_favicon.png') }}" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" /> 
+    <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}" />
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div><img src="{{asset('images/logo/datainfogreffe_color.png')}}" class="logo" alt="SDPD"></div>
+                <div>
+                    <nav>
+                        <ul class="mainmenu">
+                            <li>
+                                <a href="/">Accueil</a>
+                            </li>
+                            {% if not app.user %}
+                            <li>
+                                <a href="/login">Se connecter</a>
+                            </li>
+                            {% elseif app.user %}
+                            <li class="drop">
+                                <a>
+                                    <b>Bonjour {{app.user.firstname}} {{app.user.lastname}}</b>
+                                </a>
+                                <ul class="dropdown">
+                                    <li>
+                                        <a class="drop_a">Dernière connexion: {{app.user.lastLogin|date('Y-m-d H:i:s')}}</a>
+                                    </li>
+                                    {% if app.user.roles[0] == 'ROLE_ADMIN' %}
+                                    <li>
+                                        <a href="#" class="drop_a">Liste Utilisateur</a>
+                                    </li>
+                                    {% endif %}
+                                    <li>
+                                        <a href="/logout" class="drop_a">Se déconnecter</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+    <script src="{{ asset('js/vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/vendor/jquery-3.2.1.min.js') }}"></script>
+    {% block javascripts %}
+    <script src="{{ asset('js/active.js') }}"></script>
+    {% endblock %}
+</body>
+
 </html>

@@ -1,0 +1,35 @@
+@import '../variables';
+@import "../mixins";
+
+.login__page {
+    width: 50%;
+    margin: 100px auto;
+    border-radius: $div-radius;
+    background-color: $bg_grey_light;
+    .login-error {
+        color: $color-danger;
+    }
+    .login-form {
+        padding: 30px;
+        .login-input-line {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            margin: 0 !important;
+            label {
+                margin: 0 !important;
+                line-height: 40px;
+            }
+            input {
+                border: 1px solid #f7f7f7;
+                border-radius: 5px;
+                height: 40px;
+            }
+            #remember_me {
+                vertical-align: middle;
+            }
+            .remember_me {
+                cursor: pointer;
+            }
+        }
+    }
+}

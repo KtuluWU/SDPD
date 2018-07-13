@@ -1,0 +1,146 @@
+@-webkit-keyframes sdpd_btn {
+  16.65% {
+    -webkit-transform: skew(-12deg);
+    transform: skew(-12deg); }
+  33.3% {
+    -webkit-transform: skew(10deg);
+    transform: skew(10deg); }
+  49.95% {
+    -webkit-transform: skew(-6deg);
+    transform: skew(-6deg); }
+  66.6% {
+    -webkit-transform: skew(4deg);
+    transform: skew(4deg); }
+  83.25% {
+    -webkit-transform: skew(-2deg);
+    transform: skew(-2deg); }
+  100% {
+    -webkit-transform: skew(0);
+    transform: skew(0); } }
+a {
+  text-decoration: none !important; }
+
+.sdpd__btn {
+  background: #A2C616 none repeat scroll 0 0;
+  border-radius: 5px;
+  border: 0;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  color: #fff;
+  display: inline-block;
+  padding: 0 30px;
+  font-size: 18px;
+  height: 38px;
+  line-height: 38px;
+  cursor: pointer;
+  text-transform: uppercase;
+  -webkit-transform: perspective(1px) translateZ(0px);
+  transform: perspective(1px) translateZ(0px);
+  -webkit-transform-origin: 0 100% 0;
+  transform-origin: 0 100% 0;
+  transition: all .5s; }
+  .sdpd__btn:hover {
+    background: #0085C9 none repeat scroll 0 0;
+    color: #fff; }
+  .sdpd__btn:hover, .sdpd__btn :focus, .sdpd__btn :active {
+    -webkit-animation-name: sdpd_btn;
+    animation-name: sdpd_btn;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1; }
+  .sdpd__btn.red_btn {
+    background: #d9534f none repeat scroll 0 0;
+    color: #fff; }
+    .sdpd__btn.red_btn:hover {
+      background: #0085C9 none repeat scroll 0 0;
+      color: #fff; }
+
+.login__page {
+  width: 50%;
+  margin: 100px auto;
+  border-radius: 15px;
+  background-color: #f7f7f7; }
+  .login__page .login-error {
+    color: #d9534f; }
+  .login__page .login-form {
+    padding: 30px; }
+    .login__page .login-form .login-input-line {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      margin: 0 !important; }
+      .login__page .login-form .login-input-line label {
+        margin: 0 !important;
+        line-height: 40px; }
+      .login__page .login-form .login-input-line input {
+        border: 1px solid #f7f7f7;
+        border-radius: 5px;
+        height: 40px; }
+      .login__page .login-form .login-input-line #remember_me {
+        vertical-align: middle; }
+      .login__page .login-form .login-input-line .remember_me {
+        cursor: pointer; }
+
+.header .logo {
+  height: 60px; }
+.header .mainmenu {
+  align-self: start;
+  display: flex;
+  height: 60px;
+  padding: 0; }
+.header .mainmenu li {
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  padding: 0 25px;
+  transition: .7s; }
+  .header .mainmenu li:hover {
+    border-radius: 5px;
+    background-color: #0085C9; }
+    .header .mainmenu li:hover .drop_a {
+      color: #141414 !important; }
+    .header .mainmenu li:hover a {
+      color: #fff !important; }
+.header .mainmenu > li a {
+  align-items: center;
+  align-self: stretch;
+  color: #141414 !important;
+  display: flex;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase; }
+  .header .mainmenu > li a:hover {
+    color: #0085C9; }
+.header .mainmenu li.drop {
+  position: relative; }
+  .header .mainmenu li.drop ul.dropdown {
+    border: 1px solid #eeee;
+    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
+    left: 0;
+    list-style: outside none none;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    top: 56px;
+    transition: all 0.5s ease 0s;
+    visibility: hidden;
+    width: 220px;
+    z-index: 9;
+    background: #fff; }
+    .header .mainmenu li.drop ul.dropdown li {
+      border-top: 1px solid #eee;
+      margin: 0; }
+      .header .mainmenu li.drop ul.dropdown li a {
+        padding: 8px 12px;
+        color: #141414;
+        transition: 0.3s; }
+        .header .mainmenu li.drop ul.dropdown li a:hover {
+          color: #0085C9; }
+  .header .mainmenu li.drop:hover ul.dropdown {
+    opacity: 1;
+    top: 100%;
+    visibility: visible; }
+
+/*# sourceMappingURL=style.css.map */
