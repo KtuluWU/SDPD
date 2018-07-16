@@ -29,12 +29,12 @@ class UserController extends Controller
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $firstname = "Kun";
-        $lastname = "XU";
-        $username = "kun";
-        $email = "kun@yunkun.org";
-        $plainPassword = "wycjdhr1991621";
-        $role = array("ROLE_ADMIN");
+        $firstname = "Didi";
+        $lastname = "TOTO";
+        $username = "toto";
+        $email = "toto@yunkun.org";
+        $plainPassword = "11111111";
+        $role = array("ROLE_USER");
 
         date_default_timezone_set("Europe/Paris");
         $register_date = date_create(date('Y-m-d H:i:s'));
