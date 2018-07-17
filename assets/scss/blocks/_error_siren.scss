@@ -1,0 +1,16 @@
+@import '../variables';
+@import "../mixins";
+
+.error_siren_page {
+    margin-top: 200px;
+
+    .text {
+        margin-bottom: 50px;
+        color: $main-blue-light;
+        font-weight: bold;
+        font-size: 30px;
+        .siren {
+            color: $color-danger;
+        }
+    }
+}
