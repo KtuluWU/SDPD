@@ -1,0 +1,12 @@
+@import '../variables';
+@import "../mixins";
+
+.home_page {
+    margin-top: 200px;
+    table {
+        border: none;
+        td, th {
+            border: none;
+        }
+    }
+}

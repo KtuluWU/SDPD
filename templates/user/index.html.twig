@@ -1,20 +1,78 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello {{ controller_name }}!{% endblock %}
-
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'src/Controller/UserController.php'|file_link(0) }}">src/Controller/UserController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'templates/user/index.html.twig'|file_link(0) }}">templates/user/index.html.twig</a></code></li>
-    </ul>
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="user_page">
+    <table>
+        <thead>
+            <tr>
+                <th>{{'User.username'|trans}}</th>
+                <th>{{'User.firstname'|trans}}</th>
+                <th>{{'User.lastname'|trans}}</th>
+                <th>{{'User.email'|trans}}</th>
+                <th>{{'User.enable'|trans}}</th>
+                <th>{{'User.lastlogin'|trans}}</th>
+                <th>{{'User.role'|trans}}</th>
+                <th>{{'User.registerdate'|trans}}</th>
+                <th class="text-center">{{'User.options'|trans}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users_paginate %}
+            {% if loop.index %2==0 %}
+            <tr class="bg_grey">
+            {% else %}
+            <tr>
+            {% endif %}
+            {% if user.enable %}
+                {% set enable = 'variables.enable.y' %}
+            {% else %}
+                {% set enable = 'variables.enable.n' %}
+            {% endif %}
+                <td>{{user.username}}</td>
+                <td>{{user.firstname}}</td>
+                <td>{{user.lastname}}</td>
+                <td>{{user.email}}</td>
+                <td>{{enable|trans}}</td>
+                <td>{% if user.lastlogin|length != 0 %}{{user.lastlogin|date('Y-m-d H:i:s','Europe/Paris')}}{% endif %}</td>
+                <td>{{user.role[0]}}</td>
+                <td>{{user.regsterdate|date('Y-m-d H:i:s')}}</td>
+                <td class="options text-center">
+                    <a href="./preEdit/{{user.username}}" class="sdpd__btn">{{'variables.edit'|trans}}</a>
+                    <a id="delete_confirm" class="sdpd__btn red_btn">{{'variables.delete'|trans}}</a>
+                </td>
+            </tr>
+            <div class="modal__confirm">
+                <div class="backgroud"></div>
+                <div class="window text-center">
+                    <div class="title">{{'User.deletewarning'|trans}}</div>
+                    <div class="options">
+                        <a class="sdpd__btn red_btn" href="./delete/{{user.username}}">{{'variables.delete'|trans}}</a>
+                        <a class="sdpd__btn" id="cancel_delete">{{'variables.cancel'|trans}}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center">
+        {{ knp_pagination_render(users_paginate) }}
+    </div>
+    <div class="text-center">
+        <a href="./preCreate" class="sdpd__btn">{{'User.createuser'|trans}}</a>
+    </div>
 </div>
+    
+{% endblock %} 
+{% block javascripts %}
+{{parent()}}
+<script>
+    $(document).ready(function () {
+        $('.user_page #delete_confirm').click(function () {
+            $('.modal__confirm').toggle();
+        });
+        $('.modal__confirm #cancel_delete').click(function () {
+            $('.modal__confirm').toggle();
+        });
+    })
+</script>
 {% endblock %}

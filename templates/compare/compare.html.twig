@@ -1,0 +1,23 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="compare_page">
+    <div>
+        {% for aa in api %}
+            <a href="#{{loop.index}}">{{loop.index}}</a>
+        {% endfor %}
+    </div>
+    <div style="display:flex;">
+        <div>
+            <embed src="{{ asset('uploads/' ~ filename) }}" type="application/pdf" width="750px" height="750px"></embed>
+        </div>
+        <div id="table_compare" style="width:750px;height:750px;overflow-y:scroll">
+            filename: {{filename}}<br>
+            {% for aa in api %}
+                <div id="{{loop.index}}">{{loop.index}}. {{aa}}</div>
+            {% endfor %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %} 

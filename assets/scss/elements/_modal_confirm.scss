@@ -1,0 +1,39 @@
+@import '../variables';
+@import "../mixins";
+
+.modal__confirm a {
+    cursor: pointer;
+}
+.modal__confirm {
+    display: none;
+    .backgroud {
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 133, 201, 0.3);
+    }
+    .window {
+        position: fixed;
+        z-index: 1001;
+        top: 128px;
+        left: calc(50% - 40% / 2);
+        right: calc(50% - 40% / 2);
+        max-width: 40%;
+        max-height: 500px;
+        padding: 24px;
+        background: #fefefe;
+        border-radius: 10px; 
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .options {
+            color: #fff;
+        }
+    }
+}

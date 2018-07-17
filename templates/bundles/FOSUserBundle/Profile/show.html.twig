@@ -1,0 +1,38 @@
+{% trans_default_domain 'IFG' %}
+{% extends "base.html.twig" %}
+{% block content %}
+<div class="showprofile_page table_beauti">
+    {% if app.user %}
+    <table>
+        <tr>
+            <th>{{'User.username'|trans}}</th>
+            <td>{{ app.user.username }}</td>
+        </tr>
+        <tr>
+            <th>{{'User.truename'|trans}}</th>
+            <td>{{ app.user.firstname }} {{ app.user.lastname }}</td>
+        </tr>
+        <tr>
+            <th>{{'User.role'|trans}}</th>
+            <td>{{ app.user.roles[0] }}</td>
+        </tr>
+        <tr>
+            <th>{{'User.email'|trans}}</th>
+            <td>{{ app.user.email }}</td>
+        </tr>
+        <tr>
+            <th>{{'User.lastlogin'|trans}}</th>
+            <td>{{ app.user.lastLogin|date('Y-m-d H:i:s', 'Europe/Paris') }}</td>
+        </tr>
+        <tr>
+            <th>{{'User.registerdate'|trans}}</th>
+            <td>{{ app.user.RegisterDate|date('Y-m-d H:i:s') }}</td>
+        </tr>
+    </table>
+    <div class="profile_button text-center">
+        <a href="edit" class="sdpd__btn">{{'variables.edit'|trans}}</a>
+        <a href="change-password" class="sdpd__btn">{{'User.changepassword'|trans}}</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

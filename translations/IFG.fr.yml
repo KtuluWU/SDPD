@@ -1,4 +1,45 @@
+variables:
+  enable:
+    y: Activé
+    n: Désactivé
+  back: Retour
+  edit: Modifier
+  delete: Supprimer
+  update: Mettre à jour
+  cancel: Annuler
+  create: Créer
+
+Summury:
+  home: Accueil
+  login:
+    title: Se connecter
+    hello: Bonjour
+    lastlogin: Dernière connexion
+    userlist: Liste Utilisateur
+    profile: Profil
+  logout: Se déconnecter
+  
 InfoToSaisie:
   siren: Siren
   numdepot: Numéro de dépôt
   datedepot: Date de dépôt
+  submit: Chercher
+
+User:
+  username: Nom d'utilisateur
+  firstname: Prénom
+  lastname: Nom
+  truename: Vrai nom
+  email: Email
+  enable: Activer
+  password: Mot de passe
+  lastlogin: Dernière connexion
+  role: Niveau d'accès
+  registerdate: Date d'enregistrement
+  options: Options
+  deletewarning: Êtes-vous sûr de vouloir supprimer cette utilisateur? Cette opération ne peut pas être reprise.
+  roles:
+    user: Utilisateur
+    admin: Administrateur
+  createuser: Créer un utilisateur
+  changepassword: Changer mot de passe
