@@ -40,3 +40,8 @@ services:
         class: App\Form\UploadPdfType
         tags: 
         - { name: form.type, alis: app_UploadPdf }
+    
+    app.form.profile:
+        class: App\Form\ProfileType
+        tags: 
+        - { name: form.type, alis: app_user_profile }
