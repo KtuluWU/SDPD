@@ -1,4 +1,14 @@
+Summury:
+  home: Accueil
+  login:
+    title: Se connecter
+    hello: Bonjour
+    lastlogin: Dernière connexion
+    userlist: Liste Utilisateur
+  logout: Se déconnecter
+  
 InfoToSaisie:
   siren: Siren
   numdepot: Numéro de dépôt
   datedepot: Date de dépôt
+  submit: Chercher
