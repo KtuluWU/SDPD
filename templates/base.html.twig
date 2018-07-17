@@ -32,11 +32,14 @@
                             </a>
                             <ul class="dropdown">
                                 <li>
-                                    <a class="drop_a">{{'Summury.login.lastlogin'|trans}}: {{app.user.lastLogin|date('Y-m-d H:i:s')}}</a>
+                                    <a class="drop_a">{{'Summury.login.lastlogin'|trans}}: {{app.user.lastLogin|date('Y-m-d H:i:s','Europe/Paris')}}</a>
+                                </li>
+                                <li>
+                                    <a href="/profile" class="drop_a">{{'Summury.login.profile'|trans}}</a>
                                 </li>
                                 {% if app.user.roles[0] == 'ROLE_ADMIN' %}
                                 <li>
-                                    <a href="#" class="drop_a">{{'Summury.login.userlist'|trans}}</a>
+                                    <a href="/User" class="drop_a">{{'Summury.login.userlist'|trans}}</a>
                                 </li>
                                 {% endif %}
                                 <li>
