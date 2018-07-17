@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\IFG_SDPD\InfoToSaisie;
+use App\Entity\IFG_TEST2\InfoToSaisie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 

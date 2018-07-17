@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\IFG_SDPD\InfoToSaisie;
+use App\Entity\IFG_TEST2\InfoToSaisie;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,13 +15,6 @@ class InfoToSaisieType extends AbstractType {
     {
         $builder
             ->add('siren', null, array('label' => 'InfoToSaisie.siren','translation_domain' => 'IFG'))
-            ->add('numdepot', null, array('label' => 'InfoToSaisie.numdepot','translation_domain' => 'IFG'))
-            ->add('datedepot', DateType::class, array(
-                'label' => 'InfoToSaisie.datedepot',
-                'widget' => 'single_text',
-                'attr' => ['min' => '1940-01-01', 'max' => '2200-12-31'],
-                'translation_domain' => 'IFG'
-                ))
             ;
     }
 
