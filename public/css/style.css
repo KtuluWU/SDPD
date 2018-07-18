@@ -404,6 +404,12 @@ a {
     .sdpd__btn.red_btn:hover {
       background: #0085C9 none repeat scroll 0 0;
       color: #fff; }
+  .sdpd__btn.disabled {
+    background: #666666 none repeat scroll 0 0;
+    color: #fff; }
+    .sdpd__btn.disabled:hover {
+      background: #666666 none repeat scroll 0 0;
+      color: #fff; }
 
 .table_beauti {
   width: 50%;
@@ -439,7 +445,7 @@ a {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0, 133, 201, 0.3); }
+    background: rgba(0, 133, 201, 0.2); }
   .modal__confirm .window {
     position: fixed;
     z-index: 1001;
@@ -547,7 +553,8 @@ a {
   .header .mainmenu li.drop {
     position: relative; }
     .header .mainmenu li.drop ul.dropdown {
-      border: 1px solid #eeee;
+      border: 1px solid #eee;
+      border-radius: 5px;
       box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
       left: 0;
       list-style: outside none none;
@@ -558,7 +565,7 @@ a {
       top: 56px;
       transition: all 0.5s ease 0s;
       visibility: hidden;
-      width: 220px;
+      width: 260px;
       z-index: 9;
       background: #fff; }
       .header .mainmenu li.drop ul.dropdown li {
@@ -579,6 +586,8 @@ a {
   margin-top: 200px; }
   .home_page table {
     border: none; }
+    .home_page table tr {
+      border-top: none !important; }
     .home_page table td, .home_page table th {
       border: none; }
 
@@ -633,5 +642,89 @@ a {
 
 .showprofile_page, .editprofile_page, .changepassword_page {
   margin-top: 100px; }
+
+.compare_page {
+  width: 90%;
+  margin: 50px auto; }
+  .compare_page label {
+    margin-bottom: 0 !important;
+    font-weight: bold; }
+  .compare_page .index {
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center; }
+    .compare_page .index span {
+      width: 35px;
+      padding: 5px 6px;
+      border: 1px solid #eee;
+      border-right: 0;
+      cursor: pointer;
+      transition: all .5s; }
+      .compare_page .index span:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px; }
+      .compare_page .index span:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-right: 1px solid #eee; }
+      .compare_page .index span:hover, .compare_page .index span:active {
+        background-color: #A2C616; }
+        .compare_page .index span:hover a, .compare_page .index span:active a {
+          color: #fff; }
+      .compare_page .index span a {
+        color: #0085C9; }
+    .compare_page .index .active {
+      background-color: #A2C616; }
+      .compare_page .index .active a {
+        color: #fff; }
+  .compare_page .content {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+    font-size: 13px; }
+    .compare_page .content .block {
+      border: 2px solid #eee;
+      padding: 10px;
+      width: 50%;
+      height: 750px; }
+    .compare_page .content .pdf {
+      margin-right: 20px; }
+    .compare_page .content .data_db {
+      overflow-y: auto; }
+      .compare_page .content .data_db input[type=text] {
+        border: 1px solid #eee;
+        border-radius: 5px;
+        width: 100%;
+        height: 35px;
+        text-align: left;
+        padding-left: 10px; }
+      .compare_page .content .data_db .title_table {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px 0;
+        color: #fff;
+        background-color: #d9534f; }
+      .compare_page .content .data_db .title_part {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #0085C9; }
+      .compare_page .content .data_db .subtitle_part {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 10px 0; }
+      .compare_page .content .data_db .part {
+        margin: 20px 0; }
+      .compare_page .content .data_db .a {
+        margin-bottom: 8px; }
+      .compare_page .content .data_db .b {
+        padding-left: 30px; }
+  .compare_page .confirm_check {
+    margin-bottom: 20px;
+    color: #d9534f; }
+    .compare_page .confirm_check #valider_confirm {
+      vertical-align: 2px;
+      margin-right: 10px; }
 
 /*# sourceMappingURL=style.css.map */

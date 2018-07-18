@@ -25,14 +25,14 @@ class CompareController extends Controller
      */
     public function correction(Request $request, $filename)
     {
-        $api = ['a'=>'xxxxxxxxxx', 'b'=>'xxxxxxxxxx', 'c'=>'xxxxxxxxxx', 'd'=>'xxxxxxxxxx', 'e'=>'xxxxxxxxxx', 
+        /* $api = ['a'=>'xxxxxxxxxx', 'b'=>'xxxxxxxxxx', 'c'=>'xxxxxxxxxx', 'd'=>'xxxxxxxxxx', 'e'=>'xxxxxxxxxx', 
             'f'=>'xxxxxxxxxx', 'g'=>'xxxxxxxxxx', 'h'=>'xxxxxxxxxx', 'i'=>'xxxxxxxxxx', 'j'=>'xxxxxxxxxx',
             '1'=>'xxxxxxxxxx', '2'=>'xxxxxxxxxx', '3'=>'xxxxxxxxxx', '4'=>'xxxxxxxxxx', '5'=>'xxxxxxxxxx',
             '6'=>'xxxxxxxxxx', '7'=>'xxxxxxxxxx', '8'=>'xxxxxxxxxx', '9'=>'xxxxxxxxxx', '10'=>'xxxxxxxxxx',
             '11'=>'xxxxxxxxxx', '12'=>'xxxxxxxxxx', '13'=>'xxxxxxxxxx', '14'=>'xxxxxxxxxx', '15'=>'xxxxxxxxxx',
             '16'=>'xxxxxxxxxx', '17'=>'xxxxxxxxxx', '18'=>'xxxxxxxxxx', '19'=>'xxxxxxxxxx', '20'=>'xxxxxxxxxx',
-            '21'=>'xxxxxxxxxx', '22'=>'xxxxxxxxxx', '23'=>'xxxxxxxxxx', '24'=>'xxxxxxxxxx', '25'=>'xxxxxxxxxx'];
-
+            '21'=>'xxxxxxxxxx', '22'=>'xxxxxxxxxx', '23'=>'xxxxxxxxxx', '24'=>'xxxxxxxxxx', '25'=>'xxxxxxxxxx', '26'=>'xxxxxxxxxx']; */
+        $api = ['a'=>'xxxxxxxxxx', 'b'=>'xxxxxxxxxx', 'c'=>'xxxxxxxxxx'];
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
             'api' => $api
@@ -75,6 +75,32 @@ class CompareController extends Controller
             'form' => $form->createView(),
             'res_ch' => $res_ch
         ]);
+    }
+
+    /**
+     * @Route("/preXML", name="preXMLpage")
+     */
+    public function preXML()
+    {
+        $denomination_sociale = array();
+        $siren = array();
+        $immatriculation = array();
+        $aaa = array();
+
+
+        foreach($_POST as $key => $value) {
+            if (strpos($key, 'denomination_sociale_') === 0) {
+                array_push($denomination_sociale, $value);
+            }
+            if (strpos($key, 'siren_') === 0) {
+                array_push($siren, $value);
+            }
+            if (strpos($key, 'immatriculation_') === 0) {
+                array_push($immatriculation, $value);
+            }
+        } 
+
+        return new Response(var_dump($denomination_sociale));
     }
 
     /**
