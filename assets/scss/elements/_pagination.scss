@@ -24,5 +24,5 @@
 .pagination>.active>span:focus {
     background-color: $main-green !important;
     color: #fff !important;
-    border: 1px solid #eee !important;
+    border: 1px solid $border-grey !important;
 }
