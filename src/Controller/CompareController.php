@@ -32,11 +32,13 @@ class CompareController extends Controller
             '11'=>'xxxxxxxxxx', '12'=>'xxxxxxxxxx', '13'=>'xxxxxxxxxx', '14'=>'xxxxxxxxxx', '15'=>'xxxxxxxxxx',
             '16'=>'xxxxxxxxxx', '17'=>'xxxxxxxxxx', '18'=>'xxxxxxxxxx', '19'=>'xxxxxxxxxx', '20'=>'xxxxxxxxxx',
             '21'=>'xxxxxxxxxx', '22'=>'xxxxxxxxxx', '23'=>'xxxxxxxxxx', '24'=>'xxxxxxxxxx', '25'=>'xxxxxxxxxx', '26'=>'xxxxxxxxxx']; */
-        $api = ['a'=>'xxxxxxxxxx', 'b'=>'xxxxxxxxxx', 'c'=>'xxxxxxxxxx'];
+        
+        $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
+        $apis = json_decode($api_orig, true);
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
-            'api' => $api
-        ]);
+            'apis' => $apis
+        ]); 
     }
 
     /**
@@ -85,7 +87,6 @@ class CompareController extends Controller
         $denomination_sociale = array();
         $siren = array();
         $immatriculation = array();
-        $aaa = array();
 
 
         foreach($_POST as $key => $value) {
@@ -102,6 +103,49 @@ class CompareController extends Controller
 
         return new Response(var_dump($denomination_sociale));
     }
+
+    /**
+     * @Route("/addDBE_S_2/{filename}/{api_length}", name="addDBE_S_2page")
+     */
+    public function addDBE_S_2($filename, $api_length)
+    {
+        
+        $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
+        $apis = json_decode($api_orig, true);
+
+
+        for ($i = (count($apis)-1); $i < $api_length; $i++) {
+            $api_merge = ["$i"=>["a"=>" ", "b"=>" ", "indirecte"=>"0"]];
+            $apis = array_merge($apis, $api_merge);
+        }
+
+        return $this->render('compare/compare.html.twig', [
+            'filename' => $filename,
+            'apis' => $apis
+        ]); 
+    }
+
+    /**
+     * @Route("/addDBE_S_bis/{filename}/{api_length}", name="addDBE_S_bispage")
+     */
+    public function addDBE_S_bis($filename, $api_length)
+    {
+       
+        $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
+        $apis = json_decode($api_orig, true);
+
+
+        for ($i = (count($apis)-1); $i < $api_length; $i++) {
+            $api_merge = ["$i"=>["joint"=>" ", "b"=>" "]];
+            $apis = array_merge($apis, $api_merge);
+        }
+        
+        return $this->render('compare/compare.html.twig', [
+            'filename' => $filename,
+            'apis' => $apis
+        ]); 
+    }
+
 
     /**
      * @return string

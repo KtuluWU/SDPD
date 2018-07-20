@@ -104,6 +104,15 @@
             .b {
                 padding-left: 30px;
             }
+
+            textarea {
+                border: 1px solid $border-grey;
+                border-radius: 5px;
+                width: 100%;
+                min-height: 80px;
+                text-align: left;
+                padding-left: 10px;
+            }
         }
     }
 
@@ -113,6 +122,16 @@
         #valider_confirm {
             vertical-align: 2px;
             margin-right: 10px;
+        }
+    }
+
+    .btn_compare {
+        display: flex;
+        justify-content: flex-end;
+        .b {
+            &:not(:last-child) {
+                margin-right: 5px;
+            }
         }
     }
 }

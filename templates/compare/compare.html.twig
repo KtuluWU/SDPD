@@ -3,7 +3,7 @@
 {% block content %} 
 <div class="compare_page">
     <div class="index text-center">
-        {% for aa in api %}
+        {% for api in apis %}
             <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
         {% endfor %}
     </div>
@@ -14,7 +14,9 @@
             </div>
             <div class="data_db block">
                 
-                {% for aa in api %}
+                {% for api in apis %}
+                {# {{dump(api)}} #}
+                    {% set DBE_S_1 %}
                     {% if loop.index == 1 %}
                     {############################# Formulaire DBE-S-1 #############################}
                     <div id="{{loop.index}}" class="DBE-S-1">
@@ -23,7 +25,7 @@
                             <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
                             <div class="a">
                                 <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
+                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="{{api.a}}">
                             </div>
                             <div class="row a">
                                 <div class="col-md-6">
@@ -83,7 +85,7 @@
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
-                                        <label for="prenom_principal_{{loop.index}}">Prénomm principal</label>
+                                        <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
                                         <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
                                     </div>
                                     <div class="col-md-6">
@@ -186,15 +188,18 @@
                             </div>
                         </div>
                     </div>
-                    {% else %}
+                    {% endif %}
+                    {% endset %}
                     {############################# Formulaire DBE-S-2 #############################}
+                    {% set DBE_S_2 %}
+                    {% if api.joint is not defined %}
                     <div id="{{loop.index}}" class="DBE-S-2">
                         <div class="title_table">{{loop.index}}. DBE-S-2</div>
                         <div class="part">
                             <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
                             <div class="a">
                                 <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
+                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="{{api.b}}">
                             </div>
                             <div class="row a">
                                 <div class="col-md-6">
@@ -254,7 +259,7 @@
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
-                                        <label for="prenom_principal_{{loop.index}}">Prénomm principal</label>
+                                        <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
                                         <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
                                     </div>
                                     <div class="col-md-6">
@@ -349,19 +354,97 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <a href="#" id="add_form_DBE_S_2" class="sdpd__btn">Ajouter un DBE-S-2</a>
+                    {% endif %}
+                    {% endset %}
+                    {############################# Formulaire DBE-S-bis #############################}
+                    {% set DBE_S_bis %}
+                    {% if api.joint is defined %}
+                    <div id="{{loop.index}}" class="DBE-S-bis">
+                        <div class="title_table">{{loop.index}}. DBE-S-bis</div>
+                        <div class="part">
+                            <div class="title_part">I. SOCIETE DECLARANTE (rappel)</div>
+                            <div class="a">
+                                <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
+                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
+                            </div>
+                            <div class="row a">
+                                <div class="col-md-6">
+                                    <label for="siren_{{loop.index}}">SIREN</label>
+                                    <input type="text" id="siren_{{loop.index}}" name="siren_{{loop.index}}" value="">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="immatriculation_{{loop.index}}">Immatriculation au RCS du greffe de</label>
+                                    <input type="text" id="immatriculation_{{loop.index}}" name="immatriculation_{{loop.index}}" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="part">
+                            <div class="title_part">II. BENEFICIAIRE EFFECTIF (rappel)</div>
+                            <div class="a">
+                                <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
+                                <input type="text" id="nom_naissance_{{loop.index}}" name="nom_naissance_{{loop.index}}" value="">
+                            </div>
+                            <div class="a">
+                                <label for="nom_usage_{{loop.index}}">Nom d'usage</label>
+                                <input type="text" id="nom_usage_{{loop.index}}" name="nom_usage_{{loop.index}}" value="">
+                            </div>
+                            <div class="row a">
+                                <div class="col-md-6">
+                                    <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
+                                    <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prenom_autres_{{loop.index}}">Autres prénoms</label>
+                                    <input type="text" id="prenom_autres_{{loop.index}}" name="prenom_autres_{{loop.index}}" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="part">
+                            <div class="title_part">III. DESCRIPTION DES MODALITES DU CONTROLE EXERCE PAR LE BENEFICIAIRE EFFECTIF</div>
+                            <div class="a">
+                                <label>1) Précisez :</label>
+                                <div class="b">
+                                    <label for="preciser_demembrement_{{loop.index}}">En cas de démembrement de propriété</label>
+                                    <textarea id="preciser_demembrement_{{loop.index}}" name="preciser_demembrement_{{loop.index}}" value=""></textarea>
+                                </div>
+                                <div class="b">
+                                    <label for="preciser_detention_indirecte_{{loop.index}}">En cas de détention indirecte</label>
+                                    <textarea id="preciser_detention_indirecte_{{loop.index}}" name="preciser_detention_indirecte_{{loop.index}}" value=""></textarea>
+                                </div>
+                            </div>
+                            <div class="a">
+                                <label>2) Précisez les modalités du pouvoir de contrôle :</label>
+                                <textarea id="preciser_modalites_du_pouvoir_{{loop.index}}" name="preciser_modalites_du_pouvoir_{{loop.index}}">{{api.joint}}</textarea>
+                            </div>
+                        </div>
                     </div>
                     {% endif %}
+                    {% endset %}
+
+                    {############################# Conditions Formulaire #############################}
+
+                    {% if loop.index == 1 %}
+                        {{DBE_S_1}}
+                    {% else %}
+                        {% if api.joint is not defined %}
+                        {{DBE_S_2}}
+                        {% else %}
+                        {{DBE_S_bis}}
+                        {% endif %}
+                    {% endif %}
+
+
                 {% endfor %}
             </div>
         </div>
         <div class="confirm_check text-right">
             <input type="checkbox" id="valider_confirm">Êtes-vous sûr de vouloir valider la correction?
         </div>
-        <div class="text-right">
-            <input type="submit" id="valider" class="sdpd__btn red_btn disabled" value="Valider" disabled>
-            <a href="/" class="sdpd__btn">Annuler</a>
+        <div class="btn_compare">
+            <a href="/compare/addDBE_S_2/{{filename}}/{{apis|length}}" id="add_form_DBE_S_2" class="sdpd__btn orange_btn b">Ajouter un DBE-S-2</a>
+            <a href="/compare/addDBE_S_bis/{{filename}}/{{apis|length}}" id="add_form_DBE_S_bis" class="sdpd__btn orange_btn b">Ajouter un DBE-S-bis</a>
+            <a href="/" class="sdpd__btn b">Annuler</a>
+            <input type="submit" id="valider" class="sdpd__btn red_btn disabled b" value="Valider" disabled>
         </div>
     </form>
 </div>
