@@ -1,0 +1,51 @@
+@import '../variables';
+@import "../mixins";
+
+.user_page {
+    width: 90%;
+    margin: 50px auto;
+    .bg_grey{
+        background-color: $bg_grey_light;
+    }
+    table {
+        border-bottom: 1px solid $border-grey;
+        border-collapse: collapse;
+        border-spacing: 0;
+        font-size: 16px;
+        line-height: 35px;
+        margin: 0 0 20px;
+        width: 100%;
+        th, td {
+            padding: 8px 10px;
+        }
+        thead {
+            border-bottom: 1px solid $border-grey;
+            font-size: 14px;
+        }
+        tbody {
+            font-size: 13px;
+            .options {
+                a {
+                    color: #fff;
+                    font-size: 13px !important;
+                }
+            }
+        }
+    }
+}
+
+.editUser_page, .createUser_page {
+    // width: 90%;
+    margin: 100px auto;
+    table {
+        border-bottom: 1px solid $border-grey;
+        border-collapse: collapse;
+        border-spacing: 0;
+        line-height: 35px;
+        width: 100%;
+        td, th {
+            border-top: 1px solid $border-grey;
+            padding: 6px 10px 6px 5%;
+        }
+    }
+}

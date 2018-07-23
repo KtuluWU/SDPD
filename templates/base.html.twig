@@ -1,4 +1,4 @@
-{% trans_default_domain 'FOSUserBundle' %}
+{% trans_default_domain 'IFG' %}
 <!DOCTYPE html>
 <html>
 
@@ -15,40 +15,42 @@
     <div class="header">
         <div class="container">
             <div class="row">
-                <div><img src="{{asset('images/logo/datainfogreffe_color.png')}}" class="logo" alt="SDPD"></div>
-                <div>
-                    <nav>
-                        <ul class="mainmenu">
-                            <li>
-                                <a href="/">Accueil</a>
-                            </li>
-                            {% if not app.user %}
-                            <li>
-                                <a href="/login">Se connecter</a>
-                            </li>
-                            {% elseif app.user %}
-                            <li class="drop">
-                                <a>
-                                    <b>Bonjour {{app.user.firstname}} {{app.user.lastname}}</b>
-                                </a>
-                                <ul class="dropdown">
-                                    <li>
-                                        <a class="drop_a">Dernière connexion: {{app.user.lastLogin|date('Y-m-d H:i:s')}}</a>
-                                    </li>
-                                    {% if app.user.roles[0] == 'ROLE_ADMIN' %}
-                                    <li>
-                                        <a href="#" class="drop_a">Liste Utilisateur</a>
-                                    </li>
-                                    {% endif %}
-                                    <li>
-                                        <a href="/logout" class="drop_a">Se déconnecter</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                </div>
+                <div class="logo_block"><img src="{{asset('images/logo/datainfogreffe_color.png')}}" class="logo" alt="SDPD"></div>
+                <nav>
+                    <ul class="mainmenu">
+                        <li>
+                            <a href="/">{{'Summury.home'|trans}}</a>
+                        </li>
+                        {% if not app.user %}
+                        <li>
+                            <a href="/login">{{'Summury.login.title'|trans}}</a>
+                        </li>
+                        {% elseif app.user %}
+                        <li class="drop">
+                            <a>
+                                <b>{{'Summury.login.hello'|trans}} {{app.user.firstname}} {{app.user.lastname}}</b>
+                            </a>
+                            <ul class="dropdown">
+                                <li>
+                                    <a class="drop_a">{{'Summury.login.lastlogin'|trans}}<br>{{app.user.lastLogin|date('Y-m-d H:i:s','Europe/Paris')}}</a>
+                                </li>
+                                <li>
+                                    <a href="/profile" class="drop_a">{{'Summury.login.profile'|trans}}</a>
+                                </li>
+                                {% if app.user.roles[0] == 'ROLE_ADMIN' %}
+                                <li>
+                                    <a href="/User" class="drop_a">{{'Summury.login.userlist'|trans}}</a>
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <a href="/logout" class="drop_a">{{'Summury.logout'|trans}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
             </div>
             
         </div>
@@ -58,6 +60,13 @@
     <script src="{{ asset('js/vendor/jquery-3.2.1.min.js') }}"></script>
     {% block javascripts %}
     <script src="{{ asset('js/active.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.logo').click(function(){
+                location.href = '/';
+            });
+        })
+    </script>
     {% endblock %}
 </body>
 

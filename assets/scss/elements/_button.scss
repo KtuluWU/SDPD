@@ -37,7 +37,7 @@ a {
     border-radius: $main-radius;
     border: 0;
     box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    color: #fff;
+    color: #fff !important;
     display: inline-block;
     padding: 0 30px;
     font-size: 18px;
@@ -69,6 +69,22 @@ a {
         color: #fff;
         &:hover {
             background: $main-blue-light none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+    &.orange_btn {
+        background: $color-orange none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $main-blue-light none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+    &.disabled {
+        background: $txt_grey none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $txt_grey none repeat scroll 0 0;
             color: #fff;
         }
     }

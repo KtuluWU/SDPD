@@ -1,14 +1,24 @@
 @import '../variables';
 @import "../mixins";
 .header {
+    box-shadow: 0px 0px 9px 0px rgba(29, 29, 29, 0.8);
+    background-color: $main-green;
+    .logo_block {
+        padding: 0 20px;
+        border-radius: 10px;
+        background-color: #fff;
+    }
     .logo {
         height: 60px;
+        cursor: pointer;
     }
     .mainmenu {
         align-self: start;
         display: flex;
         height: 60px;
         padding: 0;
+        margin-bottom: 0 !important;
+        margin-left: 50px !important;
     }
     
     .mainmenu li {
@@ -21,12 +31,7 @@
         &:hover {
             border-radius: $main-radius;
             background-color: $main-blue-light;
-            .drop_a {
-                color: $txt_black !important;
-            }
-            a {
-                color: #fff !important;
-            }
+            
         }
     }
     
@@ -34,14 +39,12 @@
         a {
             align-items: center;
             align-self: stretch;
-            color: $txt_black !important;
+            color: #fff !important;
             display: flex;
             font-family: 'Raleway', sans-serif;
-            font-size: 13px;
+            font-size: 16px;
+            font-weight: bold;
             text-transform: uppercase;
-            &:hover {
-                color: $main-blue-light;
-            }
         }
     }
     .mainmenu {
@@ -50,7 +53,8 @@
                 position: relative;
                 ul {
                     &.dropdown {
-                        border: 1px solid #eeee;
+                        border: 1px solid $border-grey;
+                        border-radius: 5px;
                         box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
                         left: 0;
                         list-style: outside none none;
@@ -61,20 +65,26 @@
                         top: 56px;
                         transition: all 0.5s ease 0s;
                         visibility: hidden;
-                        width: 220px;
+                        width: 260px;
                         z-index: 9;
                         background: #fff;
                         li {
-                            border-top: 1px solid #eee;
+                            border-top: 1px solid $border-grey;
                             margin: 0;
-                            a {
-                                padding: 8px 12px;
-                                color: $txt_black;
-                                transition: 0.3s;
-                                &:hover {
-                                    color: $main-blue-light;
+                            &:hover {
+                                background-color: $main-green;
+                                a {
+                                    &.drop_a {
+                                        color: #fff !important;
+                                    }
                                 }
                             }
+                            a {
+                                &.drop_a {
+                                    padding: 8px 12px;
+                                    color: $txt_black !important;
+                                }
+                            } 
                         }
                     }
                 }
