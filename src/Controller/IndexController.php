@@ -27,7 +27,7 @@ class IndexController extends Controller
             $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
             $sql = "
                 SELECT * FROM public.ta_suividem_ass p 
-                WHERE p.siren='".$siren."' and p.codetypeacte='BENh' ORDER BY dtdepot DESC ";
+                WHERE p.siren='".$siren."' and p.codetypeacte='BENh' ORDER BY dtdepot DESC "; // date de saisie non null
             $info_saisie = $em_TEST2->prepare($sql);
             $info_saisie->execute();
             $infos_db = $info_saisie->fetchAll();

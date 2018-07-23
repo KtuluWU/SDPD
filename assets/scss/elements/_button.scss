@@ -72,4 +72,20 @@ a {
             color: #fff;
         }
     }
+    &.orange_btn {
+        background: $color-orange none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $main-blue-light none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+    &.disabled {
+        background: $txt_grey none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $txt_grey none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
 }

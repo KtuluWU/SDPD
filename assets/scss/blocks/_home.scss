@@ -5,6 +5,9 @@
     margin-top: 200px;
     table {
         border: none;
+        tr {
+            border-top: none !important;
+        }
         td, th {
             border: none;
         }
