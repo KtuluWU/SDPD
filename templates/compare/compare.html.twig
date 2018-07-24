@@ -3,11 +3,11 @@
 {% block content %} 
 <div class="compare_page">
      <div class="index text-center">
-        {% for api in apis %}
+        {% for beneficiaires in apis.beneficiaires %}
             <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
         {% endfor %}
     </div>
-    {#{{dump(apis)}}#} 
+    {{dump(apis)}} 
     <div class="infos row">
         <div class="left col-md-6">
             <table>
@@ -61,12 +61,12 @@
                             <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
                             <div class="a">
                                 <div><label for="denomination_sociale_1">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_1" name="denomination_sociale_1" value="">
+                                <input type="text" id="denomination_sociale_1" name="denomination_sociale_1" value="{{apis.denomination}}">
                             </div>
                             <div class="row a">
                                 <div class="col-md-6">
                                     <label for="siren_1">SIREN</label>
-                                    <input type="text" id="siren_1" name="siren_1" value="">
+                                    <input type="text" id="siren_1" name="siren_1" value="{{apis.siren}}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="immatriculation_1">Immatriculation au RCS du greffe de</label>
@@ -75,39 +75,40 @@
                             </div>
                             <div class="a">
                                 <label for="forme_juridique_1">Forme juridique</label>
-                                <input type="text" id="forme_juridique_1" name="forme_juridique_1" value="">
+                                <input type="text" id="forme_juridique_1" name="forme_juridique_1" value="{{apis.forme_juridique}}">
                             </div>
                             <div class="a">
                                 <label for="adresse_sociale_1">Adresse du siège social</label>
-                                <input type="text" id="adresse_sociale_1" name="adresse_sociale_1" value="">
+                                <input type="text" id="adresse_sociale_1" name="adresse_sociale_1" value="{{apis.adresse.rue}}">
                             </div>
                             <div class="row a">
                                 <div class="col-md-4">
                                     <label for="code_postal_sociale_1"><i>Code postal</i></label>
-                                    <input type="text" id="code_postal_sociale_1" name="code_postal_sociale_1" value="">
+                                    <input type="text" id="code_postal_sociale_1" name="code_postal_sociale_1" value="{{apis.adresse.code_postal}}">
                                 </div>
                                 <div class="col-md-4">
                                     <label for="commune_sociale_1"><i>Commune</i></label>
-                                    <input type="text" id="commune_sociale_1" name="commune_sociale_1" value="">
+                                    <input type="text" id="commune_sociale_1" name="commune_sociale_1" value="{{apis.adresse.commune}}">
                                 </div>
                                 <div class="col-md-4">
                                     <label for="pays_sociale_1"><i>Pays</i></label>
-                                    <input type="text" id="pays_sociale_1" name="pays_sociale_1" value="">
+                                    <input type="text" id="pays_sociale_1" name="pays_sociale_1" value="{{apis.adresse.pays}}">
                                 </div>
                             </div>
                         </div>
+                        {% for beneficiaire in apis.beneficiaires %}
                         <div class="part">
                             <div class="title_part">II. INFORMATIONS SUR LE BENEFICIAIRE EFFECTIF DE LA SOCIETE</div>
                             <div>
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
                                     <label for="cilivile_1" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Madame"> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Monsieur"> Monsieur</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Madame" {% if beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Monsieur" {% if beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
                                 </div>
                                 <div class="a">
                                     <label for="nom_naissance_1">Nom de naissance</label>
-                                    <input type="text" id="nom_naissance_1" name="nom_naissance_1" value="">
+                                    <input type="text" id="nom_naissance_1" name="nom_naissance_1" value="{{beneficiaire.nom_patronymique}}">
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
@@ -122,7 +123,7 @@
                                 <div class="row a">
                                     <div class="col-md-6">
                                         <label for="prenom_principal_1">Prénom principal</label>
-                                        <input type="text" id="prenom_principal_1" name="prenom_principal_1" value="">
+                                        <input type="text" id="prenom_principal_1" name="prenom_principal_1" value="" {% if beneficiaire.prenoms is defined %}value="{{beneficiaire.prenoms}}"{% endif %}>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="prenom_autres_1">Autres prénoms</label>
@@ -132,38 +133,38 @@
                                 <div class="row a">
                                     <div class="col-md-4">
                                         <label for="naissance_date_1">Né(e) le </label>
-                                        <input type="text" id="naissance_date_1" name="naissance_date_1" value="">
+                                        <input type="text" id="naissance_date_1" name="naissance_date_1" value="{{beneficiaire.date_naissance|date('d/m/Y')}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="naissance_lieu_1">à</label>
-                                        <input type="text" id="naissance_lieu_1" name="naissance_lieu_1" value="">
+                                        <input type="text" id="naissance_lieu_1" name="naissance_lieu_1" value="{{beneficiaire.lieu_naissance.commune}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="departement_pays_1">Département / Pays</label>
-                                        <input type="text" id="departement_pays_1" name="departement_pays_1" value="">
+                                        <input type="text" id="departement_pays_1" name="departement_pays_1" value="{{beneficiaire.lieu_naissance.departement}}/{{beneficiaire.lieu_naissance.pays}}">
                                     </div>
                                 </div>
                                 
                                 <div class="a">
                                     <label for="nationalite_1">Nationalité</label>
-                                    <input type="text" id="nationalite_1" name="nationalite_1" value="">
+                                    <input type="text" id="nationalite_1" name="nationalite_1" value="{{beneficiaire.nationalite}}">
                                 </div>
                                 <div class="a">
                                     <label for="adresse_domicile_1">Adresse du domicile</label>
-                                    <input type="text" id="adresse_domicile_1" name="adresse_domicile_1" value="">
+                                    <input type="text" id="adresse_domicile_1" name="adresse_domicile_1" value="{{beneficiaire.adresse.rue}}">
                                 </div>
                                 <div class="row a">
                                      <div class="col-md-4">
                                         <label for="code_postal_domicile_1"><i>Code postal</i></label>
-                                        <input type="text" id="code_postal_domicile_1" name="code_postal_domicile_1" value="">
+                                        <input type="text" id="code_postal_domicile_1" name="code_postal_domicile_1" value="{{beneficiaire.adresse.code_postal}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="commune_domicile_1"><i>Commune</i></label>
-                                        <input type="text" id="commune_domicile_1" name="commune_domicile_1" value="">
+                                        <input type="text" id="commune_domicile_1" name="commune_domicile_1" value="{{beneficiaire.adresse.commune}}">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="pays_domicile_1"><i>Pays</i></label>
-                                        <input type="text" id="pays_domicile_1" name="pays_domicile_1" value="">
+                                        <input type="text" id="pays_domicile_1" name="pays_domicile_1" value="{{beneficiaire.adresse.pays}}">
                                     </div>
                                 </div>
                                
@@ -215,6 +216,7 @@
                                 <input type="text" id="date_devenue_beneficiaire_1" name="date_devenue_beneficiaire_1" value="">
                             </div>
                         </div>
+                        {% endfor %}
                         <div class="part">
                             <div class="title_part">III. AUTRES INFORMATIONS</div>
                             <div>
