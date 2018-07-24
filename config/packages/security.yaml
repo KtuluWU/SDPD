@@ -47,3 +47,4 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/User/, roles: ROLE_ADMIN }
         - { path: ^/compare/, roles: ROLE_USER }
+        - { path: ^/createPremierUser, roles: IS_AUTHENTICATED_ANONYMOUSLY }
