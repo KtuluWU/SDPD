@@ -21,30 +21,46 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 class CompareController extends Controller
 {
     /**
-     * @Route("/correction/{filename}", name="correctionpage")
+     * @Route("/correction/{filename}&{siren}", name="correctionpage")
      */
-    public function correction(Request $request, $filename)
-    {
-        /* $api = ['a'=>'xxxxxxxxxx', 'b'=>'xxxxxxxxxx', 'c'=>'xxxxxxxxxx', 'd'=>'xxxxxxxxxx', 'e'=>'xxxxxxxxxx', 
-            'f'=>'xxxxxxxxxx', 'g'=>'xxxxxxxxxx', 'h'=>'xxxxxxxxxx', 'i'=>'xxxxxxxxxx', 'j'=>'xxxxxxxxxx',
-            '1'=>'xxxxxxxxxx', '2'=>'xxxxxxxxxx', '3'=>'xxxxxxxxxx', '4'=>'xxxxxxxxxx', '5'=>'xxxxxxxxxx',
-            '6'=>'xxxxxxxxxx', '7'=>'xxxxxxxxxx', '8'=>'xxxxxxxxxx', '9'=>'xxxxxxxxxx', '10'=>'xxxxxxxxxx',
-            '11'=>'xxxxxxxxxx', '12'=>'xxxxxxxxxx', '13'=>'xxxxxxxxxx', '14'=>'xxxxxxxxxx', '15'=>'xxxxxxxxxx',
-            '16'=>'xxxxxxxxxx', '17'=>'xxxxxxxxxx', '18'=>'xxxxxxxxxx', '19'=>'xxxxxxxxxx', '20'=>'xxxxxxxxxx',
-            '21'=>'xxxxxxxxxx', '22'=>'xxxxxxxxxx', '23'=>'xxxxxxxxxx', '24'=>'xxxxxxxxxx', '25'=>'xxxxxxxxxx', '26'=>'xxxxxxxxxx']; */
-        
+    public function correction(Request $request, $filename, $siren)
+    {        
         $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
         $apis = json_decode($api_orig, true);
+
+        /**
+         * API
+         */
+
+
+
+         
+
+        /**
+         * DB TEST2
+         */
+        $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
+        $sql = "
+            SELECT * FROM public.ta_suividem_ass p 
+            WHERE p.siren='".$siren."' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
+        $info_saisie = $em_TEST2->prepare($sql);
+        $info_saisie->execute();
+        $infos_db = ($info_saisie->fetchAll())[0];
+
+
+
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
-            'apis' => $apis
+            'apis' => $apis,
+            'siren' => $siren,
+            'infos_db' => $infos_db
         ]); 
     }
 
     /**
-     * @Route("/upload/{codegreffe}&{codestatut}&{chrono}&{millesime}&{numacte}&{numdepot}", name="uploadpage")
+     * @Route("/upload/{codegreffe}&{codestatut}&{chrono}&{millesime}&{numacte}&{numdepot}&{siren}", name="uploadpage")
      */
-    public function upload(Request $request, $codegreffe, $codestatut, $chrono, $millesime, $numacte, $numdepot)
+    public function upload(Request $request, $codegreffe, $codestatut, $chrono, $millesime, $numacte, $numdepot, $siren)
     {
         $pdf = new UploadPdf();
         $form = $this->createForm(UploadPdfType::class, $pdf);
@@ -70,7 +86,7 @@ class CompareController extends Controller
             $filename = $this->generateUniqueFileName($file);
             $file->move($this->getParameter('files'), $filename);            
             
-            return $this->redirectToRoute('correctionpage', array('filename' => $filename));
+            return $this->redirectToRoute('correctionpage', array('filename' => $filename, 'siren' => $siren));
         }
 
         return $this->render('compare/upload.html.twig', [
