@@ -25,10 +25,6 @@ class CompareController extends Controller
      */
     public function correction(Request $request, $filename, $siren)
     {        
-        # $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
-        # $apis = json_decode($api_orig, true);
-
-
         /**
          * API
          */
