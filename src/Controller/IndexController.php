@@ -22,7 +22,8 @@ class IndexController extends Controller
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $siren = $info->getSiren();
+            $siren_saisie = $info->getSiren();
+            $siren = str_replace(' ', '', $siren_saisie);
 
             $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
             $sql = "
