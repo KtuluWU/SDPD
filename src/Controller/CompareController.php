@@ -25,17 +25,24 @@ class CompareController extends Controller
      */
     public function correction(Request $request, $filename, $siren)
     {        
-        $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
-        $apis = json_decode($api_orig, true);
+        # $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
+        # $apis = json_decode($api_orig, true);
+
 
         /**
          * API
          */
+        $api_url_GET = "https://apidata.datainfogreffe.fr:8069/associes/rbe?siren=$siren";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url_GET);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($ch, CURLOPT_USERPWD, 'infogreffe:3fn4rg2ff2');
 
-
-
-         
-
+        $res_ch = curl_exec($ch);
+        curl_close($ch);
+        $apis = json_decode($res_ch, true);
+        
         /**
          * DB TEST2
          */
@@ -46,7 +53,6 @@ class CompareController extends Controller
         $info_saisie = $em_TEST2->prepare($sql);
         $info_saisie->execute();
         $infos_db = ($info_saisie->fetchAll())[0];
-
 
 
         return $this->render('compare/compare.html.twig', [
@@ -125,7 +131,6 @@ class CompareController extends Controller
      */
     public function addDBE_S_2($filename, $api_length)
     {
-        
         $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
         $apis = json_decode($api_orig, true);
 
