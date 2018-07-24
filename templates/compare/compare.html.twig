@@ -7,7 +7,7 @@
             <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
         {% endfor %}
     </div>
-    {# {{dump(infos_db)}} #}
+    {#{{dump(apis)}}#} 
     <div class="infos row">
         <div class="left col-md-6">
             <table>
@@ -236,7 +236,7 @@
                             <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
                             <div class="a">
                                 <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="{{api.b}}">
+                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
                             </div>
                             <div class="row a">
                                 <div class="col-md-6">
