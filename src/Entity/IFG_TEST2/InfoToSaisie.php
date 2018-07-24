@@ -16,9 +16,9 @@ class InfoToSaisie
     private $id;
 
     /**
-     * @var int
+     * @var string
      * @Assert\NotBlank()
-     * @Assert\Type("int")
+     * @Assert\Type("string")
      */
     private $siren;
 

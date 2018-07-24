@@ -37,8 +37,12 @@
                 </tr>
                 <tr>
                     <th>État:</th>
-                    {% set etat_tr = 'Etat.' ~ '0' %}
-                    <td>0 {{etat_tr|trans}}</td>
+                    {% if apis.rejet is defined %}
+                    {% set etat_tr = 'Etat.' ~ apis.rejet %}
+                    <td>{{apis.rejet}} : {{etat_tr|trans}}</td>
+                    {% else %}
+                    <td>Aucun état trouvé</td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <th>Opérateur:</th>
@@ -104,8 +108,8 @@
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
                                     <label for="cilivile_1" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Madame" {% if beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Monsieur" {% if beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
                                 </div>
                                 <div class="a">
                                     <label for="nom_naissance_1">Nom de naissance</label>
@@ -118,7 +122,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="pseudonyme_1">Pseudonyme</label>
-                                        <input type="text" id="pseudonyme_1" name="pseudonyme_1" value="">
+                                        <input type="text" id="pseudonyme_1" name="pseudonyme_1" {% if beneficiaire.pseudonyme is defined %}value="{{beneficiaire.pseudonyme}}"{% endif %}>
                                     </div>
                                 </div>
                                 <div class="row a">
@@ -142,7 +146,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="departement_pays_1">Département / Pays</label>
-                                        <input type="text" id="departement_pays_1" name="departement_pays_1" {% if beneficiaire.lieu_naissance.departement is defined and beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.departement}}/{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
+                                        <input type="text" id="departement_pays_1" name="departement_pays_1" {% if beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
                                     </div>
                                 </div>
                                 
@@ -178,8 +182,8 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_capital_1">directe et/ou indirecte de plus de 25% du capital.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1" value="directe" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "0" %}checked{% endif %}> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1" value="indirecte" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "1" %}checked{% endif %}> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1" value="0" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -194,8 +198,8 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_droits_1">directe et/ou indirecte de plus de 25% des droits de vote.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1" value="directe" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "0" %}checked{% endif %}> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1" value="indirecte" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "1" %}checked{% endif %}> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1" value="0" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -281,8 +285,8 @@
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
                                     <label for="cilivile_{{loop.index}}" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="Madame" {% if beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="Monsieur" {% if beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
                                 </div>
                                 <div class="a">
                                     <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
@@ -295,7 +299,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="pseudonyme_{{loop.index}}">Pseudonyme</label>
-                                        <input type="text" id="pseudonyme_{{loop.index}}" name="pseudonyme_{{loop.index}}" value="">
+                                        <input type="text" id="pseudonyme_{{loop.index}}" name="pseudonyme_{{loop.index}}" {% if beneficiaire.pseudonyme is defined %}value="{{beneficiaire.pseudonyme}}"{% endif %}>
                                     </div>
                                 </div>
                                 <div class="row a">
@@ -319,7 +323,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="departement_pays_{{loop.index}}">Département / Pays</label>
-                                        <input type="text" id="departement_pays_{{loop.index}}" name="departement_pays_{{loop.index}}" {% if beneficiaire.lieu_naissance.departement is defined and beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.departement}}/{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
+                                        <input type="text" id="departement_pays_{{loop.index}}" name="departement_pays_{{loop.index}}" {% if beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
                                     </div>
                                 </div>
                                 
@@ -355,8 +359,8 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_capital_{{loop.index}}">directe et/ou indirecte de plus de 25% du capital.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_{{loop.index}}" name="detention_capital_directe_{{loop.index}}" value="directe" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "0" %}checked{% endif %}> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_{{loop.index}}" name="detention_capital_indirecte_{{loop.index}}" value="indirecte" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "1" %}checked{% endif %}> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_{{loop.index}}" name="detention_capital_directe_{{loop.index}}" value="0" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_{{loop.index}}" name="detention_capital_indirecte_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined and beneficiaire.modalite_controle.detention_capital.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -371,8 +375,8 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_droits_{{loop.index}}">directe et/ou indirecte de plus de 25% des droits de vote.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_{{loop.index}}" name="detention_droits_directe_{{loop.index}}" value="directe" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "0" %}checked{% endif %}> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_{{loop.index}}" name="detention_droits_indirecte_{{loop.index}}" value="indirecte" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "1" %}checked{% endif %}> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_{{loop.index}}" name="detention_droits_directe_{{loop.index}}" value="0" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_{{loop.index}}" name="detention_droits_indirecte_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined and beneficiaire.modalite_controle.detention_votes.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -400,7 +404,6 @@
                     {% endset %}
                     {############################# Formulaire DBE-S-bis #############################}
                     {% set DBE_S_bis %}
-                    {% if api.joint is defined %}
                     {#<div id="{{loop.index}}" class="DBE-S-bis">
                         <div class="title_table">{{loop.index}}. DBE-S-bis</div>
                         <div class="part">
@@ -460,7 +463,6 @@
                             </div>
                         </div>
                     </div>#}
-                    {% endif %}
                     {% endset %}
 
                     {############################# Conditions Formulaire #############################}
@@ -473,10 +475,10 @@
             <input type="checkbox" id="valider_confirm">Êtes-vous sûr de vouloir valider la correction?
         </div>
         <div class="btn_compare">
-            <a href="/compare/addDBE_S_2/{{filename}}/{{apis|length}}" id="add_form_DBE_S_2" class="sdpd__btn orange_btn b">Ajouter un DBE-S-2</a>
-            <a href="/compare/addDBE_S_bis/{{filename}}/{{apis|length}}" id="add_form_DBE_S_bis" class="sdpd__btn orange_btn b">Ajouter un DBE-S-bis</a>
-            <a href="/" class="sdpd__btn b">Annuler</a>
-            <input type="submit" id="valider" class="sdpd__btn red_btn disabled b" value="Valider" disabled>
+            <a href="/compare/addDBE_S_2/{{filename}}/{{apis.beneficiaires|length}}/{{siren}}" id="add_form_DBE_S_2" class="sdpd__btn orange_btn b" onclick="javascript:return addS2()">Ajouter un DBE-S-2</a>
+            {# <a href="/compare/addDBE_S_bis/{{filename}}/{{apis|length}}" id="add_form_DBE_S_bis" class="sdpd__btn orange_btn b">Ajouter un DBE-S-bis</a> #}
+            <a href="/" class="sdpd__btn b" onclick="javascript:return cancel()">Annuler</a>
+            <input type="submit" id="valider" class="sdpd__btn red_btn disabled b" value="Valider" disabled onclick="javascript:return valide()">
         </div>
     </form>
 </div>
@@ -484,6 +486,30 @@
 {% block javascripts %}
 {{parent()}}
 <script>
+    function valide() { 
+        var msg = "Êtes-vous sûr de vouloir valider la correction?"; 
+        if (confirm(msg)==true){ 
+        return true; 
+        }else{ 
+        return false; 
+        } 
+    }
+    function addS2() { 
+        var msg = "Êtes-vous sûr d'ajouter un DBE S-2? \nVous perdrez toutes les modifications."; 
+        if (confirm(msg)==true){ 
+        return true; 
+        }else{ 
+        return false; 
+        } 
+    }
+    function cancel() { 
+        var msg = "Êtes-vous sûr d'annuler de corriger? \nVous perdrez toutes les modifications."; 
+        if (confirm(msg)==true){ 
+        return true; 
+        }else{ 
+        return false; 
+        } 
+    }
     $(document).ready(function () {
         $("span[id^='index-']").each(function() {
             $(this).click(function() {
