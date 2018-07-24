@@ -177,13 +177,13 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_capital_1">directe et/ou indirecte de plus de 25% du capital.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1"> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1"> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1" value="directe" {% if beneficiaire.modalite_controle.detention_capital.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1" value="indirecte" {% if beneficiaire.modalite_controle.detention_capital.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="pourcentage_capital_1">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_capital_1" name="pourcentage_capital_1" value="">
+                                            <input type="text" id="pourcentage_capital_1" name="pourcentage_capital_1" {% if beneficiaire.modalite_controle.detention_capital.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_capital.pourcentage}}"{% endif %}>
                                         </div>
                                     </div>
                                 </div>
@@ -193,19 +193,19 @@
                                         <div class="col-md-8 b">
                                             <label for="detention_droits_1">directe et/ou indirecte de plus de 25% des droits de vote.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1"> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1"> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1" value="directe" {% if beneficiaire.modalite_controle.detention_votes.type == "0" %}checked{% endif %}> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1" value="indirecte" {% if beneficiaire.modalite_controle.detention_votes.type == "1" %}checked{% endif %}> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="pourcentage_droits_1">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_droits_1" name="pourcentage_droits_1" value="">
+                                            <input type="text" id="pourcentage_droits_1" name="pourcentage_droits_1" {% if beneficiaire.modalite_controle.detention_votes.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_votes.pourcentage}}"{% endif %}>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="a">
                                     <label>Exercice, par tout autre moyen, d'un pouvoir de contrôle</label>
-                                    <input type="text" id="exercice_1" name="exercice_1" value="">
+                                    <input type="text" id="exercice_1" name="exercice_1" {% if beneficiaire.modalite_controle.autre_moyen.text is defined %}value="{{beneficiaire.modalite_controle.detention_votes.pourcentage}}"{% endif %}>
                                 </div>
                                 <div class="a">
                                     <input type="checkbox" id="representant_1" name="representant_1"> <b>Représentant légal</b>
@@ -213,7 +213,7 @@
                             </div>
                             <div>
                                 <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="text" id="date_devenue_beneficiaire_1" name="date_devenue_beneficiaire_1" value="">
+                                <input type="text" id="date_devenue_beneficiaire_1" name="date_devenue_beneficiaire_1" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_naissance|date('d/m/Y')}}"{% endif %}>
                             </div>
                         </div>
                         {% endfor %}
