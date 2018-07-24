@@ -209,7 +209,7 @@
                                     <input type="text" id="exercice_1" name="exercice_1" {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{beneficiaire.modalite_controle.autre_moyen.texte}}"{% endif %}>
                                 </div>
                                 <div class="a">
-                                    <input type="checkbox" id="representant_1" name="representant_1"> <b>Représentant légal</b>
+                                    <input type="checkbox" id="representant_1" name="representant_1" value="Représentant légal" {% if beneficiaire.modalite_controle.representant_legal is defined and beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}> <b>Représentant légal</b>
                                 </div>
                             </div>
                             <div>
