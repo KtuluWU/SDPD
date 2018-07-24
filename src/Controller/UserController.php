@@ -40,7 +40,7 @@ class UserController extends Controller
                 'regsterdate' => $value->getRegisterDate()
             ));
         }
-        $users_paginate = $this->get('knp_paginator')->paginate($user, $request->query->get('page',1),2);
+        $users_paginate = $this->get('knp_paginator')->paginate($user, $request->query->get('page',1),10);
         return $this->render('user/index.html.twig', [
             'users_paginate' =>$users_paginate
         ]);
@@ -147,8 +147,8 @@ class UserController extends Controller
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $username = "User";
-        $firstname = "User";
+        $username = "SDPD";
+        $firstname = "SDPD";
         $lastname = "ADMIN";
         $email = "user@infogreffe-siege.fr";
         $role = array("ROLE_ADMIN");

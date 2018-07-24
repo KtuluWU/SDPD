@@ -17,7 +17,9 @@
             </tr>
         </thead>
         <tbody>
+            {% set user_username = "" %}
             {% for user in users_paginate %}
+            {% set user_username = user.username %}
             {% if loop.index %2==0 %}
             <tr class="bg_grey">
             {% else %}
@@ -38,19 +40,9 @@
                 <td>{{user.regsterdate|date('Y-m-d H:i:s')}}</td>
                 <td class="options text-center">
                     <a href="./preEdit/{{user.username}}" class="sdpd__btn">{{'variables.edit'|trans}}</a>
-                    <a id="delete_confirm" class="sdpd__btn red_btn">{{'variables.delete'|trans}}</a>
+                    <a href="./delete/{{user.username}}" class="sdpd__btn red_btn" onclick="javascript:return del()">{{'variables.delete'|trans}}</a>
                 </td>
             </tr>
-            <div class="modal__confirm">
-                <div class="backgroud"></div>
-                <div class="window text-center">
-                    <div class="title">{{'User.deletewarning'|trans}}</div>
-                    <div class="options">
-                        <a class="sdpd__btn red_btn" href="./delete/{{user.username}}">{{'variables.delete'|trans}}</a>
-                        <a class="sdpd__btn" id="cancel_delete">{{'variables.cancel'|trans}}</a>
-                    </div>
-                </div>
-            </div>
             {% endfor %}
         </tbody>
     </table>
@@ -66,13 +58,13 @@
 {% block javascripts %}
 {{parent()}}
 <script>
-    $(document).ready(function () {
-        $('.user_page #delete_confirm').click(function () {
-            $('.modal__confirm').toggle();
-        });
-        $('.modal__confirm #cancel_delete').click(function () {
-            $('.modal__confirm').toggle();
-        });
-    })
+    function del() { 
+        var msg = "Êtes-vous sûr de vouloir supprimer cette utilisateur? \nCette opération ne peut pas être reprise."; 
+        if (confirm(msg)==true){ 
+        return true; 
+        }else{ 
+        return false; 
+        } 
+    }
 </script>
 {% endblock %}
