@@ -9,7 +9,7 @@
         font-weight: bold;
     }
     .index  {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
         display: flex;
         justify-content: center;
         span {
@@ -43,6 +43,16 @@
                 color: #fff;
             }
             background-color: $main-green;
+        }
+    }
+
+    .infos {
+        table {
+            tr {
+                th {
+                    padding-right: 30px;
+                }
+            }
         }
     }
 

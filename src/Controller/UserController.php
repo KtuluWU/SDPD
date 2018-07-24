@@ -40,7 +40,7 @@ class UserController extends Controller
                 'regsterdate' => $value->getRegisterDate()
             ));
         }
-        $users_paginate = $this->get('knp_paginator')->paginate($user, $request->query->get('page',1),10);
+        $users_paginate = $this->get('knp_paginator')->paginate($user, $request->query->get('page',1),2);
         return $this->render('user/index.html.twig', [
             'users_paginate' =>$users_paginate
         ]);

@@ -2,10 +2,50 @@
 {% extends 'base.html.twig' %} 
 {% block content %} 
 <div class="compare_page">
-    <div class="index text-center">
+     <div class="index text-center">
         {% for api in apis %}
             <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
         {% endfor %}
+    </div>
+    {# {{dump(infos_db)}} #}
+    <div class="infos row">
+        <div class="left col-md-6">
+            <table>
+                <tr>
+                    <th>Siren:</th>
+                    <td>{{siren}}</td>
+                </tr>
+                <tr>
+                    <th>Date de dépôt:</th>
+                    <td>{{infos_db.dtdepot|date('d/m/Y')}}</td>
+                </tr>
+                <tr>
+                    <th>Date d'acte:</th>
+                    <td>{{infos_db.dtacte|date('d/m/Y')}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="right col-md-6">
+            <table>
+                <tr>
+                    <th>Demande de saisie le</th>
+                    <td>{{infos_db.dtdemande|date('d/m/Y')}}</td>
+                </tr>
+                <tr>
+                    <th>Réception de saise le</th>
+                    <td>{{infos_db.dtsaisie|date('d/m/Y')}}</td>
+                </tr>
+                <tr>
+                    <th>État:</th>
+                    {% set etat_tr = 'Etat.' ~ '0' %}
+                    <td>0 {{etat_tr|trans}}</td>
+                </tr>
+                <tr>
+                    <th>Opérateur:</th>
+                    <td>AMITEL</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <form method="POST" action="/compare/preXML">
         <div class="content">
@@ -13,50 +53,46 @@
                 <embed src="{{ asset('uploads/' ~ filename) }}" type="application/pdf" width="100%" height="100%"></embed>
             </div>
             <div class="data_db block">
-                
-                {% for api in apis %}
-                {# {{dump(api)}} #}
                     {% set DBE_S_1 %}
-                    {% if loop.index == 1 %}
                     {############################# Formulaire DBE-S-1 #############################}
-                    <div id="{{loop.index}}" class="DBE-S-1">
-                        <div class="title_table">{{loop.index}}. DBE-S-1</div>
+                    <div id="1" class="DBE-S-1">
+                        <div class="title_table">1. DBE-S-1</div>
                         <div class="part">
                             <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
                             <div class="a">
-                                <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="{{api.a}}">
+                                <div><label for="denomination_sociale_1">Dénomination sociale</label></div>
+                                <input type="text" id="denomination_sociale_1" name="denomination_sociale_1" value="">
                             </div>
                             <div class="row a">
                                 <div class="col-md-6">
-                                    <label for="siren_{{loop.index}}">SIREN</label>
-                                    <input type="text" id="siren_{{loop.index}}" name="siren_{{loop.index}}" value="">
+                                    <label for="siren_1">SIREN</label>
+                                    <input type="text" id="siren_1" name="siren_1" value="">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="immatriculation_{{loop.index}}">Immatriculation au RCS du greffe de</label>
-                                    <input type="text" id="immatriculation_{{loop.index}}" name="immatriculation_{{loop.index}}" value="">
+                                    <label for="immatriculation_1">Immatriculation au RCS du greffe de</label>
+                                    <input type="text" id="immatriculation_1" name="immatriculation_1" value="">
                                 </div>
                             </div>
                             <div class="a">
-                                <label for="forme_juridique_{{loop.index}}">Forme juridique</label>
-                                <input type="text" id="forme_juridique_{{loop.index}}" name="forme_juridique_{{loop.index}}" value="">
+                                <label for="forme_juridique_1">Forme juridique</label>
+                                <input type="text" id="forme_juridique_1" name="forme_juridique_1" value="">
                             </div>
                             <div class="a">
-                                <label for="adresse_sociale_{{loop.index}}">Adresse du siège social</label>
-                                <input type="text" id="adresse_sociale_{{loop.index}}" name="adresse_sociale_{{loop.index}}" value="">
+                                <label for="adresse_sociale_1">Adresse du siège social</label>
+                                <input type="text" id="adresse_sociale_1" name="adresse_sociale_1" value="">
                             </div>
                             <div class="row a">
                                 <div class="col-md-4">
-                                    <label for="code_postal_sociale_{{loop.index}}"><i>Code postal</i></label>
-                                    <input type="text" id="code_postal_sociale_{{loop.index}}" name="code_postal_sociale_{{loop.index}}" value="">
+                                    <label for="code_postal_sociale_1"><i>Code postal</i></label>
+                                    <input type="text" id="code_postal_sociale_1" name="code_postal_sociale_1" value="">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="commune_sociale_{{loop.index}}"><i>Commune</i></label>
-                                    <input type="text" id="commune_sociale_{{loop.index}}" name="commune_sociale_{{loop.index}}" value="">
+                                    <label for="commune_sociale_1"><i>Commune</i></label>
+                                    <input type="text" id="commune_sociale_1" name="commune_sociale_1" value="">
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="pays_sociale_{{loop.index}}"><i>Pays</i></label>
-                                    <input type="text" id="pays_sociale_{{loop.index}}" name="pays_sociale_{{loop.index}}" value="">
+                                    <label for="pays_sociale_1"><i>Pays</i></label>
+                                    <input type="text" id="pays_sociale_1" name="pays_sociale_1" value="">
                                 </div>
                             </div>
                         </div>
@@ -65,69 +101,69 @@
                             <div>
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
-                                    <label for="cilivile_{{loop.index}}" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="Madame"> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="Monsieur"> Monsieur</div>
+                                    <label for="cilivile_1" class="col-md-4">Civilité</label>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Madame"> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="Monsieur"> Monsieur</div>
                                 </div>
                                 <div class="a">
-                                    <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
-                                    <input type="text" id="nom_naissance_{{loop.index}}" name="nom_naissance_{{loop.index}}" value="">
+                                    <label for="nom_naissance_1">Nom de naissance</label>
+                                    <input type="text" id="nom_naissance_1" name="nom_naissance_1" value="">
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
-                                        <label for="nom_usage_{{loop.index}}">Nom d'usage</label>
-                                        <input type="text" id="nom_usage_{{loop.index}}" name="nom_usage_{{loop.index}}" value="">
+                                        <label for="nom_usage_1">Nom d'usage</label>
+                                        <input type="text" id="nom_usage_1" name="nom_usage_1" value="">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="pseudonyme_{{loop.index}}">Pseudonyme</label>
-                                        <input type="text" id="pseudonyme_{{loop.index}}" name="pseudonyme_{{loop.index}}" value="">
+                                        <label for="pseudonyme_1">Pseudonyme</label>
+                                        <input type="text" id="pseudonyme_1" name="pseudonyme_1" value="">
                                     </div>
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
-                                        <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
-                                        <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
+                                        <label for="prenom_principal_1">Prénom principal</label>
+                                        <input type="text" id="prenom_principal_1" name="prenom_principal_1" value="">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="prenom_autres_{{loop.index}}">Autres prénoms</label>
-                                        <input type="text" id="prenom_autres_{{loop.index}}" name="prenom_autres_{{loop.index}}" value="">
+                                        <label for="prenom_autres_1">Autres prénoms</label>
+                                        <input type="text" id="prenom_autres_1" name="prenom_autres_1" value="">
                                     </div>
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-4">
-                                        <label for="naissance_date_{{loop.index}}">Né(e) le </label>
-                                        <input type="text" id="naissance_date_{{loop.index}}" name="naissance_date_{{loop.index}}" value="">
+                                        <label for="naissance_date_1">Né(e) le </label>
+                                        <input type="text" id="naissance_date_1" name="naissance_date_1" value="">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="naissance_lieu_{{loop.index}}">à</label>
-                                        <input type="text" id="naissance_lieu_{{loop.index}}" name="naissance_lieu_{{loop.index}}" value="">
+                                        <label for="naissance_lieu_1">à</label>
+                                        <input type="text" id="naissance_lieu_1" name="naissance_lieu_1" value="">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="departement_pays_{{loop.index}}">Département / Pays</label>
-                                        <input type="text" id="departement_pays_{{loop.index}}" name="departement_pays_{{loop.index}}" value="">
+                                        <label for="departement_pays_1">Département / Pays</label>
+                                        <input type="text" id="departement_pays_1" name="departement_pays_1" value="">
                                     </div>
                                 </div>
                                 
                                 <div class="a">
-                                    <label for="nationalite_{{loop.index}}">Nationalité</label>
-                                    <input type="text" id="nationalite_{{loop.index}}" name="nationalite_{{loop.index}}" value="">
+                                    <label for="nationalite_1">Nationalité</label>
+                                    <input type="text" id="nationalite_1" name="nationalite_1" value="">
                                 </div>
                                 <div class="a">
-                                    <label for="adresse_domicile_{{loop.index}}">Adresse du domicile</label>
-                                    <input type="text" id="adresse_domicile_{{loop.index}}" name="adresse_domicile_{{loop.index}}" value="">
+                                    <label for="adresse_domicile_1">Adresse du domicile</label>
+                                    <input type="text" id="adresse_domicile_1" name="adresse_domicile_1" value="">
                                 </div>
                                 <div class="row a">
                                      <div class="col-md-4">
-                                        <label for="code_postal_domicile_{{loop.index}}"><i>Code postal</i></label>
-                                        <input type="text" id="code_postal_domicile_{{loop.index}}" name="code_postal_domicile_{{loop.index}}" value="">
+                                        <label for="code_postal_domicile_1"><i>Code postal</i></label>
+                                        <input type="text" id="code_postal_domicile_1" name="code_postal_domicile_1" value="">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="commune_domicile_{{loop.index}}"><i>Commune</i></label>
-                                        <input type="text" id="commune_domicile_{{loop.index}}" name="commune_domicile_{{loop.index}}" value="">
+                                        <label for="commune_domicile_1"><i>Commune</i></label>
+                                        <input type="text" id="commune_domicile_1" name="commune_domicile_1" value="">
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="pays_domicile_{{loop.index}}"><i>Pays</i></label>
-                                        <input type="text" id="pays_domicile_{{loop.index}}" name="pays_domicile_{{loop.index}}" value="">
+                                        <label for="pays_domicile_1"><i>Pays</i></label>
+                                        <input type="text" id="pays_domicile_1" name="pays_domicile_1" value="">
                                     </div>
                                 </div>
                                
@@ -138,15 +174,15 @@
                                     <label>Détention :</label>
                                     <div class="row">
                                         <div class="col-md-8 b">
-                                            <label for="detention_capital_{{loop.index}}">directe et/ou indirecte de plus de 25% du capital.</label>
+                                            <label for="detention_capital_1">directe et/ou indirecte de plus de 25% du capital.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_{{loop.index}}" name="detention_capital_directe_{{loop.index}}"> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_{{loop.index}}" name="detention_capital_indirecte_{{loop.index}}"> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1"> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1"> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="pourcentage_capital_{{loop.index}}">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_capital_{{loop.index}}" name="pourcentage_capital_{{loop.index}}" value="">
+                                            <label for="pourcentage_capital_1">Pourcentage total %</label>
+                                            <input type="text" id="pourcentage_capital_1" name="pourcentage_capital_1" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -154,43 +190,44 @@
                                     <label>Détention :</label>
                                     <div class="row">
                                         <div class="col-md-8 b">
-                                            <label for="detention_droits_{{loop.index}}">directe et/ou indirecte de plus de 25% des droits de vote.</label>
+                                            <label for="detention_droits_1">directe et/ou indirecte de plus de 25% des droits de vote.</label>
                                             <div class="row">
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_{{loop.index}}" name="detention_droits_directe_{{loop.index}}"> directe</div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_{{loop.index}}" name="detention_droits_indirecte_{{loop.index}}"> indirecte</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1"> directe</div>
+                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1"> indirecte</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="pourcentage_droits_{{loop.index}}">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_droits_{{loop.index}}" name="pourcentage_droits_{{loop.index}}" value="">
+                                            <label for="pourcentage_droits_1">Pourcentage total %</label>
+                                            <input type="text" id="pourcentage_droits_1" name="pourcentage_droits_1" value="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="a">
                                     <label>Exercice, par tout autre moyen, d'un pouvoir de contrôle</label>
-                                    <input type="text" id="exercice_{{loop.index}}" name="exercice_{{loop.index}}" value="">
+                                    <input type="text" id="exercice_1" name="exercice_1" value="">
                                 </div>
                                 <div class="a">
-                                    <input type="checkbox" id="representant_{{loop.index}}" name="representant_{{loop.index}}"> <b>Représentant légal</b>
+                                    <input type="checkbox" id="representant_1" name="representant_1"> <b>Représentant légal</b>
                                 </div>
                             </div>
                             <div>
                                 <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="text" id="date_devenue_beneficiaire_{{loop.index}}" name="date_devenue_beneficiaire_{{loop.index}}" value="">
+                                <input type="text" id="date_devenue_beneficiaire_1" name="date_devenue_beneficiaire_1" value="">
                             </div>
                         </div>
                         <div class="part">
                             <div class="title_part">III. AUTRES INFORMATIONS</div>
                             <div>
-                                <div><input type="radio" id="autres_beneficiare_{{loop.index}}" name="autres_beneficiare_{{loop.index}}">  Il n’existe pas de bénéficiaire effectif autre que celui mentionné dans ce document.</div>
-                                <div><input type="radio" id="autres_beneficiare_{{loop.index}}" name="autres_beneficiare_{{loop.index}}">  Il est joint à ce document</div>
-                                <input type="text" id="nombre_document_{{loop.index}}" name="nombre_document_{{loop.index}}" placeholder="nombre document(s) annexe(s)" value="">
+                                <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1">  Il n’existe pas de bénéficiaire effectif autre que celui mentionné dans ce document.</div>
+                                <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1">  Il est joint à ce document</div>
+                                <input type="text" id="nombre_document_1" name="nombre_document_1" placeholder="nombre document(s) annexe(s)" value="">
                             </div>
                         </div>
                     </div>
-                    {% endif %}
+                    {# {% endif %} #}
                     {% endset %}
                     {############################# Formulaire DBE-S-2 #############################}
+                    {% for api in apis %}
                     {% set DBE_S_2 %}
                     {% if api.joint is not defined %}
                     <div id="{{loop.index}}" class="DBE-S-2">
@@ -422,7 +459,6 @@
                     {% endset %}
 
                     {############################# Conditions Formulaire #############################}
-
                     {% if loop.index == 1 %}
                         {{DBE_S_1}}
                     {% else %}
