@@ -105,6 +105,32 @@ class CompareController extends Controller
         $denomination_sociale = array();
         $siren = array();
         $immatriculation = array();
+        $forme_juridique = array();
+        $adresse_sociale = array();
+        $code_postal_sociale = array();
+        $commune_sociale = array();
+        $pays_sociale = array();
+        $cilivile = array();
+        $nom_naissance = array();
+        $nom_usage = array();
+        $pseudonyme = array();
+        $prenom_principal = array();
+        $prenom_autres = array();
+        $naissance_date = array();
+        $naissance_lieu = array();
+        $departement_pays = array();
+        $nationalite = array();
+        $adresse_domicile = array();
+        $code_postal_domicile = array();
+        $commune_domicile = array();
+        $pays_domicile = array();
+        $detention_capital = array();
+        $pourcentage_capital = array();
+        $detention_droits = array();
+        $pourcentage_droits = array();
+        $exercice = array();
+        $representant = array();
+        $date_devenue_beneficiaire = array();
 
 
         foreach($_POST as $key => $value) {
