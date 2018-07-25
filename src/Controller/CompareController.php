@@ -110,7 +110,7 @@ class CompareController extends Controller
         $code_postal_sociale = array();
         $commune_sociale = array();
         $pays_sociale = array();
-        $cilivile = array();
+        $civilite = array();
         $nom_naissance = array();
         $nom_usage = array();
         $pseudonyme = array();
@@ -149,11 +149,14 @@ class CompareController extends Controller
             if (strpos($key, 'code_postal_sociale_') === 0) {
                 array_push($code_postal_sociale, $value);
             }
+            if (strpos($key, 'commune_sociale_') === 0) {
+                array_push($commune_sociale, $value);
+            }
             if (strpos($key, 'pays_sociale_') === 0) {
                 array_push($pays_sociale, $value);
             }
-            if (strpos($key, 'cilivile_') === 0) {
-                array_push($cilivile, $value);
+            if (strpos($key, 'civilite_') === 0) {
+                array_push($civilite, $value);
             }
             if (strpos($key, 'nom_naissance_') === 0) {
                 array_push($nom_naissance, $value);
@@ -227,7 +230,7 @@ class CompareController extends Controller
         $code_postal_sociale = $this->infos_check($siren, $code_postal_sociale);
         $commune_sociale = $this->infos_check($siren, $commune_sociale);
         $pays_sociale = $this->infos_check($siren, $pays_sociale);
-        $cilivile = $this->infos_check($siren, $cilivile);
+        $civilite = $this->infos_check($siren, $civilite);
         $nom_naissance = $this->infos_check($siren, $nom_naissance);
         $nom_usage = $this->infos_check($siren, $nom_usage);
         $pseudonyme = $this->infos_check($siren, $pseudonyme);
@@ -260,7 +263,7 @@ class CompareController extends Controller
                     'code_postal_sociale' => $code_postal_sociale[$i],
                     'commune_sociale' => $commune_sociale[$i],
                     'pays_sociale' => $pays_sociale[$i],
-                    'cilivile' => $cilivile[$i],
+                    'civilite' => $civilite[$i],
                     'nom_naissance' => $nom_naissance[$i],
                     'nom_usage' => $nom_usage[$i],
                     'pseudonyme' => $pseudonyme[$i],
@@ -285,8 +288,261 @@ class CompareController extends Controller
             ));
         }
 
-        return new Response(json_encode($infos_xml));
+        /**
+         * XML
+         */
+        $xw = xmlwriter_open_memory();
+        xmlwriter_set_indent($xw, 1);
+        $res = xmlwriter_set_indent_string($xw, ' ');
+
+        xmlwriter_start_document($xw, '1.0', 'UTF-8');
+            xmlwriter_start_element($xw, 'listeSaisiesBE');
+                xmlwriter_start_element($xw, 'VersionSchema');
+                xmlwriter_text($xw, '1');
+                xmlwriter_end_element($xw);
+
+                xmlwriter_start_element($xw, 'SaisieBE');
+                    xmlwriter_start_element($xw, 'dateDemande');
+                    xmlwriter_text($xw, '2018-06-01');
+                    xmlwriter_end_element($xw);
+
+                    xmlwriter_start_element($xw, 'numeroDemande');
+                    xmlwriter_text($xw, 'AMITEL_20180601_2100_555');
+                    xmlwriter_end_element($xw);
+
+                    xmlwriter_start_element($xw, 'typeDemande');
+                    xmlwriter_text($xw, '1');
+                    xmlwriter_end_element($xw);
+
+                    xmlwriter_start_element($xw, 'typeDeclaration');
+                    xmlwriter_text($xw, '0');
+                    xmlwriter_end_element($xw);
+
+                    xmlwriter_start_element($xw, 'identificationEntreprise');
+                        xmlwriter_start_element($xw, 'denomination');
+                        xmlwriter_text($xw, $infos_xml[0][0]['denomination_sociale']);
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'siren');
+                        xmlwriter_text($xw, $infos_xml[0][0]['siren']);
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'codeGreffe');
+                        xmlwriter_text($xw, '0401');
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'numeroGestion');
+                            xmlwriter_start_element($xw, 'Millesime');
+                            xmlwriter_text($xw, '2016');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'Statut');
+                            xmlwriter_text($xw, 'D');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'Chrono');
+                            xmlwriter_text($xw, '00224');
+                            xmlwriter_end_element($xw);
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'formeJuridique');
+                            xmlwriter_start_element($xw, 'code');
+                            xmlwriter_text($xw, 'GFAh');
+                            xmlwriter_end_element($xw);
+                            
+                            xmlwriter_start_element($xw, 'libelle');
+                            xmlwriter_text($xw, 'Groupement foncier agricole');
+                            xmlwriter_end_element($xw);
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'nbBE');
+                        xmlwriter_text($xw, '1');
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'adresse');
+                            xmlwriter_start_element($xw, 'ligne1');
+                            xmlwriter_text($xw, $infos_xml[0][0]['adresse_sociale']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'ligne2');
+                            xmlwriter_text($xw, ' ');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'ligne3');
+                            xmlwriter_text($xw, ' ');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'localite');
+                            xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'codePostal');
+                            xmlwriter_text($xw, $infos_xml[0][0]['code_postal_sociale']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                            xmlwriter_text($xw, '222');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'pays');
+                            xmlwriter_text($xw, $infos_xml[0][0]['pays_sociale']);
+                            xmlwriter_end_element($xw);
+                        xmlwriter_end_element($xw);
+                    xmlwriter_end_element($xw); // 'identificationEntreprise'
+
+                    xmlwriter_start_element($xw, 'infoSaisie');
+                        xmlwriter_start_element($xw, 'dateSaisie');
+                        xmlwriter_text($xw, '2018-06-18');
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'codeRejet');
+                        xmlwriter_text($xw, '0');
+                        xmlwriter_end_element($xw);
+
+                        xmlwriter_start_element($xw, 'identificationDepot');
+                            xmlwriter_start_element($xw, 'dateDepot');
+                            xmlwriter_text($xw, '2018-03-26');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'numeroDepot');
+                            xmlwriter_text($xw, '1683');
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'acte');
+                                xmlwriter_start_element($xw, 'dateActe');
+                                xmlwriter_text($xw, '2018-03-12');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'numeroActe');
+                                xmlwriter_text($xw, '1');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'typeActe');
+                                xmlwriter_text($xw, 'BENh');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'libelleActe');
+                                xmlwriter_text($xw, 'Document relatif au bénéficiaire effectif');
+                                xmlwriter_end_element($xw);
+                            xmlwriter_end_element($xw);
+                        xmlwriter_end_element($xw); // 'identificationDepot'
+                    xmlwriter_end_element($xw); // 'infoSaisie'
+
+                    for ($i = 0; $i < $len_array; $i++) {
+                        xmlwriter_start_element($xw, 'BEffectif');
+                            xmlwriter_start_element($xw, 'Civilite');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['civilite']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'nomPatronymique');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['nom_naissance']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'nomMarital');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['nom_usage']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'Pseudonyme');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['pseudonyme']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'Prenoms');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['prenom_principal']);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'infoNaissance');
+                                xmlwriter_start_element($xw, 'dateNaissance');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_date']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'villeNaissance');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_lieu']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                                xmlwriter_text($xw, '59350');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'DepartementNaissance');
+                                xmlwriter_text($xw, '59');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'paysNaissance');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['departement_pays']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'Nationalite');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['nationalite']);
+                                xmlwriter_end_element($xw);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'adresse');
+                                xmlwriter_start_element($xw, 'ligne1');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['adresse_domicile']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'localite');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['commune_domicile']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'codePostal');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['code_postal_domicile']);
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                                xmlwriter_text($xw, '111');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'pays');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['pays_domicile']);
+                                xmlwriter_end_element($xw);
+                            xmlwriter_end_element($xw); 
+
+                            xmlwriter_start_element($xw, 'modaliteControle');
+                                xmlwriter_start_element($xw, 'modaliteSociete');
+                                    xmlwriter_start_element($xw, 'detentionCapital');
+                                        xmlwriter_start_element($xw, 'type');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['detention_capital']);
+                                        xmlwriter_end_element($xw);
+
+                                        xmlwriter_start_element($xw, 'pourcentage');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_capital']);
+                                        xmlwriter_end_element($xw);
+                                    xmlwriter_end_element($xw);
+
+                                    xmlwriter_start_element($xw, 'detentionDroitsVote');
+                                        xmlwriter_start_element($xw, 'type');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['detention_droits']);
+                                        xmlwriter_end_element($xw);
+
+                                        xmlwriter_start_element($xw, 'pourcentage');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_droits']);
+                                        xmlwriter_end_element($xw);
+                                    xmlwriter_end_element($xw);
+                                xmlwriter_end_element($xw);
+                            xmlwriter_end_element($xw);
+
+                            xmlwriter_start_element($xw, 'dateEffet');
+                            xmlwriter_text($xw, $infos_xml[$i][$i]['date_effect']);
+                            xmlwriter_end_element($xw);
+
+                        xmlwriter_end_element($xw); // 'BEffectif'
+                    }
+                xmlwriter_end_element($xw);
+            xmlwriter_end_element($xw);
+        xmlwriter_end_document($xw);
+
+        $res_xml = xmlwriter_output_memory($xw);
+
+        $files_route = ($this->getParameter('files'))."/test.xml";
+        $file_xml = fopen($files_route, "w");
+        fwrite($file_xml, $res_xml);
+        fclose($file_xml);
+        return new Response($res_xml);
+        // return new Response(var_dump($infos_xml));
+        
     }
+
 
     /**
      * @return array
