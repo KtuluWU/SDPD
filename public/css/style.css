@@ -722,4 +722,12 @@ a {
     .compare_page .btn_compare .b:not(:last-child) {
       margin-right: 5px; }
 
+.downloadXML_page {
+  margin-top: 200px; }
+  .downloadXML_page .filename {
+    margin-bottom: 50px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #0085C9; }
+
 /*# sourceMappingURL=style.css.map */
