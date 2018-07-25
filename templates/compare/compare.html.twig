@@ -107,9 +107,9 @@
                             <div>
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
-                                    <label for="cilivile_1" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_1" name="cilivile_1" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
+                                    <label for="civilite_1" class="col-md-4">Civilité</label>
+                                    <div class="col-md-4"><input type="radio" id="civilite_1" name="civilite_1" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="civilite_1" name="civilite_1" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
                                 </div>
                                 <div class="a">
                                     <label for="nom_naissance_1">Nom de naissance</label>
@@ -284,9 +284,9 @@
                             <div>
                                 <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
-                                    <label for="cilivile_{{loop.index}}" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="cilivile_{{loop.index}}" name="cilivile_{{loop.index}}" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
+                                    <label for="civilite_{{loop.index}}" class="col-md-4">Civilité</label>
+                                    <div class="col-md-4"><input type="radio" id="civilite_{{loop.index}}" name="civilite_{{loop.index}}" value="MME" {% if beneficiaire.civilite is defined and beneficiaire.civilite == "MME" %}checked{% endif %}> Madame</div>
+                                    <div class="col-md-4"><input type="radio" id="civilite_{{loop.index}}" name="civilite_{{loop.index}}" value="M." {% if beneficiaire.civilite is defined and beneficiaire.civilite == "M." %}checked{% endif %}> Monsieur</div>
                                 </div>
                                 <div class="a">
                                     <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
