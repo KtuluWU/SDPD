@@ -217,40 +217,90 @@ class CompareController extends Controller
             }
         }
 
-        $infos_xml = array(
-            'denomination_sociale' => $denomination_sociale,
-            'siren' => $siren,
-            'immatriculation' => $immatriculation,
-            'forme_juridique' => $forme_juridique,
-            'adresse_sociale' => $adresse_sociale,
-            'code_postal_sociale' => $code_postal_sociale,
-            'commune_sociale' => $commune_sociale,
-            'pays_sociale' => $pays_sociale,
-            'cilivile' => $cilivile,
-            'nom_naissance' => $nom_naissance,
-            'nom_usage' => $nom_usage,
-            'pseudonyme' => $pseudonyme,
-            'prenom_principal' => $prenom_principal,
-            'prenom_autres' => $prenom_autres,
-            'naissance_date' => $naissance_date,
-            'naissance_lieu' => $naissance_lieu,
-            'departement_pays' => $departement_pays,
-            'nationalite' => $nationalite,
-            'adresse_domicile' => $adresse_domicile,
-            'code_postal_domicile' => $code_postal_domicile,
-            'commune_domicile' => $commune_domicile,
-            'pays_domicile' => $pays_domicile,
-            'detention_capital' => $detention_capital,
-            'pourcentage_capital' => $pourcentage_capital,
-            'detention_droits' => $detention_droits,
-            'pourcentage_droits' => $pourcentage_droits,
-            'exercice' => $exercice,
-            'representant' => $representant,
-            'date_effect' => $date_effect,
+        $len_array = count($siren);
+        $infos_xml = array();
 
-        );
+        $denomination_sociale = $this->infos_check($siren, $denomination_sociale);
+        $immatriculation = $this->infos_check($siren, $immatriculation);
+        $forme_juridique = $this->infos_check($siren, $forme_juridique);
+        $adresse_sociale = $this->infos_check($siren, $adresse_sociale);
+        $code_postal_sociale = $this->infos_check($siren, $code_postal_sociale);
+        $commune_sociale = $this->infos_check($siren, $commune_sociale);
+        $pays_sociale = $this->infos_check($siren, $pays_sociale);
+        $cilivile = $this->infos_check($siren, $cilivile);
+        $nom_naissance = $this->infos_check($siren, $nom_naissance);
+        $nom_usage = $this->infos_check($siren, $nom_usage);
+        $pseudonyme = $this->infos_check($siren, $pseudonyme);
+        $prenom_principal = $this->infos_check($siren, $prenom_principal);
+        $prenom_autres = $this->infos_check($siren, $prenom_autres);
+        $naissance_date = $this->infos_check($siren, $naissance_date);
+        $naissance_lieu = $this->infos_check($siren, $naissance_lieu);
+        $departement_pays = $this->infos_check($siren, $departement_pays);
+        $nationalite = $this->infos_check($siren, $nationalite);
+        $adresse_domicile = $this->infos_check($siren, $adresse_domicile);
+        $code_postal_domicile = $this->infos_check($siren, $code_postal_domicile);
+        $commune_domicile = $this->infos_check($siren, $commune_domicile);
+        $pays_domicile = $this->infos_check($siren, $pays_domicile);
+        $detention_capital = $this->infos_check($siren, $detention_capital);
+        $pourcentage_capital = $this->infos_check($siren, $pourcentage_capital);
+        $detention_droits = $this->infos_check($siren, $detention_droits);
+        $pourcentage_droits = $this->infos_check($siren, $pourcentage_droits);
+        $exercice = $this->infos_check($siren, $exercice);
+        $representant = $this->infos_check($siren, $representant);
+        $date_effect = $this->infos_check($siren, $date_effect);
 
-        return new Response(var_dump($date_effect));
+        for($i = 0; $i < $len_array; $i++) {
+            array_push($infos_xml, array(
+                $i => array(
+                    'denomination_sociale' => $denomination_sociale[$i],
+                    'siren' => $siren[$i],
+                    'immatriculation' => $immatriculation[$i],
+                    'forme_juridique' => $forme_juridique[$i],
+                    'adresse_sociale' => $adresse_sociale[$i],
+                    'code_postal_sociale' => $code_postal_sociale[$i],
+                    'commune_sociale' => $commune_sociale[$i],
+                    'pays_sociale' => $pays_sociale[$i],
+                    'cilivile' => $cilivile[$i],
+                    'nom_naissance' => $nom_naissance[$i],
+                    'nom_usage' => $nom_usage[$i],
+                    'pseudonyme' => $pseudonyme[$i],
+                    'prenom_principal' => $prenom_principal[$i],
+                    'prenom_autres' => $prenom_autres[$i],
+                    'naissance_date' => $naissance_date[$i],
+                    'naissance_lieu' => $naissance_lieu[$i],
+                    'departement_pays' => $departement_pays[$i],
+                    'nationalite' => $nationalite[$i],
+                    'adresse_domicile' => $adresse_domicile[$i],
+                    'code_postal_domicile' => $code_postal_domicile[$i],
+                    'commune_domicile' => $commune_domicile[$i],
+                    'pays_domicile' => $pays_domicile[$i],
+                    'detention_capital' => $detention_capital[$i],
+                    'pourcentage_capital' => $pourcentage_capital[$i],
+                    'detention_droits' => $detention_droits[$i],
+                    'pourcentage_droits' => $pourcentage_droits[$i],
+                    'exercice' => $exercice[$i],
+                    'representant' => $representant[$i],
+                    'date_effect' => $date_effect[$i]
+                )
+            ));
+        }
+
+        return new Response(json_encode($infos_xml));
+    }
+
+    /**
+     * @return array
+     */
+    private function infos_check($siren=array(), $infos=array())
+    {
+        $len_array = count($siren);
+        $len_info = count($infos);
+        if ( $len_info < $len_array ) {
+            for ($i = $len_info; $i < $len_array; $i++) {
+                array_push($infos, " ");
+            }
+        }
+        return $infos;
     }
 
     /**
