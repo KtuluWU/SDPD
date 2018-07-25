@@ -130,7 +130,7 @@ class CompareController extends Controller
         $pourcentage_droits = array();
         $exercice = array();
         $representant = array();
-        $date_devenue_beneficiaire = array();
+        $date_effect = array();
 
 
         foreach($_POST as $key => $value) {
@@ -140,12 +140,117 @@ class CompareController extends Controller
             if (strpos($key, 'siren_') === 0) {
                 array_push($siren, $value);
             }
-            if (strpos($key, 'immatriculation_') === 0) {
-                array_push($immatriculation, $value);
+            if (strpos($key, 'forme_juridique_') === 0) {
+                array_push($forme_juridique, $value);
             }
-        } 
+            if (strpos($key, 'adresse_sociale_') === 0) {
+                array_push($adresse_sociale, $value);
+            }
+            if (strpos($key, 'code_postal_sociale_') === 0) {
+                array_push($code_postal_sociale, $value);
+            }
+            if (strpos($key, 'pays_sociale_') === 0) {
+                array_push($pays_sociale, $value);
+            }
+            if (strpos($key, 'cilivile_') === 0) {
+                array_push($cilivile, $value);
+            }
+            if (strpos($key, 'nom_naissance_') === 0) {
+                array_push($nom_naissance, $value);
+            }
+            if (strpos($key, 'nom_usage_') === 0) {
+                array_push($nom_usage, $value);
+            }
+            if (strpos($key, 'pseudonyme_') === 0) {
+                array_push($pseudonyme, $value);
+            }
+            if (strpos($key, 'prenom_principal_') === 0) {
+                array_push($prenom_principal, $value);
+            }
+            if (strpos($key, 'prenom_autres_') === 0) {
+                array_push($prenom_autres, $value);
+            }
+            if (strpos($key, 'naissance_date_') === 0) {
+                array_push($naissance_date, $value);
+            }
+            if (strpos($key, 'naissance_lieu_') === 0) {
+                array_push($naissance_lieu, $value);
+            }
+            if (strpos($key, 'departement_pays_') === 0) {
+                array_push($departement_pays, $value);
+            }
+            if (strpos($key, 'nationalite_') === 0) {
+                array_push($nationalite, $value);
+            }
+            if (strpos($key, 'adresse_domicile_') === 0) {
+                array_push($adresse_domicile, $value);
+            }
+            if (strpos($key, 'code_postal_domicile_') === 0) {
+                array_push($code_postal_domicile, $value);
+            }
+            if (strpos($key, 'commune_domicile_') === 0) {
+                array_push($commune_domicile, $value);
+            }
+            if (strpos($key, 'pays_domicile_') === 0) {
+                array_push($pays_domicile, $value);
+            }
+            if (strpos($key, 'detention_capital_') === 0) {
+                array_push($detention_capital, $value);
+            }
+            if (strpos($key, 'pourcentage_capital_') === 0) {
+                array_push($pourcentage_capital, $value);
+            }
+            if (strpos($key, 'detention_droits_') === 0) {
+                array_push($detention_droits, $value);
+            }
+            if (strpos($key, 'pourcentage_droits_') === 0) {
+                array_push($pourcentage_droits, $value);
+            }
+            if (strpos($key, 'exercice_') === 0) {
+                array_push($exercice, $value);
+            }
+            if (strpos($key, 'representant_') === 0) {
+                array_push($representant, $value);
+            }
+            if (strpos($key, 'date_effect_') === 0) {
+                array_push($date_effect, $value);
+            }
+        }
 
-        return new Response(var_dump($denomination_sociale));
+        $infos_xml = array(
+            'denomination_sociale' => $denomination_sociale,
+            'siren' => $siren,
+            'immatriculation' => $immatriculation,
+            'forme_juridique' => $forme_juridique,
+            'adresse_sociale' => $adresse_sociale,
+            'code_postal_sociale' => $code_postal_sociale,
+            'commune_sociale' => $commune_sociale,
+            'pays_sociale' => $pays_sociale,
+            'cilivile' => $cilivile,
+            'nom_naissance' => $nom_naissance,
+            'nom_usage' => $nom_usage,
+            'pseudonyme' => $pseudonyme,
+            'prenom_principal' => $prenom_principal,
+            'prenom_autres' => $prenom_autres,
+            'naissance_date' => $naissance_date,
+            'naissance_lieu' => $naissance_lieu,
+            'departement_pays' => $departement_pays,
+            'nationalite' => $nationalite,
+            'adresse_domicile' => $adresse_domicile,
+            'code_postal_domicile' => $code_postal_domicile,
+            'commune_domicile' => $commune_domicile,
+            'pays_domicile' => $pays_domicile,
+            'detention_capital' => $detention_capital,
+            'pourcentage_capital' => $pourcentage_capital,
+            'detention_droits' => $detention_droits,
+            'pourcentage_droits' => $pourcentage_droits,
+            'exercice' => $exercice,
+            'representant' => $representant,
+            'date_effect' => $date_effect,
+
+        );
+
+        return new Response(var_dump($date_effect));
     }
 
     /**
