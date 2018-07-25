@@ -534,12 +534,15 @@ class CompareController extends Controller
 
         $res_xml = xmlwriter_output_memory($xw);
 
-        $files_route = ($this->getParameter('files'))."/test.xml";
+        $files_route = ($this->getParameter('files'))."/$siren[0].xml";
+
         $file_xml = fopen($files_route, "w");
         fwrite($file_xml, $res_xml);
         fclose($file_xml);
-        return new Response($res_xml);
-        // return new Response(var_dump($infos_xml));
+        
+        return $this->render('compare/downloadXML.html.twig', [
+            'siren' => $siren[0]
+        ]); 
         
     }
 
@@ -630,7 +633,7 @@ class CompareController extends Controller
      */
     private function generateUniqueFileName($file)
     {
-        return md5(uniqid()).'.'.$file->guessExtension();;
+        return md5(uniqid()).'.'.$file->guessExtension();
     }
 }
 
