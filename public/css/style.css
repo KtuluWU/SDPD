@@ -674,7 +674,7 @@ a {
       margin-right: 20px; }
     .compare_page .content .data_db {
       overflow-y: auto; }
-      .compare_page .content .data_db input[type=text] {
+      .compare_page .content .data_db input[type=text], .compare_page .content .data_db input[type=date] {
         border: 1px solid #eee;
         border-radius: 5px;
         width: 100%;
