@@ -72,7 +72,7 @@
         }
         .data_db {
             overflow-y: auto;
-            input[type=text] {
+            input[type=text], input[type=date] {
                 border: 1px solid $border-grey;
                 border-radius: 5px;
                 width: 100%;

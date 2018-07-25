@@ -44,10 +44,10 @@
                     <td>Aucun état trouvé</td>
                     {% endif %}
                 </tr>
-                <tr>
+                {# <tr>
                     <th>Opérateur:</th>
                     <td>AMITEL</td>
-                </tr>
+                </tr> #}
             </table>
         </div>
     </div>
@@ -138,7 +138,7 @@
                                 <div class="row a">
                                     <div class="col-md-4">
                                         <label for="naissance_date_1">Né(e) le </label>
-                                        <input type="text" id="naissance_date_1" name="naissance_date_1" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('d/m/Y')}}"{% endif %}>
+                                        <input type="date" id="naissance_date_1" name="naissance_date_1" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('Y-m-d')}}"{% endif %}>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="naissance_lieu_1">à</label>
@@ -213,12 +213,12 @@
                                     <input type="text" id="exercice_1" name="exercice_1" {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{beneficiaire.modalite_controle.autre_moyen.texte}}"{% endif %}>
                                 </div>
                                 <div class="a">
-                                    <input type="checkbox" id="representant_1" name="representant_1" value="Représentant légal" {% if beneficiaire.modalite_controle.representant_legal is defined and beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}> <b>Représentant légal</b>
+                                    <input type="checkbox" id="representant_1" name="representant_1" value="1" {% if beneficiaire.modalite_controle.representant_legal is defined and beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}> <b>Représentant légal</b>
                                 </div>
                             </div>
                             <div>
                                 <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="text" id="date_devenue_beneficiaire_1" name="date_devenue_beneficiaire_1" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('d/m/Y')}}"{% endif %}>
+                                <input type="date" id="date_effect_1" name="date_effect_1" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('Y-m-d')}}"{% endif %}>
                             </div>
                         </div>
                         {% endif %}
@@ -315,7 +315,7 @@
                                 <div class="row a">
                                     <div class="col-md-4">
                                         <label for="naissance_date_{{loop.index}}">Né(e) le </label>
-                                        <input type="text" id="naissance_date_{{loop.index}}" name="naissance_date_{{loop.index}}" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('d/m/Y')}}"{% endif %}>
+                                        <input type="date" id="naissance_date_{{loop.index}}" name="naissance_date_{{loop.index}}" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('Y-m-d')}}"{% endif %}>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="naissance_lieu_{{loop.index}}">à</label>
@@ -390,12 +390,12 @@
                                     <input type="text" id="exercice_{{loop.index}}" name="exercice_{{loop.index}}" {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{beneficiaire.modalite_controle.autre_moyen.texte}}"{% endif %}>
                                 </div>
                                 <div class="a">
-                                    <input type="checkbox" id="representant_{{loop.index}}" name="representant_{{loop.index}}" {% if beneficiaire.modalite_controle.representant_legal is defined and beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}> <b>Représentant légal</b>
+                                    <input type="checkbox" id="representant_{{loop.index}}" name="representant_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.representant_legal is defined and beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}> <b>Représentant légal</b>
                                 </div>
                             </div>
                             <div>
                                 <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="text" id="date_devenue_beneficiaire_{{loop.index}}" name="date_devenue_beneficiaire_{{loop.index}}" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('d/m/Y')}}"{% endif %}>
+                                <input type="date" id="date_effect_{{loop.index}}" name="date_effect_{{loop.index}}" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('Y-m-d')}}"{% endif %}>
                             </div>
                         </div>
                     </div>
