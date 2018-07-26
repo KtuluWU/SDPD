@@ -98,10 +98,17 @@ class CompareController extends Controller
     }
 
     /**
-     * @Route("/preXML", name="preXMLpage")
+     * @Route("/generateXML/{filename}", name="generateXMLpage")
      */
-    public function preXML()
+    public function generateXML($filename)
     {
+        $fileSystem = new Filesystem();
+        $file_pdf = ($this->getParameter('files'))."/".$filename;
+
+        if (file_exists($file_pdf)) {
+            $fileSystem->remove($file_pdf);
+        }
+
         $denomination_sociale = array();
         $siren = array();
         $immatriculation = array();
