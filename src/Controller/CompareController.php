@@ -553,6 +553,19 @@ class CompareController extends Controller
         
     }
 
+    /**
+     * @return array
+     */
+    private function after_xml($siren)
+    {
+        $data_TEST2 = array();
+        $sql = "SELECT dtdemande, numdepot, typedemande, codegreffe, numerogestion, codeformejuridique, libformejuridique, dtsaisie, dtdepot, 
+            numdepot, dtacte, noacte FROM public.ta_suividem_ass s WHERE siren='$siren'"; 
+        $info_saisie = $em_TEST2->prepare($sql);
+        $info_saisie->execute();
+        $data_TEST2 = ($info_saisie->fetchAll())[0];
+        return $data_TEST2;
+    }
 
     /**
      * @return array
