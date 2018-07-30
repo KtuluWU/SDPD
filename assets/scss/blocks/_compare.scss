@@ -47,12 +47,22 @@
     }
 
     .infos {
+        margin-top: 40px;
+        margin-bottom: 40px;
         table {
             tr {
                 th {
                     padding-right: 30px;
                 }
             }
+            .operator {
+                border-top: 2px solid $border-grey;
+            }
+        }
+        .tip {
+            font-weight: bold;
+            color: $color-danger;
+            margin-top: -20px;
         }
     }
 
