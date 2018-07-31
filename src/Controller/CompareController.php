@@ -326,7 +326,7 @@ class CompareController extends Controller
 
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
-        $res = xmlwriter_set_indent_string($xw, ' ');
+        $res = xmlwriter_set_indent_string($xw, '');
 
         xmlwriter_start_document($xw, '1.0', 'UTF-8');
             xmlwriter_start_element($xw, 'listeSaisiesBE');
@@ -389,7 +389,7 @@ class CompareController extends Controller
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'nbBE');
-                        xmlwriter_text($xw, '1');
+                        xmlwriter_text($xw, $nb_BE);
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'adresse');
@@ -398,11 +398,11 @@ class CompareController extends Controller
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'ligne2');
-                            xmlwriter_text($xw, ' ');
+                            xmlwriter_text($xw, '');
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'ligne3');
-                            xmlwriter_text($xw, ' ');
+                            xmlwriter_text($xw, '');
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'localite');
@@ -497,7 +497,12 @@ class CompareController extends Controller
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'DepartementNaissance');
-                                xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['departement']);
+                                if (isset($apis['beneficiaires'][$i]['lieu_naissance']['departement'])) {
+                                    xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['departement']);
+                                } else {
+                                    xmlwriter_text($xw, '');
+                                }
+                                
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'paysNaissance');
