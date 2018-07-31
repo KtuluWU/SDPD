@@ -8,6 +8,7 @@
         {% endfor %}
     </div>
     {# {{dump(apis)}}  #}
+    {% set userTruename = app.user.firstname ~ " " ~ app.user.lastname %}
     <div class="infos row">
         <div class="left col-md-6">
             <table>
@@ -44,14 +45,25 @@
                     <td>Aucun état trouvé</td>
                     {% endif %}
                 </tr>
-                {# <tr>
-                    <th>Opérateur:</th>
-                    <td>AMITEL</td>
-                </tr> #}
+                {# {{ dump(infos_operator) }} #}
+                {% for info_operator in infos_operator %}
+                    <tr class="operator">
+                        <th>Opérateur:</th>
+                        <td>{% if info_operator.operator is defined %}{{info_operator.operator}}{% endif %}</td>
+                    </tr> 
+                    <tr>
+                        <th>Date de saisie d'opérateur:</th>
+                        <td>{% if info_operator.dateSaisie is defined %}{{info_operator.dateSaisie|date('d/m/Y H:i:s')}}{% endif %}</td>
+                    </tr> 
+                {% endfor %}
             </table>
+            <div class="text-center">
+                {{ knp_pagination_render(infos_operator) }}
+                <div class="tip">{% if infos_operator.items is not empty %}(Attention, cette opération vous perd toutes les modifications !){% endif %}</div>
+            </div>
         </div>
     </div>
-    <form method="POST" action="/compare/generateXML/{{filename}}">
+    <form method="POST" action="/compare/generateXML/{{filename}}&{{userTruename}}">
         <div class="content">
             <div class="pdf block">
                 <embed src="{{ asset('uploads/' ~ filename) }}" type="application/pdf" width="100%" height="100%"></embed>

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\IFG_TEST2\UploadPdf;
+use App\Entity\IFG_SDPD\Operator;
 use App\Form\UploadPdfType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,12 +37,16 @@ class CompareController extends Controller
         $info_saisie->execute();
         $infos_db = ($info_saisie->fetchAll())[0];
 
+        $infos_operator = $this->data_Operator($request, $siren);
+
+
 
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
             'apis' => $apis,
             'siren' => $siren,
-            'infos_db' => $infos_db
+            'infos_db' => $infos_db,
+            'infos_operator' => $infos_operator
         ]); 
     }
 
@@ -84,9 +89,9 @@ class CompareController extends Controller
     }
 
     /**
-     * @Route("/generateXML/{filename}", name="generateXMLpage")
+     * @Route("/generateXML/{filename}&{operator}", name="generateXMLpage")
      */
-    public function generateXML($filename)
+    public function generateXML($filename, $operator)
     {
         $fileSystem = new Filesystem();
         $file_pdf = ($this->getParameter('files'))."/".$filename;
@@ -288,6 +293,22 @@ class CompareController extends Controller
         $file_xml = fopen($files_route, "w");
         fwrite($file_xml, $res_xml);
         fclose($file_xml);
+
+        /**
+         * Opérateur
+         */
+        $operator_db = new Operator();
+        $em_SDPD = $this->getDoctrine()->getManager('IFG_SDPD');
+
+        date_default_timezone_set("Europe/Paris");
+        $dateSaisie_operator = date_create(date('Y-m-d H:i:s'));
+
+        $operator_db->setSiren($siren[0]);
+        $operator_db->setOperator($operator);
+        $operator_db->setDateSaisie($dateSaisie_operator);
+
+        $em_SDPD->persist($operator_db);
+        $em_SDPD->flush();
         
         return $this->render('compare/downloadXML.html.twig', [
             'siren' => $siren[0]
@@ -581,6 +602,29 @@ class CompareController extends Controller
 
         return $apis;
     }
+    
+    /**
+     * @return array
+     */
+    private function data_Operator(Request $request, $siren)
+    {
+        $operator = new Operator();
+        $em_SDPD = $this->getDoctrine()->getManager('IFG_SDPD');
+        $operators_db = $em_SDPD->getRepository('IFG_SDPD:Operator')->findBySiren($siren);
+
+        $infos = array();
+
+        foreach($operators_db as $value) {
+            array_push($infos, array(
+                'operator' => $value->getOperator(),
+                'dateSaisie' => $value->getDateSaisie()
+            ));
+        }
+
+        $infos_paginate = $this->get('knp_paginator')->paginate($infos, $request->query->get('page',1),2);
+
+        return $infos_paginate;
+    }
 
     /**
      * @return array
@@ -600,7 +644,7 @@ class CompareController extends Controller
     /**
      * @Route("/addDBE_S_2/{filename}/{beneficiaires}/{siren}", name="addDBE_S_2page")
      */
-    public function addDBE_S_2($filename, $beneficiaires, $siren)
+    public function addDBE_S_2(Request $request, $filename, $beneficiaires, $siren)
     {
         $apis = $this->data_API($siren);
         
@@ -613,6 +657,8 @@ class CompareController extends Controller
         $info_saisie->execute();
         $infos_db = ($info_saisie->fetchAll())[0];
 
+        $infos_operator = $this->data_Operator($request, $siren);
+
 
         for ($i = (count($apis['beneficiaires'])-1); $i < $beneficiaires; $i++) {
             $api_merge = ["$i"=>[" "=>" "]];
@@ -623,7 +669,8 @@ class CompareController extends Controller
             'filename' => $filename,
             'apis' => $apis,
             'siren' => $siren,
-            'infos_db' => $infos_db
+            'infos_db' => $infos_db,
+            'infos_operator' => $infos_operator
         ]); 
     }
 

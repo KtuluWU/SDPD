@@ -658,8 +658,17 @@ a {
       background-color: #A2C616; }
       .compare_page .index .active a {
         color: #fff; }
-  .compare_page .infos table tr th {
-    padding-right: 30px; }
+  .compare_page .infos {
+    margin-top: 40px;
+    margin-bottom: 40px; }
+    .compare_page .infos table tr th {
+      padding-right: 30px; }
+    .compare_page .infos table .operator {
+      border-top: 2px solid #eee; }
+    .compare_page .infos .tip {
+      font-weight: bold;
+      color: #d9534f;
+      margin-top: -20px; }
   .compare_page .content {
     display: flex;
     justify-content: center;
