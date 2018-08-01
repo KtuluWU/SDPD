@@ -44,7 +44,7 @@ User:
   createuser: Créer un utilisateur
   changepassword: Changer mot de passe
 
-Etat:
+codesRejet:
   0: Validé
   112: Document autre que DIBE
   113: DIBE incomplète (il manque des pages)

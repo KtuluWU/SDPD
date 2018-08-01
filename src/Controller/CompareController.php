@@ -27,19 +27,8 @@ class CompareController extends Controller
     public function correction(Request $request, $filename, $siren)
     {        
         $apis = $this->data_API($siren);
-        
-        /**
-         * DB TEST2
-         */
-        $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
-        $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
-        $info_saisie = $em_TEST2->prepare($sql);
-        $info_saisie->execute();
-        $infos_db = ($info_saisie->fetchAll())[0];
-
+        $infos_db = $this->data_TEST2($siren);
         $infos_operator = $this->data_Operator($request, $siren);
-
-
 
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
@@ -250,6 +239,8 @@ class CompareController extends Controller
         $representant = $this->infos_check($siren, $representant);
         $date_effect = $this->infos_check($siren, $date_effect);
 
+        $code_rejet = $_POST['code_rejets'];
+
         for($i = 0; $i < $nb_BE; $i++) {
             array_push($infos_xml, array(
                 $i => array(
@@ -281,7 +272,8 @@ class CompareController extends Controller
                     'pourcentage_droits' => $pourcentage_droits[$i],
                     'exercice' => $exercice[$i],
                     'representant' => $representant[$i],
-                    'date_effect' => $date_effect[$i]
+                    'date_effect' => $date_effect[$i],
+                    'code_rejet' => $code_rejet
                 )
             ));
         }
@@ -313,7 +305,6 @@ class CompareController extends Controller
         return $this->render('compare/downloadXML.html.twig', [
             'siren' => $siren[0]
         ]); 
-        
     }
 
     /**
@@ -321,8 +312,9 @@ class CompareController extends Controller
      */
     private function XML_generator($nb_BE, $infos_xml)
     {
-        $apis = $this->data_API($infos_xml[0][0]['siren']);
-
+        $siren = $infos_xml[0][0]['siren'];
+        $apis = $this->data_API($siren);
+        $infos_db = $this->data_TEST2($siren);
 
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
@@ -336,15 +328,15 @@ class CompareController extends Controller
 
                 xmlwriter_start_element($xw, 'SaisieBE');
                     xmlwriter_start_element($xw, 'dateDemande');
-                    xmlwriter_text($xw, '2018-06-01');
+                    xmlwriter_text($xw, $infos_db['dtdemande']);
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'numeroDemande');
-                    xmlwriter_text($xw, 'AMITEL_20180601_2100_555');
+                    xmlwriter_text($xw, 'XXXXX');
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'typeDemande');
-                    xmlwriter_text($xw, '1');
+                    xmlwriter_text($xw, $infos_db['typedemande']);
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'typeDeclaration');
@@ -357,7 +349,7 @@ class CompareController extends Controller
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'siren');
-                        xmlwriter_text($xw, $infos_xml[0][0]['siren']);
+                        xmlwriter_text($xw, $siren);
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'codeGreffe');
@@ -413,8 +405,16 @@ class CompareController extends Controller
                             xmlwriter_text($xw, $infos_xml[0][0]['code_postal_sociale']);
                             xmlwriter_end_element($xw);
 
+                            xmlwriter_start_element($xw, 'bureauDistributeur');
+                            xmlwriter_text($xw, 'XXXXX');
+                            xmlwriter_end_element($xw);
+
                             xmlwriter_start_element($xw, 'codeCommuneINSEE');
-                            xmlwriter_text($xw, '222');
+                            if (isset($apis['adresse']['code_insee'])) {
+                                xmlwriter_text($xw, $apis['adresse']['code_insee']);
+                            } else {
+                                xmlwriter_text($xw, '');
+                            }
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'pays');
@@ -425,11 +425,11 @@ class CompareController extends Controller
 
                     xmlwriter_start_element($xw, 'infoSaisie');
                         xmlwriter_start_element($xw, 'dateSaisie');
-                        xmlwriter_text($xw, '2018-06-18');
+                        xmlwriter_text($xw, $infos_db['dtsaisie']);
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'codeRejet');
-                        xmlwriter_text($xw, $apis['rejet']);
+                        xmlwriter_text($xw, $infos_xml[0][0]['code_rejet']);
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'identificationDepot');
@@ -455,7 +455,11 @@ class CompareController extends Controller
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'libelleActe');
-                                xmlwriter_text($xw, 'Document relatif au bénéficiaire effectif');
+                                xmlwriter_text($xw, 'XXXXX');
+                                xmlwriter_end_element($xw);
+
+                                xmlwriter_start_element($xw, 'decisionActe');
+                                xmlwriter_text($xw, 'XXXXX');
                                 xmlwriter_end_element($xw);
                             xmlwriter_end_element($xw);
                         xmlwriter_end_element($xw); // 'identificationDepot'
@@ -493,7 +497,11 @@ class CompareController extends Controller
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'codeCommuneINSEE');
-                                xmlwriter_text($xw, '59350');
+                                if (isset($apis['beneficiaires'][$i]['lieu_naissance']['code_insee'])) {
+                                    xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['code_insee']);
+                                } else {
+                                    xmlwriter_text($xw, '');
+                                }
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'DepartementNaissance');
@@ -502,7 +510,6 @@ class CompareController extends Controller
                                 } else {
                                     xmlwriter_text($xw, '');
                                 }
-                                
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'paysNaissance');
@@ -528,7 +535,11 @@ class CompareController extends Controller
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'codeCommuneINSEE');
-                                xmlwriter_text($xw, '111');
+                                if (isset($apis['beneficiaires'][$i]['adresse']['code_insee'])) {
+                                    xmlwriter_text($xw, $apis['beneficiaires'][$i]['adresse']['code_insee']);
+                                } else {
+                                    xmlwriter_text($xw, '');
+                                }
                                 xmlwriter_end_element($xw);
 
                                 xmlwriter_start_element($xw, 'pays');
@@ -557,6 +568,14 @@ class CompareController extends Controller
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_droits']);
                                         xmlwriter_end_element($xw);
                                     xmlwriter_end_element($xw);
+
+                                    xmlwriter_start_element($xw, 'autreMoyen');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['exercice']);
+                                    xmlwriter_end_element($xw);
+
+                                    xmlwriter_start_element($xw, 'representantLegal');
+                                        xmlwriter_text($xw, $infos_xml[$i][$i]['representant']);
+                                    xmlwriter_end_element($xw);
                                 xmlwriter_end_element($xw);
                             xmlwriter_end_element($xw);
 
@@ -576,17 +595,60 @@ class CompareController extends Controller
     }
 
     /**
+     * @Route("/addDBE_S_2/{filename}/{beneficiaires}/{siren}", name="addDBE_S_2page")
+     */
+    public function addDBE_S_2(Request $request, $filename, $beneficiaires, $siren)
+    {
+        $apis = $this->data_API($siren);
+        $infos_db = $this->data_TEST2($siren);
+        $infos_operator = $this->data_Operator($request, $siren);
+
+        for ($i = (count($apis['beneficiaires'])-1); $i < $beneficiaires; $i++) {
+            $api_merge = ["$i"=>[" "=>" "]];
+            $apis['beneficiaires'] = array_merge($apis['beneficiaires'], $api_merge);
+        }
+
+        return $this->render('compare/compare.html.twig', [
+            'filename' => $filename,
+            'apis' => $apis,
+            'siren' => $siren,
+            'infos_db' => $infos_db,
+            'infos_operator' => $infos_operator
+        ]); 
+    }
+
+    /**
+     * @Route("/addDBE_S_bis/{filename}/{api_length}", name="addDBE_S_bispage")
+     */
+    /*public function addDBE_S_bis($filename, $api_length)
+    {
+       
+        $api_orig = '{ "1":{"a":"zzzzzzzzzzzz", "b":"zzzzzzzzzzzz", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
+        $apis = json_decode($api_orig, true);
+
+
+        for ($i = (count($apis)-1); $i < $api_length; $i++) {
+            $api_merge = ["$i"=>["joint"=>" ", "b"=>" "]];
+            $apis = array_merge($apis, $api_merge);
+        }
+        
+        return $this->render('compare/compare.html.twig', [
+            'filename' => $filename,
+            'apis' => $apis
+        ]); 
+    }*/
+
+    /**
      * @return array
      */
     private function data_TEST2($siren)
     {
-        $data_TEST2 = array();
-        $sql = "SELECT dtdemande, numdepot, typedemande, codegreffe, numerogestion, codeformejuridique, libformejuridique, dtsaisie, dtdepot, 
-            numdepot, dtacte, noacte FROM public.ta_suividem_ass s WHERE siren='$siren'"; 
+        $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
+        $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
         $info_saisie = $em_TEST2->prepare($sql);
         $info_saisie->execute();
-        $data_TEST2 = ($info_saisie->fetchAll())[0];
-        return $data_TEST2;
+        $infos_db = ($info_saisie->fetchAll())[0];
+        return $infos_db;
     }
 
     /**
@@ -626,7 +688,7 @@ class CompareController extends Controller
             ));
         }
 
-        $infos_paginate = $this->get('knp_paginator')->paginate($infos, $request->query->get('page',1),2);
+        $infos_paginate = $this->get('knp_paginator')->paginate($infos, $request->query->get('page',1),3);
 
         return $infos_paginate;
     }
@@ -645,61 +707,6 @@ class CompareController extends Controller
         }
         return $infos;
     }
-
-    /**
-     * @Route("/addDBE_S_2/{filename}/{beneficiaires}/{siren}", name="addDBE_S_2page")
-     */
-    public function addDBE_S_2(Request $request, $filename, $beneficiaires, $siren)
-    {
-        $apis = $this->data_API($siren);
-        
-        /**
-         * DB TEST2
-         */
-        $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
-        $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
-        $info_saisie = $em_TEST2->prepare($sql);
-        $info_saisie->execute();
-        $infos_db = ($info_saisie->fetchAll())[0];
-
-        $infos_operator = $this->data_Operator($request, $siren);
-
-
-        for ($i = (count($apis['beneficiaires'])-1); $i < $beneficiaires; $i++) {
-            $api_merge = ["$i"=>[" "=>" "]];
-            $apis['beneficiaires'] = array_merge($apis['beneficiaires'], $api_merge);
-        }
-
-        return $this->render('compare/compare.html.twig', [
-            'filename' => $filename,
-            'apis' => $apis,
-            'siren' => $siren,
-            'infos_db' => $infos_db,
-            'infos_operator' => $infos_operator
-        ]); 
-    }
-
-    /**
-     * @Route("/addDBE_S_bis/{filename}/{api_length}", name="addDBE_S_bispage")
-     */
-    /*public function addDBE_S_bis($filename, $api_length)
-    {
-       
-        $api_orig = '{ "1":{"a":"xxxxxxxxxx", "b":"xxxxxxxxxx", "indirecte":"0"}, "2":{"a":"yyyyyyyyyyyyyyy", "b":"yyyyyyyyyyyyyyy", "indirecte":"1"}, "3":{"joint":"jointjointjoint", "b":"yyyyyyyyyyyyyyy"}}';
-        $apis = json_decode($api_orig, true);
-
-
-        for ($i = (count($apis)-1); $i < $api_length; $i++) {
-            $api_merge = ["$i"=>["joint"=>" ", "b"=>" "]];
-            $apis = array_merge($apis, $api_merge);
-        }
-        
-        return $this->render('compare/compare.html.twig', [
-            'filename' => $filename,
-            'apis' => $apis
-        ]); 
-    }*/
-
 
     /**
      * @return string
