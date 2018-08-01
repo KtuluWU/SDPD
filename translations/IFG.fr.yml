@@ -44,7 +44,7 @@ User:
   createuser: Créer un utilisateur
   changepassword: Changer mot de passe
 
-Etat:
+codesRejet:
   0: Validé
   112: Document autre que DIBE
   113: DIBE incomplète (il manque des pages)
@@ -71,8 +71,8 @@ Etat:
   155: pas d'information d'identité de l'entreprise dans les autres feuillets (DBES2 ou DBESbis)
   156: Données incohérentes par rapport au KBIS RCS
   157: Somme des % supérieure à 100
-  501: REJET_DATE_INVALIDE # date de dépôt/saisie invalide
-  502: REJET_DATES_INCOHERENTES # date de dépôt et date de saisie incohérentes
-  531: REJET_SAISIE_ANTERIEURE # date de saisie antérieure au données actuelles
-  532: REJET_DEPOT_ANTERIEUR # date de dépôt antérieure au données actuelles
-  541: REJET_UNICITE_CODE # multiples occurrences d'un même associé
+  501: REJET_DATE_INVALIDE => date de dépôt/saisie invalide
+  502: REJET_DATES_INCOHERENTES => date de dépôt et date de saisie incohérentes
+  531: REJET_SAISIE_ANTERIEURE => date de saisie antérieure au données actuelles
+  532: REJET_DEPOT_ANTERIEUR => date de dépôt antérieure au données actuelles
+  541: REJET_UNICITE_CODE => multiples occurrences d'un même associé

@@ -7,7 +7,7 @@
             <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
         {% endfor %}
     </div>
-    {# {{dump(apis)}}  #}
+    {# {{dump(infos_db)}}  #}
     {% set userTruename = app.user.firstname ~ " " ~ app.user.lastname %}
     <div class="infos row">
         <div class="left col-md-6">
@@ -39,7 +39,7 @@
                 <tr>
                     <th>État:</th>
                     {% if apis.rejet is defined %}
-                    {% set etat_tr = 'Etat.' ~ apis.rejet %}
+                    {% set etat_tr = 'codesRejet.' ~ apis.rejet %}
                     <td>{{apis.rejet}} : {{etat_tr|trans}}</td>
                     {% else %}
                     <td>Aucun état trouvé</td>
@@ -482,6 +482,42 @@
                     {{DBE_S_2}}
 
             </div>
+        </div>
+        <div class="code_rejets text-right">
+            <label for="code_rejets">Code rejet:</label>
+            <select id="code_rejets" name="code_rejets" class="text-center">
+                <option value="0" {% if apis.rejet == 0 %}selected{% endif %}>{{'codesRejet.0'|trans}}</option>
+                <option value="112" {% if apis.rejet == 112 %}selected{% endif %}>{{'codesRejet.112'|trans}}</option>
+                <option value="113" {% if apis.rejet == 113 %}selected{% endif %}>{{'codesRejet.113'|trans}}</option>
+                <option value="114" {% if apis.rejet == 114 %}selected{% endif %}>{{'codesRejet.114'|trans}}</option>
+                <option value="115" {% if apis.rejet == 115 %}selected{% endif %}>{{'codesRejet.115'|trans}}</option>
+                <option value="131" {% if apis.rejet == 131 %}selected{% endif %}>{{'codesRejet.131'|trans}}</option>
+                <option value="132" {% if apis.rejet == 132 %}selected{% endif %}>{{'codesRejet.132'|trans}}</option>
+                <option value="133" {% if apis.rejet == 133 %}selected{% endif %}>{{'codesRejet.133'|trans}}</option>
+                <option value="140" {% if apis.rejet == 140 %}selected{% endif %}>{{'codesRejet.140'|trans}}</option>
+                <option value="141" {% if apis.rejet == 141 %}selected{% endif %}>{{'codesRejet.141'|trans}}</option>
+                <option value="142" {% if apis.rejet == 142 %}selected{% endif %}>{{'codesRejet.142'|trans}}</option>
+                <option value="143" {% if apis.rejet == 143 %}selected{% endif %}>{{'codesRejet.143'|trans}}</option>
+                <option value="144" {% if apis.rejet == 144 %}selected{% endif %}>{{'codesRejet.144'|trans}}</option>
+                <option value="145" {% if apis.rejet == 145 %}selected{% endif %}>{{'codesRejet.145'|trans}}</option>
+                <option value="146" {% if apis.rejet == 146 %}selected{% endif %}>{{'codesRejet.146'|trans}}</option>
+                <option value="147" {% if apis.rejet == 147 %}selected{% endif %}>{{'codesRejet.147'|trans}}</option>
+                <option value="148" {% if apis.rejet == 148 %}selected{% endif %}>{{'codesRejet.148'|trans}}</option>
+                <option value="149" {% if apis.rejet == 149 %}selected{% endif %}>{{'codesRejet.149'|trans}}</option>
+                <option value="150" {% if apis.rejet == 150 %}selected{% endif %}>{{'codesRejet.150'|trans}}</option>
+                <option value="151" {% if apis.rejet == 151 %}selected{% endif %}>{{'codesRejet.151'|trans}}</option>
+                <option value="152" {% if apis.rejet == 152 %}selected{% endif %}>{{'codesRejet.152'|trans}}</option>
+                <option value="153" {% if apis.rejet == 153 %}selected{% endif %}>{{'codesRejet.153'|trans}}</option>
+                <option value="154" {% if apis.rejet == 154 %}selected{% endif %}>{{'codesRejet.154'|trans}}</option>
+                <option value="155" {% if apis.rejet == 155 %}selected{% endif %}>{{'codesRejet.155'|trans}}</option>
+                <option value="156" {% if apis.rejet == 156 %}selected{% endif %}>{{'codesRejet.156'|trans}}</option>
+                <option value="157" {% if apis.rejet == 157 %}selected{% endif %}>{{'codesRejet.157'|trans}}</option>
+                <option value="501" {% if apis.rejet == 501 %}selected{% endif %}>{{'codesRejet.501'|trans}}</option>
+                <option value="502" {% if apis.rejet == 502 %}selected{% endif %}>{{'codesRejet.502'|trans}}</option>
+                <option value="531" {% if apis.rejet == 531 %}selected{% endif %}>{{'codesRejet.531'|trans}}</option>
+                <option value="532" {% if apis.rejet == 532 %}selected{% endif %}>{{'codesRejet.532'|trans}}</option>
+                <option value="541" {% if apis.rejet == 541 %}selected{% endif %}>{{'codesRejet.541'|trans}}</option>
+            </select>
         </div>
         <div class="confirm_check text-right">
             <input type="checkbox" id="valider_confirm">Êtes-vous sûr de vouloir valider la correction?

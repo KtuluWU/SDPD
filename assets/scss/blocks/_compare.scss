@@ -136,6 +136,17 @@
         }
     }
 
+    .code_rejets {
+        margin-bottom: 20px;
+        select {
+            width: 300px;
+            height: 35px;
+            border: 1px solid $border-grey;
+            border-radius: $main-radius;
+            background: $border-grey;
+        }
+    }
+
     .confirm_check {
         margin-bottom: 20px;
         color: $color-danger;
