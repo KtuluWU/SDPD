@@ -49,8 +49,8 @@ class CompareController extends Controller
         $form->handleRequest($request);
 
         // $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
-        $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=2104&codestatut=B&chrono=00324&millesime=07&numeroacte=1&numerodepot=8&typeproduit=act";
-
+        // $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=2104&codestatut=B&chrono=00324&millesime=07&numeroacte=1&numerodepot=8&typeproduit=act";
+        $url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
         /**
          * Récupérer le pdf par cUrl
          */
@@ -332,7 +332,7 @@ class CompareController extends Controller
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'numeroDemande');
-                    xmlwriter_text($xw, 'XXXXX');
+                    xmlwriter_text($xw, $infos_db['iddemext']);
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'typeDemande');
@@ -406,7 +406,7 @@ class CompareController extends Controller
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'bureauDistributeur');
-                            xmlwriter_text($xw, 'XXXXX');
+                            xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'codeCommuneINSEE');
