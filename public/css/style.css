@@ -667,8 +667,7 @@ a {
       border-top: 2px solid #eee; }
     .compare_page .infos .tip {
       font-weight: bold;
-      color: #d9534f;
-      margin-top: -20px; }
+      color: #d9534f; }
   .compare_page .content {
     display: flex;
     justify-content: center;
