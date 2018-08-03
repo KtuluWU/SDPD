@@ -1,0 +1,91 @@
+@import '../variables';
+@import "../mixins";
+
+@-webkit-keyframes sdpd_btn {
+    16.65% {
+        -webkit-transform: skew(-12deg);
+        transform: skew(-12deg);
+    }
+    33.3% {
+        -webkit-transform: skew(10deg);
+        transform: skew(10deg);
+    }
+    49.95% {
+        -webkit-transform: skew(-6deg);
+        transform: skew(-6deg);
+    }
+    66.6% {
+        -webkit-transform: skew(4deg);
+        transform: skew(4deg);
+    }
+    83.25% {
+        -webkit-transform: skew(-2deg);
+        transform: skew(-2deg);
+    }
+    100% {
+        -webkit-transform: skew(0);
+        transform: skew(0);
+    }
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.sdpd__btn {
+    background: $main-green none repeat scroll 0 0;
+    border-radius: $main-radius;
+    border: 0;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    color: #fff !important;
+    display: inline-block;
+    padding: 0 30px;
+    font-size: 18px;
+    height: 38px;
+    line-height: 38px;
+    cursor: pointer;
+    text-transform: uppercase;
+    -webkit-transform: perspective(1px) translateZ(0px);
+    transform: perspective(1px) translateZ(0px);
+    -webkit-transform-origin: 0 100% 0;
+    transform-origin: 0 100% 0;
+    transition: all .5s;
+    &:hover {
+        background: $main-blue-light none repeat scroll 0 0;
+        color: #fff;
+    }
+    &:hover,:focus,:active {
+        -webkit-animation-name: sdpd_btn;
+        animation-name: sdpd_btn;
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-timing-function: ease-in-out;
+        animation-timing-function: ease-in-out;
+        -webkit-animation-iteration-count: 1;
+        animation-iteration-count: 1;
+    }
+    &.red_btn {
+        background: $color-danger none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $main-blue-light none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+    &.orange_btn {
+        background: $color-orange none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $main-blue-light none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+    &.disabled {
+        background: $txt_grey none repeat scroll 0 0;
+        color: #fff;
+        &:hover {
+            background: $txt_grey none repeat scroll 0 0;
+            color: #fff;
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %}
+<div class="downloadXML_page">
+    <div class="text-center">
+        <div class="filename">{{siren}}.xml</div>
+        <a href="/uploads/{{siren}}.xml" class="sdpd__btn" download>Télécharger le XML</a>
+    </div>
+</div>
+{% endblock %}

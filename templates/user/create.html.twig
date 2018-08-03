@@ -1,0 +1,52 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="createUser_page table_beauti">
+    <form method="POST" action="/User/create">
+        <table>
+            <tr>
+                <th><label for="user_create_username">{{'User.username'|trans}} * </label></th>
+                <td><input type="text" id="user_create_username" name="user_create_username"></td>
+            </tr>
+            <tr>
+                <th><label for="user_create_firstname">{{'User.firstname'|trans}}</label></th>
+                <td><input type="text" id="user_create_firstname" name="user_create_firstname"></td>
+            </tr>
+            <tr>
+                <th><label for="user_create_lastname">{{'User.lastname'|trans}}</label></th>
+                <td><input type="text" id="user_create_lastname" name="user_create_lastname"></td>
+            </tr>
+            <tr>
+                <th><label for="user_create_email">{{'User.email'|trans}} * </label></th>
+                <td><input type="text" id="user_create_email" name="user_create_email"></td>
+            </tr>
+            <tr>
+                <th><label for="user_create_password">{{'User.password'|trans}} * </label></th>
+                <td><input type="text" id="user_create_password" name="user_create_password"></td>
+            </tr>
+            <tr>
+                <th><label for="user_create_roles">{{'User.role'|trans}}</label></th>
+                <td>
+                    <select id="user_create_roles" name="user_create_roles">
+                        <option value="ROLE_USER" selected>{{'User.roles.user'|trans}}</option>
+                        <option value="ROLE_ADMIN">{{'User.roles.admin'|trans}}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="user_create_enable">{{'User.enable'|trans}}</label></th>
+                <td>
+                    <select id="user_create_enable" name="user_create_enable">
+                        <option value=1 selected>{{'variables.enable.y'|trans}}</option> 
+                        <option value=0>{{'variables.enable.n'|trans}}</option> 
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="text-center">
+            <a href="/User" class="sdpd__btn">{{'variables.back'|trans}}</a>
+            <input type="submit" class="sdpd__btn" value="{{'variables.create'|trans}}">
+        </div>
+    </form>
+</div>
+{% endblock %}

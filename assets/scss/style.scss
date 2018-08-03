@@ -1,0 +1,20 @@
+@import 'variables';
+@import 'mixins';
+
+@import 'basic/reset';
+
+@import 'elements/button';
+@import 'elements/table';
+@import 'elements/modal_confirm';
+@import 'elements/pagination';
+
+
+@import 'blocks/login';
+@import 'blocks/header';
+@import 'blocks/home';
+@import 'blocks/upload';
+@import 'blocks/error_siren';
+@import 'blocks/user_show';
+@import 'blocks/profile';
+@import 'blocks/compare';
+@import 'blocks/downloadXML';

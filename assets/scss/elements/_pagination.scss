@@ -1,0 +1,28 @@
+@import '../variables';
+@import "../mixins";
+
+.pagination {
+    justify-content: center;
+    margin: 30px auto;
+}
+.pagination>li>a,
+.pagination>li>span {
+    color: $txt_grey !important;
+}
+.pagination>li>a:hover,
+.pagination>li>span:hover,
+.pagination>li>a:focus,
+.pagination>li>span:focus {
+    background-color: $main-blue-light !important;
+    color: #fff !important;
+}
+.pagination>.active>a,
+.pagination>.active>span,
+.pagination>.active>a:hover,
+.pagination>.active>span:hover,
+.pagination>.active>a:focus,
+.pagination>.active>span:focus {
+    background-color: $main-green !important;
+    color: #fff !important;
+    border: 1px solid $border-grey !important;
+}

@@ -1,0 +1,70 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="user_page">
+    <table>
+        <thead>
+            <tr>
+                <th>{{'User.username'|trans}}</th>
+                <th>{{'User.firstname'|trans}}</th>
+                <th>{{'User.lastname'|trans}}</th>
+                <th>{{'User.email'|trans}}</th>
+                <th>{{'User.enable'|trans}}</th>
+                <th>{{'User.lastlogin'|trans}}</th>
+                <th>{{'User.role'|trans}}</th>
+                <th>{{'User.registerdate'|trans}}</th>
+                <th class="text-center">{{'User.options'|trans}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set user_username = "" %}
+            {% for user in users_paginate %}
+            {% set user_username = user.username %}
+            {% if loop.index %2==0 %}
+            <tr class="bg_grey">
+            {% else %}
+            <tr>
+            {% endif %}
+            {% if user.enable %}
+                {% set enable = 'variables.enable.y' %}
+            {% else %}
+                {% set enable = 'variables.enable.n' %}
+            {% endif %}
+                <td>{{user.username}}</td>
+                <td>{{user.firstname}}</td>
+                <td>{{user.lastname}}</td>
+                <td>{{user.email}}</td>
+                <td>{{enable|trans}}</td>
+                <td>{% if user.lastlogin|length != 0 %}{{user.lastlogin|date('Y-m-d H:i:s','Europe/Paris')}}{% endif %}</td>
+                <td>{{user.role[0]}}</td>
+                <td>{{user.regsterdate|date('Y-m-d H:i:s')}}</td>
+                <td class="options text-center">
+                    <a href="./preEdit/{{user.username}}" class="sdpd__btn">{{'variables.edit'|trans}}</a>
+                    <a href="./delete/{{user.username}}" class="sdpd__btn red_btn" onclick="javascript:return del()">{{'variables.delete'|trans}}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center">
+        {{ knp_pagination_render(users_paginate) }}
+    </div>
+    <div class="text-center">
+        <a href="./preCreate" class="sdpd__btn">{{'User.createuser'|trans}}</a>
+    </div>
+</div>
+    
+{% endblock %} 
+{% block javascripts %}
+{{parent()}}
+<script>
+    function del() { 
+        var msg = "Êtes-vous sûr de vouloir supprimer cette utilisateur? \nCette opération ne peut pas être reprise."; 
+        if (confirm(msg)==true){ 
+        return true; 
+        }else{ 
+        return false; 
+        } 
+    }
+</script>
+{% endblock %}

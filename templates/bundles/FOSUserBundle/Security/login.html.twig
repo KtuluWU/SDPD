@@ -1,0 +1,32 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% extends "base.html.twig" %}
+{% block content %}
+    <div class="login__page text-center">
+        {% if error %}
+            <div class="login-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <form action="{{ path('fos_user_security_check') }}" method="post" class="login-form">
+            {% if csrf_token %}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+            {% endif %}
+            <div class="login-input-line row">
+                <label for="username" class="col-sm-4 col-md-4">{{ 'security.login.username'|trans }}</label>
+                <input type="text" id="username" name="_username" class="col-sm-8 col-md-8" value="{{ last_username }}" required="required" autocomplete="username"/>
+            </div>
+
+            <div class="login-input-line row">
+                <label for="password" class="col-sm-4 col-md-4">{{ 'security.login.password'|trans }}</label>
+                <input type="password" id="password" name="_password" class="col-sm-8 col-md-8" required="required" autocomplete="current-password"/>
+            </div>
+
+            <div class="login-input-line">
+                <input type="checkbox" id="remember_me" name="_remember_me" value="on" class="remember_me"/>
+                <label for="remember_me" class="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+
+            </div>
+            <a href="/resetting/request" class="sdpd__btn red_btn">{{ 'resetting.request.submit'|trans }}</a>
+            <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" class="sdpd__btn"/>
+        </form>
+    </div>
+{% endblock %}
