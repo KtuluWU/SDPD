@@ -727,6 +727,7 @@ a {
       border-radius: 5px;
       background: #eee; }
   .compare_page .confirm_check {
+    font-size: 20px;
     margin-bottom: 20px;
     color: #d9534f; }
     .compare_page .confirm_check #valider_confirm {

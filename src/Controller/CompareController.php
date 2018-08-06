@@ -111,9 +111,11 @@ class CompareController extends Controller
         $code_postal_domicile = array();
         $commune_domicile = array();
         $pays_domicile = array();
-        $detention_capital = array();
+        $detention_capital_directe = array();
+        $detention_capital_indirecte = array();
+        $detention_droits_directe = array();
+        $detention_droits_indirecte = array();
         $pourcentage_capital = array();
-        $detention_droits = array();
         $pourcentage_droits = array();
         $exercice = array();
         $representant = array();
@@ -184,14 +186,20 @@ class CompareController extends Controller
             if (strpos($key, 'pays_domicile_') === 0) {
                 array_push($pays_domicile, $value);
             }
-            if (strpos($key, 'detention_capital_') === 0) {
-                array_push($detention_capital, $value);
+            if (strpos($key, 'detention_capital_directe_') === 0) {
+                array_push($detention_capital_directe, $value);
+            }
+            if (strpos($key, 'detention_capital_indirecte_') === 0) {
+                array_push($detention_capital_indirecte, $value);
+            }
+            if (strpos($key, 'detention_droits_directe_') === 0) {
+                array_push($detention_droits_directe, $value);
+            }
+            if (strpos($key, 'detention_droits_indirecte_') === 0) {
+                array_push($detention_droits_indirecte, $value);
             }
             if (strpos($key, 'pourcentage_capital_') === 0) {
                 array_push($pourcentage_capital, $value);
-            }
-            if (strpos($key, 'detention_droits_') === 0) {
-                array_push($detention_droits, $value);
             }
             if (strpos($key, 'pourcentage_droits_') === 0) {
                 array_push($pourcentage_droits, $value);
@@ -231,15 +239,19 @@ class CompareController extends Controller
         $code_postal_domicile = $this->infos_check($siren, $code_postal_domicile);
         $commune_domicile = $this->infos_check($siren, $commune_domicile);
         $pays_domicile = $this->infos_check($siren, $pays_domicile);
-        $detention_capital = $this->infos_check($siren, $detention_capital);
+        // $detention_capital_directe = $this->infos_check($siren, $detention_capital_directe);
+        // $detention_capital_indirecte = $this->infos_check($siren, $detention_capital_indirecte);
+        // $detention_droits_directe = $this->infos_check($siren, $detention_droits_directe);
+        // $detention_droits_indirecte = $this->infos_check($siren, $detention_droits_indirecte);
         $pourcentage_capital = $this->infos_check($siren, $pourcentage_capital);
-        $detention_droits = $this->infos_check($siren, $detention_droits);
         $pourcentage_droits = $this->infos_check($siren, $pourcentage_droits);
         $exercice = $this->infos_check($siren, $exercice);
-        $representant = $this->infos_check($siren, $representant);
+        // $representant = $this->infos_check($siren, $representant);
         $date_effect = $this->infos_check($siren, $date_effect);
 
         $code_rejet = $_POST['code_rejets'];
+        $detention_capital = $this->detention_capital_check($siren, $detention_capital_directe, $detention_capital_indirecte);
+        $detention_droits = $this->detention_droits_check($siren, $detention_droits_directe, $detention_droits_indirecte);
 
         for($i = 0; $i < $nb_BE; $i++) {
             array_push($infos_xml, array(
@@ -278,14 +290,6 @@ class CompareController extends Controller
             ));
         }
 
-        $res_xml = $this->XML_generator($nb_BE, $infos_xml);
-
-        $files_route = ($this->getParameter('files'))."/$siren[0].xml";
-
-        $file_xml = fopen($files_route, "w");
-        fwrite($file_xml, $res_xml);
-        fclose($file_xml);
-
         /**
          * Opérateur
          */
@@ -301,6 +305,18 @@ class CompareController extends Controller
 
         $em_SDPD->persist($operator_db);
         $em_SDPD->flush();
+
+        /**
+         * Générer XML
+         */
+
+        $res_xml = $this->XML_generator($nb_BE, $infos_xml, $operator);
+
+        $files_route = ($this->getParameter('files'))."/$siren[0].xml";
+
+        $file_xml = fopen($files_route, "w");
+        fwrite($file_xml, $res_xml);
+        fclose($file_xml);
         
         return $this->render('compare/downloadXML.html.twig', [
             'siren' => $siren[0]
@@ -310,7 +326,7 @@ class CompareController extends Controller
     /**
      * XML
      */
-    private function XML_generator($nb_BE, $infos_xml)
+    private function XML_generator($nb_BE, $infos_xml, $operator)
     {
         $siren = $infos_xml[0][0]['siren'];
         $apis = $this->data_API($siren);
@@ -324,6 +340,10 @@ class CompareController extends Controller
             xmlwriter_start_element($xw, 'listeSaisiesBE');
                 xmlwriter_start_element($xw, 'VersionSchema');
                 xmlwriter_text($xw, '1');
+                xmlwriter_end_element($xw);
+
+                xmlwriter_start_element($xw, 'operateur');
+                xmlwriter_text($xw, $operator);
                 xmlwriter_end_element($xw);
 
                 xmlwriter_start_element($xw, 'SaisieBE');
@@ -604,9 +624,42 @@ class CompareController extends Controller
         $infos_operator = $this->data_Operator($request, $siren);
 
         for ($i = (count($apis['beneficiaires'])-1); $i < $beneficiaires; $i++) {
-            $api_merge = ["$i"=>[" "=>" "]];
+            $api_merge = ["$i" => array(
+                "civilite" => "",
+                "nom_patronymique" => "",
+                "nom_marital" => "",
+                "prenoms" => "",
+                "date_naissance" => "",
+                "lieu_naissance" => array(
+                    "commune" => "",
+                    "code_insee" => "",
+                    "departement" => "",
+                    "pays" => ""
+                ),
+                "adresse" => array(
+                    "rue" => "",
+                    "code_postal" => "",
+                    "commune" => "",
+                    "code_insee" => "",
+                    "pays" => ""
+                ),
+                "nationalite" => "",
+                "modalite_controle" => array(
+                    "detention_capital" => array(
+                        "type" => "",
+                        "pourcentage" => ""
+                    ),
+                    "detention_votes" => array(
+                        "type" => "",
+                        "pourcentage" => ""
+                    )
+                ),
+                "date_effet" => ""
+            )];
             $apis['beneficiaires'] = array_merge($apis['beneficiaires'], $api_merge);
         }
+
+        // return new Response(var_dump($apis['beneficiaires']));
 
         return $this->render('compare/compare.html.twig', [
             'filename' => $filename,
@@ -614,7 +667,7 @@ class CompareController extends Controller
             'siren' => $siren,
             'infos_db' => $infos_db,
             'infos_operator' => $infos_operator
-        ]); 
+        ]);
     }
 
     /**
@@ -702,10 +755,60 @@ class CompareController extends Controller
         $len_info = count($infos);
         if ( $len_info < $nb_BE ) {
             for ($i = $len_info; $i < $nb_BE; $i++) {
-                array_push($infos, " ");
+                array_push($infos, "");
             }
         }
         return $infos;
+    }
+
+    /**
+     * @return array
+     */
+    private function detention_capital_check($siren=array(), $detention_capital_directe=array(), $detention_capital_indirecte=array())
+    {
+        $nb_BE = count($siren);
+        $detention_capital = array();
+        
+        for ($i = 0; $i < $nb_BE; $i++) {
+            if ($detention_capital_directe[$i] && !$detention_capital_indirecte[$i]) {
+                $detention_capital[$i] = 0;
+            } else if (!$detention_capital_directe[$i] && $detention_capital_indirecte[$i]) {
+                $detention_capital[$i] = 1;
+            }
+            else if (!$detention_capital_directe[$i] && !$detention_capital_indirecte[$i]) {
+                $detention_capital[$i] = 2;
+            }
+            else if ($detention_capital_directe[$i] && $detention_capital_indirecte[$i]) {
+                $detention_capital[$i] = 3;
+            }
+        }
+
+        return $detention_capital;
+    }
+
+    /**
+     * @return array
+     */
+    private function detention_droits_check($siren=array(), $detention_droits_directe=array(), $detention_droits_indirecte=array())
+    {
+        $nb_BE = count($siren);
+        $detention_droits = array();
+        
+        for ($i = 0; $i < $nb_BE; $i++) {
+            if ($detention_droits_directe[$i] && !$detention_droits_indirecte[$i]) {
+                $detention_droits[$i] = 0;
+            } else if (!$detention_droits_directe[$i] && $detention_droits_indirecte[$i]) {
+                $detention_droits[$i] = 1;
+            }
+            else if (!$detention_droits_directe[$i] && !$detention_droits_indirecte[$i]) {
+                $detention_droits[$i] = 2;
+            }
+            else if ($detention_droits_directe[$i] && $detention_droits_indirecte[$i]) {
+                $detention_droits[$i] = 3;
+            }
+        }
+
+        return $detention_droits;
     }
 
     /**
