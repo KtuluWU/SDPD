@@ -328,7 +328,7 @@ class CompareController extends Controller
      */
     private function XML_generator($nb_BE, $infos_xml, $operator)
     {
-        $siren = $infos_xml[0][0]['siren'];
+        $siren = $this->siren_traite($infos_xml[0][0]['siren']);
         $apis = $this->data_API($siren);
         $infos_db = $this->data_TEST2($siren);
 
@@ -360,7 +360,7 @@ class CompareController extends Controller
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'typeDeclaration');
-                    xmlwriter_text($xw, $apis['declaration']['type']);
+                    xmlwriter_text($xw, $this->typeDeclaration_traite($apis['declaration']['type']));
                     xmlwriter_end_element($xw);
 
                     xmlwriter_start_element($xw, 'identificationEntreprise');
@@ -386,7 +386,7 @@ class CompareController extends Controller
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'Chrono');
-                            xmlwriter_text($xw, $apis['numero_gestion']['chrono']);
+                            xmlwriter_text($xw,  $this->chrono_traite($apis['numero_gestion']['chrono']));
                             xmlwriter_end_element($xw);
                         xmlwriter_end_element($xw);
 
@@ -405,41 +405,42 @@ class CompareController extends Controller
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'adresse');
-                            xmlwriter_start_element($xw, 'ligne1');
-                            xmlwriter_text($xw, $infos_xml[0][0]['adresse_sociale']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'ligne2');
-                            xmlwriter_text($xw, '');
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'ligne3');
-                            xmlwriter_text($xw, '');
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'localite');
-                            xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'codePostal');
-                            xmlwriter_text($xw, $infos_xml[0][0]['code_postal_sociale']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'bureauDistributeur');
-                            xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'codeCommuneINSEE');
-                            if (isset($apis['adresse']['code_insee'])) {
-                                xmlwriter_text($xw, $apis['adresse']['code_insee']);
-                            } else {
-                                xmlwriter_text($xw, '');
+                            
+                            if ($infos_xml[0][0]['adresse_sociale'] != null) {
+                                xmlwriter_start_element($xw, 'ligne2');
+                                xmlwriter_text($xw, $infos_xml[0][0]['adresse_sociale']);
+                                xmlwriter_end_element($xw);
                             }
-                            xmlwriter_end_element($xw);
 
-                            xmlwriter_start_element($xw, 'pays');
-                            xmlwriter_text($xw, $infos_xml[0][0]['pays_sociale']);
-                            xmlwriter_end_element($xw);
+                            if ($infos_xml[0][0]['commune_sociale'] != null) {
+                                xmlwriter_start_element($xw, 'localite');
+                                xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
+                                xmlwriter_end_element($xw);
+                            }
+
+                            if ($infos_xml[0][0]['code_postal_sociale'] != null) {
+                                xmlwriter_start_element($xw, 'codePostal');
+                                xmlwriter_text($xw, $infos_xml[0][0]['code_postal_sociale']);
+                                xmlwriter_end_element($xw);
+                            }
+                            
+                            if ($infos_xml[0][0]['commune_sociale'] != null) {
+                                xmlwriter_start_element($xw, 'bureauDistributeur');
+                                xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
+                                xmlwriter_end_element($xw);
+                            }
+                            
+                            if (isset($apis['adresse']['code_insee'])) {
+                                xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                                xmlwriter_text($xw, $apis['adresse']['code_insee']);
+                                xmlwriter_end_element($xw);
+                            }                            
+
+                            if ($infos_xml[0][0]['pays_sociale'] != null) {
+                                xmlwriter_start_element($xw, 'pays');
+                                xmlwriter_text($xw, $infos_xml[0][0]['pays_sociale']);
+                                xmlwriter_end_element($xw);
+                            }
                         xmlwriter_end_element($xw);
                     xmlwriter_end_element($xw); // 'identificationEntreprise'
 
@@ -462,18 +463,25 @@ class CompareController extends Controller
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'acte');
-                                xmlwriter_start_element($xw, 'dateActe');
-                                xmlwriter_text($xw, $apis['depot']['acte']['date']);
-                                xmlwriter_end_element($xw);
+                                if (isset($apis['depot']['acte']['date'])) {
+                                    xmlwriter_start_element($xw, 'dateActe');
+                                    xmlwriter_text($xw, $apis['depot']['acte']['date']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
+                                if (isset($apis['depot']['acte']['numero'])) {
+                                    xmlwriter_start_element($xw, 'numeroActe');
+                                    xmlwriter_text($xw, $apis['depot']['acte']['numero']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
+                                if (isset($apis['depot']['acte']['type'])) {
+                                    xmlwriter_start_element($xw, 'typeActe');
+                                    xmlwriter_text($xw, $apis['depot']['acte']['type']);
+                                    xmlwriter_end_element($xw);
+                                }
 
-                                xmlwriter_start_element($xw, 'numeroActe');
-                                xmlwriter_text($xw, $apis['depot']['acte']['numero']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'typeActe');
-                                xmlwriter_text($xw, $apis['depot']['acte']['type']);
-                                xmlwriter_end_element($xw);
-
+                                /*
                                 xmlwriter_start_element($xw, 'libelleActe');
                                 xmlwriter_text($xw, 'XXXXX');
                                 xmlwriter_end_element($xw);
@@ -481,90 +489,109 @@ class CompareController extends Controller
                                 xmlwriter_start_element($xw, 'decisionActe');
                                 xmlwriter_text($xw, 'XXXXX');
                                 xmlwriter_end_element($xw);
+                                */
                             xmlwriter_end_element($xw);
                         xmlwriter_end_element($xw); // 'identificationDepot'
                     xmlwriter_end_element($xw); // 'infoSaisie'
 
                     for ($i = 0; $i < $nb_BE; $i++) {
                         xmlwriter_start_element($xw, 'BEffectif');
-                            xmlwriter_start_element($xw, 'Civilite');
-                            xmlwriter_text($xw, $infos_xml[$i][$i]['civilite']);
-                            xmlwriter_end_element($xw);
-
+                            if ($infos_xml[$i][$i]['civilite'] != null) {
+                                xmlwriter_start_element($xw, 'Civilite');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['civilite']);
+                                xmlwriter_end_element($xw);
+                            }
+                            
                             xmlwriter_start_element($xw, 'nomPatronymique');
                             xmlwriter_text($xw, $infos_xml[$i][$i]['nom_naissance']);
                             xmlwriter_end_element($xw);
 
-                            xmlwriter_start_element($xw, 'nomMarital');
-                            xmlwriter_text($xw, $infos_xml[$i][$i]['nom_usage']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'Pseudonyme');
-                            xmlwriter_text($xw, $infos_xml[$i][$i]['pseudonyme']);
-                            xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'Prenoms');
-                            xmlwriter_text($xw, $infos_xml[$i][$i]['prenom_principal']);
-                            xmlwriter_end_element($xw);
+                            if ($infos_xml[$i][$i]['nom_usage'] != null) {
+                                xmlwriter_start_element($xw, 'nomMarital');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['nom_usage']);
+                                xmlwriter_end_element($xw);
+                            }
+                            
+                            if ($infos_xml[$i][$i]['pseudonyme'] != null) {
+                                xmlwriter_start_element($xw, 'Pseudonyme');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['pseudonyme']);
+                                xmlwriter_end_element($xw);
+                            }
+                            
+                            if ($infos_xml[$i][$i]['prenom_principal'] != null) {
+                                xmlwriter_start_element($xw, 'Prenoms');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['prenom_principal']);
+                                xmlwriter_end_element($xw);
+                            }
 
                             xmlwriter_start_element($xw, 'infoNaissance');
-                                xmlwriter_start_element($xw, 'dateNaissance');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_date']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'villeNaissance');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_lieu']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                                if ($infos_xml[$i][$i]['naissance_date'] != null) {
+                                    xmlwriter_start_element($xw, 'dateNaissance');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_date']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
+                                if ($infos_xml[$i][$i]['naissance_lieu'] != null) {
+                                    xmlwriter_start_element($xw, 'villeNaissance');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_lieu']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
                                 if (isset($apis['beneficiaires'][$i]['lieu_naissance']['code_insee'])) {
+                                    xmlwriter_start_element($xw, 'codeCommuneINSEE');
                                     xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['code_insee']);
-                                } else {
-                                    xmlwriter_text($xw, '');
-                                }
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'DepartementNaissance');
+                                    xmlwriter_end_element($xw);
+                                }   
+                                
                                 if (isset($apis['beneficiaires'][$i]['lieu_naissance']['departement'])) {
+                                    xmlwriter_start_element($xw, 'DepartementNaissance');
                                     xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['departement']);
-                                } else {
-                                    xmlwriter_text($xw, '');
+                                    xmlwriter_end_element($xw);
                                 }
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'paysNaissance');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['departement_pays']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'Nationalite');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['nationalite']);
-                                xmlwriter_end_element($xw);
+                                
+                                if ($infos_xml[$i][$i]['departement_pays'] != null) {
+                                    xmlwriter_start_element($xw, 'paysNaissance');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['departement_pays']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
+                                if ($infos_xml[$i][$i]['nationalite'] != null) {
+                                    xmlwriter_start_element($xw, 'Nationalite');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['nationalite']);
+                                    xmlwriter_end_element($xw);
+                                }
                             xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'adresse');
-                                xmlwriter_start_element($xw, 'ligne1');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['adresse_domicile']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'localite');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['commune_domicile']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'codePostal');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['code_postal_domicile']);
-                                xmlwriter_end_element($xw);
-
-                                xmlwriter_start_element($xw, 'codeCommuneINSEE');
-                                if (isset($apis['beneficiaires'][$i]['adresse']['code_insee'])) {
-                                    xmlwriter_text($xw, $apis['beneficiaires'][$i]['adresse']['code_insee']);
-                                } else {
-                                    xmlwriter_text($xw, '');
+                                if ($infos_xml[$i][$i]['adresse_domicile'] != null) {
+                                    xmlwriter_start_element($xw, 'ligne2');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['adresse_domicile']);
+                                    xmlwriter_end_element($xw);
                                 }
-                                xmlwriter_end_element($xw);
+                                
+                                if ($infos_xml[$i][$i]['commune_domicile'] != null) {
+                                    xmlwriter_start_element($xw, 'localite');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['commune_domicile']);
+                                    xmlwriter_end_element($xw);
+                                }
+                                
+                                if ($infos_xml[$i][$i]['code_postal_domicile'] != null) {
+                                    xmlwriter_start_element($xw, 'codePostal');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['code_postal_domicile']);
+                                    xmlwriter_end_element($xw);
+                                }
 
-                                xmlwriter_start_element($xw, 'pays');
-                                xmlwriter_text($xw, $infos_xml[$i][$i]['pays_domicile']);
-                                xmlwriter_end_element($xw);
+                                if (isset($apis['beneficiaires'][$i]['adresse']['code_insee'])) {
+                                    xmlwriter_start_element($xw, 'codeCommuneINSEE');
+                                    xmlwriter_text($xw, $apis['beneficiaires'][$i]['adresse']['code_insee']);
+                                    xmlwriter_end_element($xw);
+                                }                                
+
+                                if ($infos_xml[$i][$i]['pays_domicile'] != null) {
+                                    xmlwriter_start_element($xw, 'pays');
+                                    xmlwriter_text($xw, $infos_xml[$i][$i]['pays_domicile']);
+                                    xmlwriter_end_element($xw);
+                                }
                             xmlwriter_end_element($xw); 
 
                             xmlwriter_start_element($xw, 'modaliteControle');
@@ -574,9 +601,11 @@ class CompareController extends Controller
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['detention_capital']);
                                         xmlwriter_end_element($xw);
 
-                                        xmlwriter_start_element($xw, 'pourcentage');
-                                        xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_capital']);
-                                        xmlwriter_end_element($xw);
+                                        if ($infos_xml[$i][$i]['pourcentage_capital'] != null) {
+                                            xmlwriter_start_element($xw, 'pourcentage');
+                                            xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_capital']);
+                                            xmlwriter_end_element($xw);
+                                        }
                                     xmlwriter_end_element($xw);
 
                                     xmlwriter_start_element($xw, 'detentionDroitsVote');
@@ -584,24 +613,33 @@ class CompareController extends Controller
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['detention_droits']);
                                         xmlwriter_end_element($xw);
 
-                                        xmlwriter_start_element($xw, 'pourcentage');
-                                        xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_droits']);
-                                        xmlwriter_end_element($xw);
+                                        if ($infos_xml[$i][$i]['pourcentage_droits'] != null) {
+                                            xmlwriter_start_element($xw, 'pourcentage');
+                                            xmlwriter_text($xw, $infos_xml[$i][$i]['pourcentage_droits']);
+                                            xmlwriter_end_element($xw);
+                                        }
                                     xmlwriter_end_element($xw);
 
-                                    xmlwriter_start_element($xw, 'autreMoyen');
+                                    if ($infos_xml[$i][$i]['exercice'] != null) {
+                                        xmlwriter_start_element($xw, 'autreMoyen');
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['exercice']);
-                                    xmlwriter_end_element($xw);
-
-                                    xmlwriter_start_element($xw, 'representantLegal');
-                                        xmlwriter_text($xw, $infos_xml[$i][$i]['representant']);
-                                    xmlwriter_end_element($xw);
+                                        xmlwriter_end_element($xw);
+                                    }
+                                    
+                                    if ($infos_xml[$i][$i]['representant'] == 1) {
+                                        xmlwriter_start_element($xw, 'representantLegal');
+                                        xmlwriter_text($xw, "");
+                                        xmlwriter_end_element($xw);
+                                    }
+                                    
                                 xmlwriter_end_element($xw);
                             xmlwriter_end_element($xw);
-
-                            xmlwriter_start_element($xw, 'dateEffet');
-                            xmlwriter_text($xw, $infos_xml[$i][$i]['date_effect']);
-                            xmlwriter_end_element($xw);
+                            
+                            if ($infos_xml[$i][$i]['date_effect'] != null) {
+                                xmlwriter_start_element($xw, 'dateEffet');
+                                xmlwriter_text($xw, $infos_xml[$i][$i]['date_effect']);
+                                xmlwriter_end_element($xw);
+                            }
 
                         xmlwriter_end_element($xw); // 'BEffectif'
                     }
@@ -700,8 +738,15 @@ class CompareController extends Controller
         $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
         $info_saisie = $em_TEST2->prepare($sql);
         $info_saisie->execute();
-        $infos_db = ($info_saisie->fetchAll())[0];
-        return $infos_db;
+        $infos_db = $info_saisie->fetchAll();
+
+        if (empty($infos_db)) {
+            return $this->render('error/siren.html.twig', [
+                'siren' => $siren
+            ]);
+        } else {
+            return $infos_db[0];
+        }
     }
 
     /**
@@ -809,6 +854,34 @@ class CompareController extends Controller
         }
 
         return $detention_droits;
+    }
+
+    /**
+     * @return integer
+     */
+    private function typeDeclaration_traite($data) {
+        switch($data) {
+            case "SOC": 
+                return 0;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * @return integer
+     */
+    private function siren_traite($siren) {
+        $res = sprintf("%09d", $siren);
+        return $res;
+    }
+
+    /**
+     * @return integer
+     */
+    private function chrono_traite($data) {
+        $res = sprintf("%05d", $data);
+        return $res;
     }
 
     /**
