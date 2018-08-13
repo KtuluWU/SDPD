@@ -24,8 +24,9 @@ yarn-error.log
 
 ### Yun
 .DS_Store
-/assets/.sass-cache
-/assets/scss/.sass-cache
-/public/css/*.map
+.idea
+.vscode
+.sass-cache
+*.map
 /public/uploads/*
 !/public/uploads/.gitkeep
