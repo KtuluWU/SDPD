@@ -8,7 +8,7 @@ use App\Form\UploadPdfType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response; 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -25,7 +25,7 @@ class CompareController extends Controller
      * @Route("/correction/{filename}&{siren}", name="correctionpage")
      */
     public function correction(Request $request, $filename, $siren)
-    {        
+    {
         $apis = $this->data_API($siren);
         $infos_db = $this->data_TEST2($siren);
         $infos_operator = $this->data_Operator($request, $siren);
@@ -36,7 +36,7 @@ class CompareController extends Controller
             'siren' => $siren,
             'infos_db' => $infos_db,
             'infos_operator' => $infos_operator
-        ]); 
+        ]);
     }
 
     /**
@@ -48,9 +48,8 @@ class CompareController extends Controller
         $form = $this->createForm(UploadPdfType::class, $pdf);
         $form->handleRequest($request);
 
-        // $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
-        // $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=2104&codestatut=B&chrono=00324&millesime=07&numeroacte=1&numerodepot=8&typeproduit=act";
-        $url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
+        $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
+        //$url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
         /**
          * Récupérer le pdf par cUrl
          */
@@ -66,8 +65,8 @@ class CompareController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('filename')->getData();
             $filename = $this->generateUniqueFileName($file);
-            $file->move($this->getParameter('files'), $filename);            
-            
+            $file->move($this->getParameter('files'), $filename);
+
             return $this->redirectToRoute('correctionpage', array('filename' => $filename, 'siren' => $siren));
         }
 
@@ -317,10 +316,10 @@ class CompareController extends Controller
         $file_xml = fopen($files_route, "w");
         fwrite($file_xml, $res_xml);
         fclose($file_xml);
-        
+
         return $this->render('compare/downloadXML.html.twig', [
             'siren' => $siren[0]
-        ]); 
+        ]);
     }
 
     /**
@@ -394,7 +393,7 @@ class CompareController extends Controller
                             xmlwriter_start_element($xw, 'code');
                             xmlwriter_text($xw, $apis['forme_juridique']);
                             xmlwriter_end_element($xw);
-                            
+
                             xmlwriter_start_element($xw, 'libelle');
                             xmlwriter_text($xw, $apis['libelle_forme_juridique']);
                             xmlwriter_end_element($xw);
@@ -405,7 +404,7 @@ class CompareController extends Controller
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'adresse');
-                            
+
                             if ($infos_xml[0][0]['adresse_sociale'] != null) {
                                 xmlwriter_start_element($xw, 'ligne2');
                                 xmlwriter_text($xw, $infos_xml[0][0]['adresse_sociale']);
@@ -423,18 +422,18 @@ class CompareController extends Controller
                                 xmlwriter_text($xw, $infos_xml[0][0]['code_postal_sociale']);
                                 xmlwriter_end_element($xw);
                             }
-                            
+
                             if ($infos_xml[0][0]['commune_sociale'] != null) {
                                 xmlwriter_start_element($xw, 'bureauDistributeur');
                                 xmlwriter_text($xw, $infos_xml[0][0]['commune_sociale']);
                                 xmlwriter_end_element($xw);
                             }
-                            
+
                             if (isset($apis['adresse']['code_insee'])) {
                                 xmlwriter_start_element($xw, 'codeCommuneINSEE');
                                 xmlwriter_text($xw, $apis['adresse']['code_insee']);
                                 xmlwriter_end_element($xw);
-                            }                            
+                            }
 
                             if ($infos_xml[0][0]['pays_sociale'] != null) {
                                 xmlwriter_start_element($xw, 'pays');
@@ -468,13 +467,13 @@ class CompareController extends Controller
                                     xmlwriter_text($xw, $apis['depot']['acte']['date']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if (isset($apis['depot']['acte']['numero'])) {
                                     xmlwriter_start_element($xw, 'numeroActe');
                                     xmlwriter_text($xw, $apis['depot']['acte']['numero']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if (isset($apis['depot']['acte']['type'])) {
                                     xmlwriter_start_element($xw, 'typeActe');
                                     xmlwriter_text($xw, $apis['depot']['acte']['type']);
@@ -501,7 +500,7 @@ class CompareController extends Controller
                                 xmlwriter_text($xw, $infos_xml[$i][$i]['civilite']);
                                 xmlwriter_end_element($xw);
                             }
-                            
+
                             xmlwriter_start_element($xw, 'nomPatronymique');
                             xmlwriter_text($xw, $infos_xml[$i][$i]['nom_naissance']);
                             xmlwriter_end_element($xw);
@@ -511,13 +510,13 @@ class CompareController extends Controller
                                 xmlwriter_text($xw, $infos_xml[$i][$i]['nom_usage']);
                                 xmlwriter_end_element($xw);
                             }
-                            
+
                             if ($infos_xml[$i][$i]['pseudonyme'] != null) {
                                 xmlwriter_start_element($xw, 'Pseudonyme');
                                 xmlwriter_text($xw, $infos_xml[$i][$i]['pseudonyme']);
                                 xmlwriter_end_element($xw);
                             }
-                            
+
                             if ($infos_xml[$i][$i]['prenom_principal'] != null) {
                                 xmlwriter_start_element($xw, 'Prenoms');
                                 xmlwriter_text($xw, $infos_xml[$i][$i]['prenom_principal']);
@@ -530,31 +529,31 @@ class CompareController extends Controller
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_date']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if ($infos_xml[$i][$i]['naissance_lieu'] != null) {
                                     xmlwriter_start_element($xw, 'villeNaissance');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['naissance_lieu']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if (isset($apis['beneficiaires'][$i]['lieu_naissance']['code_insee'])) {
                                     xmlwriter_start_element($xw, 'codeCommuneINSEE');
                                     xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['code_insee']);
                                     xmlwriter_end_element($xw);
-                                }   
-                                
+                                }
+
                                 if (isset($apis['beneficiaires'][$i]['lieu_naissance']['departement'])) {
                                     xmlwriter_start_element($xw, 'DepartementNaissance');
                                     xmlwriter_text($xw, $apis['beneficiaires'][$i]['lieu_naissance']['departement']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if ($infos_xml[$i][$i]['departement_pays'] != null) {
                                     xmlwriter_start_element($xw, 'paysNaissance');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['departement_pays']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if ($infos_xml[$i][$i]['nationalite'] != null) {
                                     xmlwriter_start_element($xw, 'Nationalite');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['nationalite']);
@@ -568,13 +567,13 @@ class CompareController extends Controller
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['adresse_domicile']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if ($infos_xml[$i][$i]['commune_domicile'] != null) {
                                     xmlwriter_start_element($xw, 'localite');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['commune_domicile']);
                                     xmlwriter_end_element($xw);
                                 }
-                                
+
                                 if ($infos_xml[$i][$i]['code_postal_domicile'] != null) {
                                     xmlwriter_start_element($xw, 'codePostal');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['code_postal_domicile']);
@@ -585,14 +584,14 @@ class CompareController extends Controller
                                     xmlwriter_start_element($xw, 'codeCommuneINSEE');
                                     xmlwriter_text($xw, $apis['beneficiaires'][$i]['adresse']['code_insee']);
                                     xmlwriter_end_element($xw);
-                                }                                
+                                }
 
                                 if ($infos_xml[$i][$i]['pays_domicile'] != null) {
                                     xmlwriter_start_element($xw, 'pays');
                                     xmlwriter_text($xw, $infos_xml[$i][$i]['pays_domicile']);
                                     xmlwriter_end_element($xw);
                                 }
-                            xmlwriter_end_element($xw); 
+                            xmlwriter_end_element($xw);
 
                             xmlwriter_start_element($xw, 'modaliteControle');
                                 xmlwriter_start_element($xw, 'modaliteSociete');
@@ -625,16 +624,16 @@ class CompareController extends Controller
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['exercice']);
                                         xmlwriter_end_element($xw);
                                     }
-                                    
+
                                     if ($infos_xml[$i][$i]['representant'] == 1) {
                                         xmlwriter_start_element($xw, 'representantLegal');
                                         xmlwriter_text($xw, "");
                                         xmlwriter_end_element($xw);
                                     }
-                                    
+
                                 xmlwriter_end_element($xw);
                             xmlwriter_end_element($xw);
-                            
+
                             if ($infos_xml[$i][$i]['date_effect'] != null) {
                                 xmlwriter_start_element($xw, 'dateEffet');
                                 xmlwriter_text($xw, $infos_xml[$i][$i]['date_effect']);
@@ -735,7 +734,7 @@ class CompareController extends Controller
     private function data_TEST2($siren)
     {
         $em_TEST2 = $this->getDoctrine()->getManager('IFG_TEST2')->getConnection();
-        $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC "; 
+        $sql = "SELECT * FROM public.ta_suividem_ass p WHERE p.siren='$siren' and p.codetypeacte='BENh' and p.dtsaisie is not null ORDER BY dtdepot DESC ";
         $info_saisie = $em_TEST2->prepare($sql);
         $info_saisie->execute();
         $infos_db = $info_saisie->fetchAll();
@@ -767,7 +766,7 @@ class CompareController extends Controller
 
         return $apis;
     }
-    
+
     /**
      * @return array
      */
@@ -813,7 +812,7 @@ class CompareController extends Controller
     {
         $nb_BE = count($siren);
         $detention_capital = array();
-        
+
         for ($i = 0; $i < $nb_BE; $i++) {
             if ($detention_capital_directe[$i] && !$detention_capital_indirecte[$i]) {
                 $detention_capital[$i] = 0;
@@ -838,7 +837,7 @@ class CompareController extends Controller
     {
         $nb_BE = count($siren);
         $detention_droits = array();
-        
+
         for ($i = 0; $i < $nb_BE; $i++) {
             if ($detention_droits_directe[$i] && !$detention_droits_indirecte[$i]) {
                 $detention_droits[$i] = 0;
@@ -861,7 +860,7 @@ class CompareController extends Controller
      */
     private function typeDeclaration_traite($data) {
         switch($data) {
-            case "SOC": 
+            case "SOC":
                 return 0;
             default:
                 return null;
