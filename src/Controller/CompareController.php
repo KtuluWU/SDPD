@@ -308,17 +308,18 @@ class CompareController extends Controller
         /**
          * Générer XML
          */
-
+        $infos_db = $this->data_TEST2($siren[0]);
         $res_xml = $this->XML_generator($nb_BE, $infos_xml, $operator);
-
-        $files_route = ($this->getParameter('files'))."/$siren[0].xml";
+        $date_saisie = date("Ymd" ,strtotime($infos_db['dtsaisie']));
+        $file_name = "beffectifs_".$siren[0]."_".$date_saisie.".xml";
+        $files_route = ($this->getParameter('files'))."/".$file_name;
 
         $file_xml = fopen($files_route, "w");
         fwrite($file_xml, $res_xml);
         fclose($file_xml);
 
         return $this->render('compare/downloadXML.html.twig', [
-            'siren' => $siren[0]
+            'file_name' => $file_name
         ]);
     }
 
