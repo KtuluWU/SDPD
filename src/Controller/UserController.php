@@ -139,38 +139,6 @@ class UserController extends Controller
         return $this->redirectToRoute('userpage');
     }
 
-    /**
-     * @Route("/createPremierUser", name="createPremierUserpage")
-     */
-    public function createPremierUser()
-    {
-        $userManager = $this->get('fos_user.user_manager');
-        $user = $userManager->createUser();
-
-        $username = "SDPD";
-        $firstname = "SDPD";
-        $lastname = "ADMIN";
-        $email = "user@infogreffe-siege.fr";
-        $role = array("ROLE_ADMIN");
-        $enable = "1";
-        $plainPassword = "11111";
-
-        date_default_timezone_set("Europe/Paris");
-        $register_date = date_create(date('Y-m-d H:i:s'));
-
-        $user->setFirstname($firstname);
-        $user->setLastname($lastname);
-        $user->setUsername($username);
-        $user->setEmail($email);
-        $user->setPlainPassword($plainPassword);
-        $user->setRoles($role);
-        $user->setRegisterDate($register_date);
-        $user->setEnabled($enable);
-
-        $userManager->updateUser($user);
-        return $this->redirectToRoute('homepage');
-    }
-
 
     /**
      * @Route("/delete/{username}", name="deleteuserpage")

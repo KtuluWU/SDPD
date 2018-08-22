@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\IFG_TEST2\UploadPdf;
 use App\Entity\IFG_SDPD\Operator;
-use App\Form\UploadPdfType;
 use PhpParser\Node\Scalar\MagicConst\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,10 +26,6 @@ class CompareController extends Controller
      */
     public function correction(Request $request, $codegreffe, $codestatut, $chrono, $millesime, $numacte, $numdepot, $siren)
     {
-        $pdf = new UploadPdf();
-        $form = $this->createForm(UploadPdfType::class, $pdf);
-        $form->handleRequest($request);
-
         $url_GED = "https://INFOGREFFE:JsE2=BDC@services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
         //$url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
 
