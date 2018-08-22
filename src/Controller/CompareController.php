@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\IFG_TEST2\UploadPdf;
 use App\Entity\IFG_SDPD\Operator;
 use App\Form\UploadPdfType;
+use PhpParser\Node\Scalar\MagicConst\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,11 +22,24 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class CompareController extends Controller
 {
+
     /**
-     * @Route("/correction/{filename}&{siren}", name="correctionpage")
+     * @Route("/correction/{codegreffe}&{codestatut}&{chrono}&{millesime}&{numacte}&{numdepot}&{siren}", name="correctionpage")
      */
-    public function correction(Request $request, $filename, $siren)
+    public function correction(Request $request, $codegreffe, $codestatut, $chrono, $millesime, $numacte, $numdepot, $siren)
     {
+        $pdf = new UploadPdf();
+        $form = $this->createForm(UploadPdfType::class, $pdf);
+        $form->handleRequest($request);
+
+        $url_GED = "https://INFOGREFFE:JsE2=BDC@services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
+        //$url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
+
+        $filename = ($this->generateUniqueFileName()).".pdf";
+
+        $pdfContent = file_get_contents($url_GED);
+        file_put_contents($this->getParameter('files')."/".$filename ,$pdfContent);
+
         $apis = $this->data_API($siren);
         $infos_db = $this->data_TEST2($siren);
         $infos_operator = $this->data_Operator($request, $siren);
@@ -36,43 +50,6 @@ class CompareController extends Controller
             'siren' => $siren,
             'infos_db' => $infos_db,
             'infos_operator' => $infos_operator
-        ]);
-    }
-
-    /**
-     * @Route("/upload/{codegreffe}&{codestatut}&{chrono}&{millesime}&{numacte}&{numdepot}&{siren}", name="uploadpage")
-     */
-    public function upload(Request $request, $codegreffe, $codestatut, $chrono, $millesime, $numacte, $numdepot, $siren)
-    {
-        $pdf = new UploadPdf();
-        $form = $this->createForm(UploadPdfType::class, $pdf);
-        $form->handleRequest($request);
-
-        $url_GED = "https://services.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
-        //$url_GED = "https://qual.infogreffe.fr/wwwDemat/getDocument?codegreffe=$codegreffe&codestatut=$codestatut&chrono=$chrono&millesime=$millesime&numeroacte=$numacte&numerodepot=$numdepot&typeproduit=act&telecharge";
-        /**
-         * Récupérer le pdf par cUrl
-         */
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url_GED);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, 'INFOGREFFE:JsE2=BDC');
-
-        $res_ch = curl_exec($ch);
-        curl_close($ch);
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('filename')->getData();
-            $filename = $this->generateUniqueFileName($file);
-            $file->move($this->getParameter('files'), $filename);
-
-            return $this->redirectToRoute('correctionpage', array('filename' => $filename, 'siren' => $siren));
-        }
-
-        return $this->render('compare/upload.html.twig', [
-            'form' => $form->createView(),
-            'res_ch' => $res_ch
         ]);
     }
 
@@ -887,9 +864,9 @@ class CompareController extends Controller
     /**
      * @return string
      */
-    private function generateUniqueFileName($file)
+    private function generateUniqueFileName()
     {
-        return md5(uniqid()).'.'.$file->guessExtension();
+        return md5(uniqid());
     }
 }
 
