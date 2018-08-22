@@ -50,7 +50,7 @@ class IndexController extends Controller
             $chrono = substr($numgestion, 5);
             $millesime = substr($numgestion, 2, 2);
 
-            return $this->redirectToRoute('uploadpage', array('codegreffe'=>$codegreffe, 'codestatut'=>$codestatut, 'chrono'=>$chrono, 'millesime'=>$millesime, 'numacte'=>$numacte, 'numdepot'=>$numdepot, 'siren'=>$siren));
+            return $this->redirectToRoute('correctionpage', array('codegreffe'=>$codegreffe, 'codestatut'=>$codestatut, 'chrono'=>$chrono, 'millesime'=>$millesime, 'numacte'=>$numacte, 'numdepot'=>$numdepot, 'siren'=>$siren));
 
             // return new Response ("Code greffe: ".$codegreffe."<br>Numéro gestion: ".$numgestion."<br>Code statut: ".$codestatut."<br>Chrono: ".$chrono."<br>Millesime: ".$millesime."<br>Numéro d'acte: ".$numacte."<br>Numéro de dépôt: ".$numdepot."<br>".$url_GED);
         }
