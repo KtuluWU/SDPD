@@ -8,9 +8,9 @@ parameters:
 doctrine:
     dbal:
         # configure these for your database server
-        default_connection: IFG_SDPD
+        default_connection: default
         connections:
-            IFG_SDPD:
+            default:
                 driver: 'pdo_mysql'
                 server_version: '5.7'
                 charset: utf8mb4
@@ -31,10 +31,10 @@ doctrine:
         
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
-        default_entity_manager: IFG_SDPD
+        default_entity_manager: default
         entity_managers:
-            IFG_SDPD:
-                connection: IFG_SDPD
+            default:
+                connection: default
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: true
                 mappings:

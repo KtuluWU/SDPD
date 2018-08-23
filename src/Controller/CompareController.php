@@ -264,7 +264,7 @@ class CompareController extends Controller
          * Opérateur
          */
         $operator_db = new Operator();
-        $em_SDPD = $this->getDoctrine()->getManager('IFG_SDPD');
+        $em_SDPD = $this->getDoctrine()->getManager('default');
 
         date_default_timezone_set("Europe/Paris");
         $dateSaisie_operator = date_create(date('Y-m-d H:i:s'));
@@ -745,7 +745,7 @@ class CompareController extends Controller
     private function data_Operator(Request $request, $siren)
     {
         $operator = new Operator();
-        $em_SDPD = $this->getDoctrine()->getManager('IFG_SDPD');
+        $em_SDPD = $this->getDoctrine()->getManager('default');
         $operators_db = $em_SDPD->getRepository('IFG_SDPD:Operator')->findBySiren($siren);
 
         $infos = array();
