@@ -1,593 +1,839 @@
 {% trans_default_domain 'IFG' %}
 {% extends 'base.html.twig' %} 
-{% block content %} 
-<div class="compare_page">
-     <div class="index text-center">
-        {% for beneficiaires in apis.beneficiaires %}
-            <span id="index-{{loop.index}}"><a href="#{{loop.index}}">{{loop.index}}</a></span>
-        {% endfor %}
-    </div>
-    {# {{dump(apis)}}  #}
-    {% set userTruename = app.user.firstname ~ " " ~ app.user.lastname %}
-    <div class="infos row">
-        <div class="left col-md-6">
-            <table>
-                <tr>
-                    <th>Siren:</th>
-                    <td>{{siren}}</td>
-                </tr>
-                <tr>
-                    <th>Date de dépôt:</th>
-                    <td>{{infos_db.dtdepot|date('d/m/Y')}}</td>
-                </tr>
-                <tr>
-                    <th>Date d'acte:</th>
-                    <td>{{infos_db.dtacte|date('d/m/Y')}}</td>
-                </tr>
-            </table>
+{% block content %}
+    <div class="compare_page">
+        <div class="index text-center">
+            {% for beneficiaires in apis.beneficiaires %}
+                <span id="index-{{ loop.index }}"><a href="#{{ loop.index }}">{{ loop.index }}</a></span>
+            {% endfor %}
         </div>
-        <div class="right col-md-6">
-            <table>
-                <tr>
-                    <th>Demande de saisie le</th>
-                    <td>{{infos_db.dtdemande|date('d/m/Y')}}</td>
-                </tr>
-                <tr>
-                    <th>Réception de saise le</th>
-                    <td>{{infos_db.dtsaisie|date('d/m/Y')}}</td>
-                </tr>
-                <tr>
-                    <th>État:</th>
-                    {% if apis.rejet is defined %}
-                    {% set etat_tr = 'codesRejet.' ~ apis.rejet %}
-                    <td>{{apis.rejet}} : {{etat_tr|trans}}</td>
-                    {% else %}
-                    <td>Aucun état trouvé</td>
-                    {% endif %}
-                </tr>
-                {# {{ dump(infos_operator) }} #}
-                {% for info_operator in infos_operator %}
-                    <tr class="operator">
-                        <th>Opérateur:</th>
-                        <td>{% if info_operator.operator is defined %}{{info_operator.operator}}{% endif %}</td>
-                    </tr> 
+        {# {{dump(apis)}}  #}
+        {% set userTruename = app.user.firstname ~ " " ~ app.user.lastname %}
+        <div class="infos row">
+            <div class="left col-md-6">
+                <table>
                     <tr>
-                        <th>Date de saisie d'opérateur:</th>
-                        <td>{% if info_operator.dateSaisie is defined %}{{info_operator.dateSaisie|date('d/m/Y H:i:s')}}{% endif %}</td>
-                    </tr> 
-                {% endfor %}
-            </table>
-            <div class="text-center">
-                {{ knp_pagination_render(infos_operator) }}
-                <div class="tip">{% if infos_operator.items is not empty and infos_operator.getTotalItemCount > 3 %}(Attention, cette opération vous perd toutes les modifications !){% endif %}</div>
+                        <th>Siren:</th>
+                        <td>{{ siren }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de dépôt:</th>
+                        <td>{{ infos_db.dtdepot|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date d'acte:</th>
+                        <td>{{ infos_db.dtacte|date('d/m/Y') }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right col-md-6">
+                <table>
+                    <tr>
+                        <th>Demande de saisie le</th>
+                        <td>{{ infos_db.dtdemande|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Réception de saisie le</th>
+                        <td>{{ infos_db.dtsaisie|date('d/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>État:</th>
+                        {% if apis.rejet is defined %}
+                            {% set etat_tr = 'codesRejet.' ~ apis.rejet %}
+                            <td>{{ apis.rejet }} : {{ etat_tr|trans }}</td>
+                        {% else %}
+                            <td>Aucun état trouvé</td>
+                        {% endif %}
+                    </tr>
+                    {#{{ dump(infos_operator) }}#}
+                    {% if infos_operator is empty %}
+                        <tr class="operator">
+                            <th>Opérateur:</th>
+                            <td>Nah</td>
+                        </tr>
+                        <tr>
+                            <th>Date de saisie d'opérateur:</th>
+                            <td>Nah</td>
+                        </tr>
+                    {% else %}
+                        {% for info_operator in infos_operator %}
+                            <tr class="operator">
+                                <th>Opérateur:</th>
+                                <td>{% if info_operator.operator is defined %}{{ info_operator.operator }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Date de saisie d'opérateur:</th>
+                                <td>{% if info_operator.dateSaisie is defined %}{{ info_operator.dateSaisie|date('d/m/Y H:i:s') }}{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </table>
+                <div class="text-center">
+                    {{ knp_pagination_render(infos_operator) }}
+                    <div class="tip">{% if infos_operator.items is not empty and infos_operator.getTotalItemCount > 3 %}(Attention, cette opération vous perd toutes les modifications !){% endif %}</div>
+                </div>
             </div>
         </div>
-    </div>
-    <form method="POST" action="/compare/generateXML/{{ filename }}&{{userTruename}}">
-        <div class="content">
-            <div class="pdf block">
-                <embed src="{{ asset('uploads/' ~ filename) }}" type="application/pdf" width="100%" height="100%" />
-            </div>
-            <div class="data_db block">
+        <form method="POST" action="/compare/generateXML/{{ filename }}&{{ userTruename }}&{{ apis.beneficiaires|length }}">
+            <div class="content">
+                <div class="pdf block">
+                    <embed src="{{ asset('uploads/' ~ filename) }}" type="application/pdf" width="100%" height="100%"/>
+                </div>
+                <div class="data_db block">
                     {% set DBE_S_1 %}
-                    {############################# Formulaire DBE-S-1 #############################}
-                    <div id="1" class="DBE-S-1">
-                        <div class="title_table">1. DBE-S-1</div>
-                        <div class="part">
-                            <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
-                            <div class="a">
-                                <div><label for="denomination_sociale_1">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_1" name="denomination_sociale_1" {% if apis.denomination is defined %}value="{{apis.denomination}}"{% endif %}>
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-6">
-                                    <label for="siren_1">SIREN</label>
-                                    <input type="text" id="siren_1" name="siren_1" {% if apis.siren is defined %}value="{{apis.siren}}"{% endif %}>
+                        {############################# Formulaire DBE-S-1 #############################}
+                        <div id="1" class="DBE-S-1">
+                            <div class="title_table">1. DBE-S-1</div>
+                            <div class="part">
+                                <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
+                                <div class="a">
+                                    <div><label for="denomination_sociale_1">Dénomination sociale</label></div>
+                                    <input type="text" id="denomination_sociale_1" name="denomination_sociale_1"
+                                           {% if apis.denomination is defined %}value="{{ apis.denomination }}"{% endif %}>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="immatriculation_1">Immatriculation au RCS du greffe de</label>
-                                    <input type="text" id="immatriculation_1" name="immatriculation_1" {% if apis.immatriculation is defined %}value="{{apis.immatriculation}}"{% endif %}>
-                                </div>
-                            </div>
-                            <div class="a">
-                                <label for="forme_juridique_1">Forme juridique</label>
-                                <input type="text" id="forme_juridique_1" name="forme_juridique_1" {% if apis.forme_juridique is defined %}value="{{apis.forme_juridique}}"{% endif %}>
-                            </div>
-                            <div class="a">
-                                <label for="adresse_sociale_1">Adresse du siège social</label>
-                                <input type="text" id="adresse_sociale_1" name="adresse_sociale_1" {% if apis.adresse.rue is defined %}value="{{apis.adresse.rue}}"{% endif %}>
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-4">
-                                    <label for="code_postal_sociale_1"><i>Code postal</i></label>
-                                    <input type="text" id="code_postal_sociale_1" name="code_postal_sociale_1" {% if apis.adresse.code_postal is defined %}value="{{apis.adresse.code_postal}}"{% endif %}>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="commune_sociale_1"><i>Commune</i></label>
-                                    <input type="text" id="commune_sociale_1" name="commune_sociale_1" {% if apis.adresse.commune is defined %}value="{{apis.adresse.commune}}"{% endif %}>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="pays_sociale_1"><i>Pays</i></label>
-                                    <input type="text" id="pays_sociale_1" name="pays_sociale_1" {% if apis.adresse.pays is defined %}value="{{apis.adresse.pays}}"{% endif %}>
-                                </div>
-                            </div>
-                        </div>
-                        {% for beneficiaire in apis.beneficiaires %}
-                        {% if loop.index == 1 %}
-                        <div class="part">
-                            <div class="title_part">II. INFORMATIONS SUR LE BENEFICIAIRE EFFECTIF DE LA SOCIETE</div>
-                            <div>
-                                <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
-                                    <label for="civilite_1" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="civilite_1" name="civilite_1" value="MME" {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "MME" %}checked{% endif %}{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="civilite_1" name="civilite_1" value="M." {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "M." %}checked{% endif %}{% endif %}> Monsieur</div>
+                                    <div class="col-md-6">
+                                        <label for="siren_1">SIREN</label>
+                                        <input type="text" id="siren_1" name="siren_1"
+                                               {% if apis.siren is defined %}value="{{ apis.siren }}"{% endif %}>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="immatriculation_1">Immatriculation au RCS du greffe de</label>
+                                        <input type="text" id="immatriculation_1" name="immatriculation_1"
+                                               {% if apis.immatriculation is defined %}value="{{ apis.immatriculation }}"{% endif %}>
+                                    </div>
                                 </div>
                                 <div class="a">
-                                    <label for="nom_naissance_1">Nom de naissance</label>
-                                    <input type="text" id="nom_naissance_1" name="nom_naissance_1" {% if beneficiaire.nom_patronymique is defined %}value="{{beneficiaire.nom_patronymique}}"{% endif %}>
-                                </div>
-                                <div class="row a">
-                                    <div class="col-md-6">
-                                        <label for="nom_usage_1">Nom d'usage</label>
-                                        <input type="text" id="nom_usage_1" name="nom_usage_1" {% if beneficiaire.nom_marital is defined %}value="{{beneficiaire.nom_marital}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="pseudonyme_1">Pseudonyme</label>
-                                        <input type="text" id="pseudonyme_1" name="pseudonyme_1" {% if beneficiaire.pseudonyme is defined %}value="{{beneficiaire.pseudonyme}}"{% endif %}>
-                                    </div>
-                                </div>
-                                <div class="row a">
-                                    <div class="col-md-6">
-                                        <label for="prenom_principal_1">Prénom principal</label>
-                                        <input type="text" id="prenom_principal_1" name="prenom_principal_1" {% if beneficiaire.prenoms is defined %}value="{{beneficiaire.prenoms}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="prenom_autres_1">Autres prénoms</label>
-                                        <input type="text" id="prenom_autres_1" name="prenom_autres_1" value="">
-                                    </div>
-                                </div>
-                                <div class="row a">
-                                    <div class="col-md-4">
-                                        <label for="naissance_date_1">Né(e) le </label>
-                                        <input type="date" id="naissance_date_1" name="naissance_date_1" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('Y-m-d')}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="naissance_lieu_1">à</label>
-                                        <input type="text" id="naissance_lieu_1" name="naissance_lieu_1" {% if beneficiaire.lieu_naissance.commune is defined %}value="{{beneficiaire.lieu_naissance.commune}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="departement_pays_1">Département / Pays</label>
-                                        <input type="text" id="departement_pays_1" name="departement_pays_1" {% if beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
-                                    </div>
-                                </div>
-                                
-                                <div class="a">
-                                    <label for="nationalite_1">Nationalité</label>
-                                    <input type="text" id="nationalite_1" name="nationalite_1" {% if beneficiaire.nationalite is defined %}value="{{beneficiaire.nationalite}}"{% endif %}>
+                                    <label for="forme_juridique_1">Forme juridique</label>
+                                    <input type="text" id="forme_juridique_1" name="forme_juridique_1"
+                                           {% if apis.forme_juridique is defined %}value="{{ apis.forme_juridique }}"{% endif %}>
                                 </div>
                                 <div class="a">
-                                    <label for="adresse_domicile_1">Adresse du domicile</label>
-                                    <input type="text" id="adresse_domicile_1" name="adresse_domicile_1" {% if beneficiaire.adresse.rue is defined %}value="{{beneficiaire.adresse.rue}}"{% endif %}>
+                                    <label for="adresse_sociale_1">Adresse du siège social</label>
+                                    <input type="text" id="adresse_sociale_1" name="adresse_sociale_1"
+                                           {% if apis.adresse.rue is defined %}value="{{ apis.adresse.rue }}"{% endif %}>
                                 </div>
                                 <div class="row a">
-                                     <div class="col-md-4">
-                                        <label for="code_postal_domicile_1"><i>Code postal</i></label>
-                                        <input type="text" id="code_postal_domicile_1" name="code_postal_domicile_1" {% if beneficiaire.adresse.code_postal is defined %}value="{{beneficiaire.adresse.code_postal}}"{% endif %}>
+                                    <div class="col-md-4">
+                                        <label for="code_postal_sociale_1"><i>Code postal</i></label>
+                                        <input type="text" id="code_postal_sociale_1" name="code_postal_sociale_1"
+                                               {% if apis.adresse.code_postal is defined %}value="{{ apis.adresse.code_postal }}"{% endif %}>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="commune_domicile_1"><i>Commune</i></label>
-                                        <input type="text" id="commune_domicile_1" name="commune_domicile_1" {% if beneficiaire.adresse.commune is defined %}value="{{beneficiaire.adresse.commune}}"{% endif %}>
+                                        <label for="commune_sociale_1"><i>Commune</i></label>
+                                        <input type="text" id="commune_sociale_1" name="commune_sociale_1"
+                                               {% if apis.adresse.commune is defined %}value="{{ apis.adresse.commune }}"{% endif %}>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="pays_domicile_1"><i>Pays</i></label>
-                                        <input type="text" id="pays_domicile_1" name="pays_domicile_1" {% if beneficiaire.adresse.pays is defined %}value="{{beneficiaire.adresse.pays}}"{% endif %}>
+                                        <label for="pays_sociale_1"><i>Pays</i></label>
+                                        <input type="text" id="pays_sociale_1" name="pays_sociale_1"
+                                               {% if apis.adresse.pays is defined %}value="{{ apis.adresse.pays }}"{% endif %}>
                                     </div>
                                 </div>
-                               
                             </div>
-                            <div>
-                                <div class="subtitle_part">2) Informations sur les modalités du contrôle exercé par le bénéficiaire effectif sur la société (R. 561-1 du code monétaire et financier) :</div>
-                                <div class="a" >
-                                    <label>Détention :</label>
-                                    <div class="row">
-                                        <div class="col-md-8 b">
-                                            <label for="detention_capital_1">directe et/ou indirecte de plus de 25% du capital.</label>
-                                            <div class="row">
-                                                <div><input type="hidden" id="detention_capital_directe_1" name="detention_capital_directe_1" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_1" name="detention_capital_directe_1" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "0" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}> directe</div>
-                                                <div><input type="hidden" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_1" name="detention_capital_indirecte_1" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "1" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}> indirecte</div>
+                            {% for beneficiaire in apis.beneficiaires %}
+                                {% if loop.index == 1 %}
+                                    <div class="part">
+                                        <div class="title_part">II. INFORMATIONS SUR LE BENEFICIAIRE EFFECTIF DE LA
+                                            SOCIETE
+                                        </div>
+                                        <div>
+                                            <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire
+                                                effectif :
+                                            </div>
+                                            <div class="row a">
+                                                <label for="civilite_1" class="col-md-4">Civilité</label>
+                                                <div class="col-md-4"><input type="radio" id="civilite_1"
+                                                                             name="civilite_1"
+                                                                             value="MME" {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "MME" %}checked{% endif %}{% endif %}>
+                                                    Madame
+                                                </div>
+                                                <div class="col-md-4"><input type="radio" id="civilite_1"
+                                                                             name="civilite_1"
+                                                                             value="M." {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "M." %}checked{% endif %}{% endif %}>
+                                                    Monsieur
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <label for="nom_naissance_1">Nom de naissance</label>
+                                                <input type="text" id="nom_naissance_1" name="nom_naissance_1"
+                                                       {% if beneficiaire.nom_patronymique is defined %}value="{{ beneficiaire.nom_patronymique }}"{% endif %}>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-6">
+                                                    <label for="nom_usage_1">Nom d'usage</label>
+                                                    <input type="text" id="nom_usage_1" name="nom_usage_1"
+                                                           {% if beneficiaire.nom_marital is defined %}value="{{ beneficiaire.nom_marital }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="pseudonyme_1">Pseudonyme</label>
+                                                    <input type="text" id="pseudonyme_1" name="pseudonyme_1"
+                                                           {% if beneficiaire.pseudonyme is defined %}value="{{ beneficiaire.pseudonyme }}"{% endif %}>
+                                                </div>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-6">
+                                                    <label for="prenom_principal_1">Prénom principal</label>
+                                                    <input type="text" id="prenom_principal_1" name="prenom_principal_1"
+                                                           {% if beneficiaire.prenoms is defined %}value="{{ beneficiaire.prenoms }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="prenom_autres_1">Autres prénoms</label>
+                                                    <input type="text" id="prenom_autres_1" name="prenom_autres_1"
+                                                           value="">
+                                                </div>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-4">
+                                                    <label for="naissance_date_1">Né(e) le </label>
+                                                    <input type="date" id="naissance_date_1" name="naissance_date_1"
+                                                           {% if beneficiaire.date_naissance is defined %}value="{{ beneficiaire.date_naissance|date('Y-m-d') }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="naissance_lieu_1">à</label>
+                                                    <input type="text" id="naissance_lieu_1" name="naissance_lieu_1"
+                                                           {% if beneficiaire.lieu_naissance.commune is defined %}value="{{ beneficiaire.lieu_naissance.commune }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="departement_pays_1">Département / Pays</label>
+                                                    <input type="text" id="departement_pays_1" name="departement_pays_1"
+                                                           {% if beneficiaire.lieu_naissance.pays is defined %}value="{{ beneficiaire.lieu_naissance.pays }}"{% endif %}>
+                                                </div>
+                                            </div>
+
+                                            <div class="a">
+                                                <label for="nationalite_1">Nationalité</label>
+                                                <input type="text" id="nationalite_1" name="nationalite_1"
+                                                       {% if beneficiaire.nationalite is defined %}value="{{ beneficiaire.nationalite }}"{% endif %}>
+                                            </div>
+                                            <div class="a">
+                                                <label for="adresse_domicile_1">Adresse du domicile</label>
+                                                <input type="text" id="adresse_domicile_1" name="adresse_domicile_1"
+                                                       {% if beneficiaire.adresse.rue is defined %}value="{{ beneficiaire.adresse.rue }}"{% endif %}>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-4">
+                                                    <label for="code_postal_domicile_1"><i>Code postal</i></label>
+                                                    <input type="text" id="code_postal_domicile_1"
+                                                           name="code_postal_domicile_1"
+                                                           {% if beneficiaire.adresse.code_postal is defined %}value="{{ beneficiaire.adresse.code_postal }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="commune_domicile_1"><i>Commune</i></label>
+                                                    <input type="text" id="commune_domicile_1" name="commune_domicile_1"
+                                                           {% if beneficiaire.adresse.commune is defined %}value="{{ beneficiaire.adresse.commune }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="pays_domicile_1"><i>Pays</i></label>
+                                                    <input type="text" id="pays_domicile_1" name="pays_domicile_1"
+                                                           {% if beneficiaire.adresse.pays is defined %}value="{{ beneficiaire.adresse.pays }}"{% endif %}>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div>
+                                            <div class="subtitle_part">2) Informations sur les modalités du contrôle
+                                                exercé
+                                                par le bénéficiaire effectif sur la société (R. 561-1 du code monétaire
+                                                et
+                                                financier) :
+                                            </div>
+                                            <div class="a">
+                                                <label>Détention :</label>
+                                                <div class="row">
+                                                    <div class="col-md-8 b">
+                                                        <label for="detention_capital_1">directe et/ou indirecte de plus
+                                                            de
+                                                            25% du capital.</label>
+                                                        <div class="row">
+                                                            <div><input type="hidden" id="detention_capital_directe_1"
+                                                                        name="detention_capital_directe_1" value="0">
+                                                            </div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_capital_directe_1"
+                                                                                         name="detention_capital_directe_1"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "0" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}>
+                                                                directe
+                                                            </div>
+                                                            <div><input type="hidden" id="detention_capital_indirecte_1"
+                                                                        name="detention_capital_indirecte_1" value="0">
+                                                            </div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_capital_indirecte_1"
+                                                                                         name="detention_capital_indirecte_1"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "1" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}>
+                                                                indirecte
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="pourcentage_capital_1">Pourcentage total %</label>
+                                                        <input type="text" id="pourcentage_capital_1"
+                                                               name="pourcentage_capital_1"
+                                                               {% if beneficiaire.modalite_controle.detention_capital.pourcentage is defined %}value="{{ beneficiaire.modalite_controle.detention_capital.pourcentage }}"{% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <label>Détention :</label>
+                                                <div class="row">
+                                                    <div class="col-md-8 b">
+                                                        <label for="detention_droits_1">directe et/ou indirecte de plus
+                                                            de
+                                                            25% des droits de vote.</label>
+                                                        <div class="row">
+                                                            <div><input type="hidden" id="detention_droits_directe_1"
+                                                                        name="detention_droits_directe_1" value="0">
+                                                            </div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_droits_directe_1"
+                                                                                         name="detention_droits_directe_1"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "0" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}>
+                                                                directe
+                                                            </div>
+                                                            <div><input type="hidden" id="detention_droits_indirecte_1"
+                                                                        name="detention_droits_indirecte_1" value="0">
+                                                            </div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_droits_indirecte_1"
+                                                                                         name="detention_droits_indirecte_1"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "1" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}>
+                                                                indirecte
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="pourcentage_droits_1">Pourcentage total %</label>
+                                                        <input type="text" id="pourcentage_droits_1"
+                                                               name="pourcentage_droits_1"
+                                                               {% if beneficiaire.modalite_controle.detention_votes.pourcentage is defined %}value="{{ beneficiaire.modalite_controle.detention_votes.pourcentage }}"{% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <div><input type="hidden" id="autre_moyen_case_1"
+                                                            name="autre_moyen_case_1" value="0"></div>
+                                                <input type="checkbox" id="autre_moyen_case_1" name="autre_moyen_case_1" value="1" {% if beneficiaire.modalite_controle.autre_moyen is defined %}checked{% endif %}>  Exercice, par tout autre moyen, d'un pouvoir de contrôle
+                                                <input type="text" id="exercice_1" name="exercice_1"
+                                                       {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{ beneficiaire.modalite_controle.autre_moyen.texte }}"{% endif %}>
+                                            </div>
+                                            <div class="a">
+                                                <div><input type="hidden" id="representant_1" name="representant_1"
+                                                            value="0"></div>
+                                                <input type="checkbox" id="representant_1" name="representant_1"
+                                                       value="1" {% if beneficiaire.modalite_controle.representant_legal is defined %} {% if beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}{% endif %}>
+                                                <b>Représentant légal</b>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label for="pourcentage_capital_1">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_capital_1" name="pourcentage_capital_1" {% if beneficiaire.modalite_controle.detention_capital.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_capital.pourcentage}}"{% endif %}>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="a">
-                                    <label>Détention :</label>
-                                    <div class="row">
-                                        <div class="col-md-8 b">
-                                            <label for="detention_droits_1">directe et/ou indirecte de plus de 25% des droits de vote.</label>
-                                            <div class="row">
-                                                <div><input type="hidden" id="detention_droits_directe_1" name="detention_droits_directe_1" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_1" name="detention_droits_directe_1" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "0" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}> directe</div>
-                                                <div><input type="hidden" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_1" name="detention_droits_indirecte_1" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "1" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}> indirecte</div>
+                                        <div>
+                                            <div class="subtitle_part">3) Date à laquelle la personne est devenue
+                                                bénéficiaire effectif de la société :
                                             </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="pourcentage_droits_1">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_droits_1" name="pourcentage_droits_1" {% if beneficiaire.modalite_controle.detention_votes.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_votes.pourcentage}}"{% endif %}>
+                                            <input type="date" id="date_effect_1" name="date_effect_1"
+                                                   {% if beneficiaire.date_effet is defined %}value="{{ beneficiaire.date_effet|date('Y-m-d') }}"{% endif %}>
                                         </div>
                                     </div>
+                                {% endif %}
+                            {% endfor %}
+                            {#<div class="part">
+                                <div class="title_part">III. AUTRES INFORMATIONS</div>
+                                <div>
+                                    <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1"> Il
+                                        n’existe pas de bénéficiaire effectif autre que celui mentionné dans ce
+                                        document.
+                                    </div>
+                                    <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1"> Il
+                                        est
+                                        joint à ce document
+                                    </div>
+                                    <input type="text" id="nombre_document_1" name="nombre_document_1"
+                                           placeholder="nombre document(s) annexe(s)" value="">
                                 </div>
-                                <div class="a">
-                                    <label>Exercice, par tout autre moyen, d'un pouvoir de contrôle</label>
-                                    <input type="text" id="exercice_1" name="exercice_1" {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{beneficiaire.modalite_controle.autre_moyen.texte}}"{% endif %}>
-                                </div>
-                                <div class="a">
-                                    <div><input type="hidden" id="representant_1" name="representant_1" value="0"></div>
-                                    <input type="checkbox" id="representant_1" name="representant_1" value="1" {% if beneficiaire.modalite_controle.representant_legal is defined %} {% if beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}{% endif %}> <b>Représentant légal</b>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="date" id="date_effect_1" name="date_effect_1" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('Y-m-d')}}"{% endif %}>
-                            </div>
+                            </div>#}
                         </div>
-                        {% endif %}
-                        {% endfor %}
-                        <div class="part">
-                            <div class="title_part">III. AUTRES INFORMATIONS</div>
-                            <div>
-                                <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1">  Il n’existe pas de bénéficiaire effectif autre que celui mentionné dans ce document.</div>
-                                <div><input type="radio" id="autres_beneficiare_1" name="autres_beneficiare_1">  Il est joint à ce document</div>
-                                <input type="text" id="nombre_document_1" name="nombre_document_1" placeholder="nombre document(s) annexe(s)" value="">
-                            </div>
-                        </div>
-                    </div>
-                    {# {% endif %} #}
+                        {# {% endif %} #}
                     {% endset %}
                     {############################# Formulaire DBE-S-2 #############################}
                     {% set DBE_S_2 %}
-                    {% for beneficiaire in apis.beneficiaires %}
-                    {% if loop.index != 1 %}
-                    <div id="{{loop.index}}" class="DBE-S-2">
-                        <div class="title_table">{{loop.index}}. DBE-S-2</div>
-                        <div class="part">
-                            <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
-                            <div class="a">
-                                <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" {% if apis.denomination is defined %}value="{{apis.denomination}}"{% endif %}>
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-6">
-                                    <label for="siren_{{loop.index}}">SIREN</label>
-                                    <input type="text" id="siren_{{loop.index}}" name="siren_{{loop.index}}" {% if apis.siren is defined %}value="{{apis.siren}}"{% endif %}>
+                        {% for beneficiaire in apis.beneficiaires %}
+                            {% if loop.index != 1 %}
+                                <div id="{{ loop.index }}" class="DBE-S-2">
+                                    <div class="title_table">{{ loop.index }}. DBE-S-2</div>
+                                    {#<div class="part">
+                                        <div class="title_part">I. INFORMATIONS RELATIVES A LA SOCIETE DECLARANTE</div>
+                                        <div class="a">
+                                            <div><label for="denomination_sociale_{{ loop.index }}">Dénomination
+                                                    sociale</label></div>
+                                            <input type="text" id="denomination_sociale_{{ loop.index }}"
+                                                   name="denomination_sociale_{{ loop.index }}"
+                                                   {% if apis.denomination is defined %}value="{{ apis.denomination }}"{% endif %}>
+                                        </div>
+                                        <div class="row a">
+                                            <div class="col-md-6">
+                                                <label for="siren_{{ loop.index }}">SIREN</label>
+                                                <input type="text" id="siren_{{ loop.index }}"
+                                                       name="siren_{{ loop.index }}"
+                                                       {% if apis.siren is defined %}value="{{ apis.siren }}"{% endif %}>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="immatriculation_{{ loop.index }}">Immatriculation au RCS du
+                                                    greffe de</label>
+                                                <input type="text" id="immatriculation_{{ loop.index }}"
+                                                       name="immatriculation_{{ loop.index }}"
+                                                       {% if apis.immatriculation is defined %}value="{{ apis.immatriculation }}"{% endif %}>
+                                            </div>
+                                        </div>
+                                        <div class="a">
+                                            <label for="forme_juridique_{{ loop.index }}">Forme juridique</label>
+                                            <input type="text" id="forme_juridique_{{ loop.index }}"
+                                                   name="forme_juridique_{{ loop.index }}"
+                                                   {% if apis.denomination is defined %}value="{{ apis.forme_juridique }}"{% endif %}>
+                                        </div>
+                                        <div class="a">
+                                            <label for="adresse_sociale_{{ loop.index }}">Adresse du siège
+                                                social</label>
+                                            <input type="text" id="adresse_sociale_{{ loop.index }}"
+                                                   name="adresse_sociale_{{ loop.index }}"
+                                                   {% if apis.adresse.rue is defined %}value="{{ apis.adresse.rue }}"{% endif %}>
+                                        </div>
+                                        <div class="row a">
+                                            <div class="col-md-4">
+                                                <label for="code_postal_sociale_{{ loop.index }}"><i>Code
+                                                        postal</i></label>
+                                                <input type="text" id="code_postal_sociale_{{ loop.index }}"
+                                                       name="code_postal_sociale_{{ loop.index }}"
+                                                       {% if apis.adresse.code_postal is defined %}value="{{ apis.adresse.code_postal }}"{% endif %}>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="commune_sociale_{{ loop.index }}"><i>Commune</i></label>
+                                                <input type="text" id="commune_sociale_{{ loop.index }}"
+                                                       name="commune_sociale_{{ loop.index }}"
+                                                       {% if apis.adresse.commune is defined %}value="{{ apis.adresse.commune }}"{% endif %}>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="pays_sociale_{{ loop.index }}"><i>Pays</i></label>
+                                                <input type="text" id="pays_sociale_{{ loop.index }}"
+                                                       name="pays_sociale_{{ loop.index }}"
+                                                       {% if apis.adresse.pays is defined %}value="{{ apis.adresse.pays }}"{% endif %}>
+                                            </div>
+                                        </div>
+                                    </div>#}
+                                    <div class="part">
+                                        <div class="title_part">II. INFORMATIONS SUR LE BENEFICIAIRE EFFECTIF DE LA
+                                            SOCIETE
+                                        </div>
+                                        <div>
+                                            <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire
+                                                effectif :
+                                            </div>
+                                            <div class="row a">
+                                                <label for="civilite_{{ loop.index }}" class="col-md-4">Civilité</label>
+                                                <div class="col-md-4"><input type="radio" id="civilite_{{ loop.index }}"
+                                                                             name="civilite_{{ loop.index }}"
+                                                                             value="MME" {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "MME" %}checked{% endif %}{% endif %}>
+                                                    Madame
+                                                </div>
+                                                <div class="col-md-4"><input type="radio" id="civilite_{{ loop.index }}"
+                                                                             name="civilite_{{ loop.index }}"
+                                                                             value="M." {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "M." %}checked{% endif %}{% endif %}>
+                                                    Monsieur
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <label for="nom_naissance_{{ loop.index }}">Nom de naissance</label>
+                                                <input type="text" id="nom_naissance_{{ loop.index }}"
+                                                       name="nom_naissance_{{ loop.index }}"
+                                                       {% if beneficiaire.nom_patronymique is defined %}value="{{ beneficiaire.nom_patronymique }}"{% endif %}>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-6">
+                                                    <label for="nom_usage_{{ loop.index }}">Nom d'usage</label>
+                                                    <input type="text" id="nom_usage_{{ loop.index }}"
+                                                           name="nom_usage_{{ loop.index }}"
+                                                           {% if beneficiaire.nom_marital is defined %}value="{{ beneficiaire.nom_marital }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="pseudonyme_{{ loop.index }}">Pseudonyme</label>
+                                                    <input type="text" id="pseudonyme_{{ loop.index }}"
+                                                           name="pseudonyme_{{ loop.index }}"
+                                                           {% if beneficiaire.pseudonyme is defined %}value="{{ beneficiaire.pseudonyme }}"{% endif %}>
+                                                </div>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-6">
+                                                    <label for="prenom_principal_{{ loop.index }}">Prénom
+                                                        principal</label>
+                                                    <input type="text" id="prenom_principal_{{ loop.index }}"
+                                                           name="prenom_principal_{{ loop.index }}"
+                                                           {% if beneficiaire.prenoms is defined %}value="{{ beneficiaire.prenoms }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="prenom_autres_{{ loop.index }}">Autres prénoms</label>
+                                                    <input type="text" id="prenom_autres_{{ loop.index }}"
+                                                           name="prenom_autres_{{ loop.index }}" value="">
+                                                </div>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-4">
+                                                    <label for="naissance_date_{{ loop.index }}">Né(e) le </label>
+                                                    <input type="date" id="naissance_date_{{ loop.index }}"
+                                                           name="naissance_date_{{ loop.index }}"
+                                                           {% if beneficiaire.date_naissance is defined %}value="{{ beneficiaire.date_naissance|date('Y-m-d') }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="naissance_lieu_{{ loop.index }}">à</label>
+                                                    <input type="text" id="naissance_lieu_{{ loop.index }}"
+                                                           name="naissance_lieu_{{ loop.index }}"
+                                                           {% if beneficiaire.lieu_naissance.commune is defined %}value="{{ beneficiaire.lieu_naissance.commune }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="departement_pays_{{ loop.index }}">Département /
+                                                        Pays</label>
+                                                    <input type="text" id="departement_pays_{{ loop.index }}"
+                                                           name="departement_pays_{{ loop.index }}"
+                                                           {% if beneficiaire.lieu_naissance.pays is defined %}value="{{ beneficiaire.lieu_naissance.pays }}"{% endif %}>
+                                                </div>
+                                            </div>
+
+                                            <div class="a">
+                                                <label for="nationalite_{{ loop.index }}">Nationalité</label>
+                                                <input type="text" id="nationalite_{{ loop.index }}"
+                                                       name="nationalite_{{ loop.index }}"
+                                                       {% if beneficiaire.nationalite is defined %}value="{{ beneficiaire.nationalite }}"{% endif %}>
+                                            </div>
+                                            <div class="a">
+                                                <label for="adresse_domicile_{{ loop.index }}">Adresse du
+                                                    domicile</label>
+                                                <input type="text" id="adresse_domicile_{{ loop.index }}"
+                                                       name="adresse_domicile_{{ loop.index }}"
+                                                       {% if beneficiaire.adresse.rue is defined %}value="{{ beneficiaire.adresse.rue }}"{% endif %}>
+                                            </div>
+                                            <div class="row a">
+                                                <div class="col-md-4">
+                                                    <label for="code_postal_domicile_{{ loop.index }}"><i>Code
+                                                            postal</i></label>
+                                                    <input type="text" id="code_postal_domicile_{{ loop.index }}"
+                                                           name="code_postal_domicile_{{ loop.index }}"
+                                                           {% if beneficiaire.adresse.code_postal is defined %}value="{{ beneficiaire.adresse.code_postal }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="commune_domicile_{{ loop.index }}"><i>Commune</i></label>
+                                                    <input type="text" id="commune_domicile_{{ loop.index }}"
+                                                           name="commune_domicile_{{ loop.index }}"
+                                                           {% if beneficiaire.adresse.commune is defined %}value="{{ beneficiaire.adresse.commune }}"{% endif %}>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="pays_domicile_{{ loop.index }}"><i>Pays</i></label>
+                                                    <input type="text" id="pays_domicile_{{ loop.index }}"
+                                                           name="pays_domicile_{{ loop.index }}"
+                                                           {% if beneficiaire.adresse.pays is defined %}value="{{ beneficiaire.adresse.pays }}"{% endif %}>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div>
+                                            <div class="subtitle_part">2) Informations sur les modalités du contrôle
+                                                exercé
+                                                par le bénéficiaire effectif sur la société (R. 561-1 du code monétaire
+                                                et
+                                                financier) :
+                                            </div>
+                                            <div class="a">
+                                                <label>Détention :</label>
+                                                <div class="row">
+                                                    <div class="col-md-8 b">
+                                                        <label for="detention_capital_{{ loop.index }}">directe et/ou
+                                                            indirecte de plus de 25% du capital.</label>
+                                                        <div class="row">
+                                                            <div><input type="hidden"
+                                                                        id="detention_capital_directe_{{ loop.index }}"
+                                                                        name="detention_capital_directe_{{ loop.index }}"
+                                                                        value="0"></div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_capital_directe_{{ loop.index }}"
+                                                                                         name="detention_capital_directe_{{ loop.index }}"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "0" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}>
+                                                                directe
+                                                            </div>
+                                                            <div><input type="hidden"
+                                                                        id="detention_capital_indirecte_{{ loop.index }}"
+                                                                        name="detention_capital_indirecte_{{ loop.index }}"
+                                                                        value="0"></div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_capital_indirecte_{{ loop.index }}"
+                                                                                         name="detention_capital_indirecte_{{ loop.index }}"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "1" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}>
+                                                                indirecte
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="pourcentage_capital_{{ loop.index }}">Pourcentage
+                                                            total
+                                                            %</label>
+                                                        <input type="text" id="pourcentage_capital_{{ loop.index }}"
+                                                               name="pourcentage_capital_{{ loop.index }}"
+                                                               {% if beneficiaire.modalite_controle.detention_capital.pourcentage is defined %}value="{{ beneficiaire.modalite_controle.detention_capital.pourcentage }}"{% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <label>Détention :</label>
+                                                <div class="row">
+                                                    <div class="col-md-8 b">
+                                                        <label for="detention_droits_{{ loop.index }}">directe et/ou
+                                                            indirecte de plus de 25% des droits de vote.</label>
+                                                        <div class="row">
+                                                            <div><input type="hidden"
+                                                                        id="detention_droits_directe_{{ loop.index }}"
+                                                                        name="detention_droits_directe_{{ loop.index }}"
+                                                                        value="0"></div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_droits_directe_{{ loop.index }}"
+                                                                                         name="detention_droits_directe_{{ loop.index }}"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "0" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}>
+                                                                directe
+                                                            </div>
+                                                            <div><input type="hidden"
+                                                                        id="detention_droits_indirecte_{{ loop.index }}"
+                                                                        name="detention_droits_indirecte_{{ loop.index }}"
+                                                                        value="0"></div>
+                                                            <div class="col-md-6"><input type="checkbox"
+                                                                                         id="detention_droits_indirecte_{{ loop.index }}"
+                                                                                         name="detention_droits_indirecte_{{ loop.index }}"
+                                                                                         value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "1" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}>
+                                                                indirecte
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="pourcentage_droits_{{ loop.index }}">Pourcentage
+                                                            total
+                                                            %</label>
+                                                        <input type="text" id="pourcentage_droits_{{ loop.index }}"
+                                                               name="pourcentage_droits_{{ loop.index }}"
+                                                               {% if beneficiaire.modalite_controle.detention_votes.pourcentage is defined %}value="{{ beneficiaire.modalite_controle.detention_votes.pourcentage }}"{% endif %}>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="a">
+                                                <div><input type="hidden" id="autre_moyen_case_{{ loop.index }}"
+                                                            name="autre_moyen_case_{{ loop.index }}" value="0"></div>
+                                                <input type="checkbox" id="autre_moyen_case_{{ loop.index }}" name="autre_moyen_case_{{ loop.index }}" value="1" {% if beneficiaire.modalite_controle.autre_moyen is defined %}checked{% endif %}>  Exercice, par tout autre moyen, d'un pouvoir de contrôle
+                                                <input type="text" id="exercice_{{ loop.index }}"
+                                                       name="exercice_{{ loop.index }}"
+                                                       {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{ beneficiaire.modalite_controle.autre_moyen.texte }}"{% endif %}>
+                                            </div>
+                                            <div class="a">
+                                                <div><input type="hidden" id="representant_{{ loop.index }}"
+                                                            name="representant_{{ loop.index }}" value="0"></div>
+                                                <input type="checkbox" id="representant_{{ loop.index }}"
+                                                       name="representant_{{ loop.index }}"
+                                                       value="1" {% if beneficiaire.modalite_controle.representant_legal is defined %} {% if beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}{% endif %}>
+                                                <b>Représentant légal</b>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="subtitle_part">3) Date à laquelle la personne est devenue
+                                                bénéficiaire effectif de la société :
+                                            </div>
+                                            <input type="date" id="date_effect_{{ loop.index }}"
+                                                   name="date_effect_{{ loop.index }}"
+                                                   {% if beneficiaire.date_effet is defined %}value="{{ beneficiaire.date_effet|date('Y-m-d') }}"{% endif %}>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="immatriculation_{{loop.index}}">Immatriculation au RCS du greffe de</label>
-                                    <input type="text" id="immatriculation_{{loop.index}}" name="immatriculation_{{loop.index}}" {% if apis.immatriculation is defined %}value="{{apis.immatriculation}}"{% endif %}>
+                            {% endif %}
+                        {% endfor %}
+                    {% endset %}
+                    {############################# Formulaire DBE-S-bis #############################}
+                    {% set DBE_S_bis %}
+                        {#<div id="{{loop.index}}" class="DBE-S-bis">
+                            <div class="title_table">{{loop.index}}. DBE-S-bis</div>
+                            <div class="part">
+                                <div class="title_part">I. SOCIETE DECLARANTE (rappel)</div>
+                                <div class="a">
+                                    <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
+                                    <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
                                 </div>
-                            </div>
-                            <div class="a">
-                                <label for="forme_juridique_{{loop.index}}">Forme juridique</label>
-                                <input type="text" id="forme_juridique_{{loop.index}}" name="forme_juridique_{{loop.index}}" {% if apis.denomination is defined %}value="{{apis.forme_juridique}}"{% endif %}>
-                            </div>
-                            <div class="a">
-                                <label for="adresse_sociale_{{loop.index}}">Adresse du siège social</label>
-                                <input type="text" id="adresse_sociale_{{loop.index}}" name="adresse_sociale_{{loop.index}}" {% if apis.adresse.rue is defined %}value="{{apis.adresse.rue}}"{% endif %}>
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-4">
-                                    <label for="code_postal_sociale_{{loop.index}}"><i>Code postal</i></label>
-                                    <input type="text" id="code_postal_sociale_{{loop.index}}" name="code_postal_sociale_{{loop.index}}" {% if apis.adresse.code_postal is defined %}value="{{apis.adresse.code_postal}}"{% endif %}>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="commune_sociale_{{loop.index}}"><i>Commune</i></label>
-                                    <input type="text" id="commune_sociale_{{loop.index}}" name="commune_sociale_{{loop.index}}" {% if apis.adresse.commune is defined %}value="{{apis.adresse.commune}}"{% endif %}>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="pays_sociale_{{loop.index}}"><i>Pays</i></label>
-                                    <input type="text" id="pays_sociale_{{loop.index}}" name="pays_sociale_{{loop.index}}" {% if apis.adresse.pays is defined %}value="{{apis.adresse.pays}}"{% endif %}>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="part">
-                            <div class="title_part">II. INFORMATIONS SUR LE BENEFICIAIRE EFFECTIF DE LA SOCIETE</div>
-                            <div>
-                                <div class="subtitle_part">1) Informations sur l’identité du bénéficiaire effectif :</div>
                                 <div class="row a">
-                                    <label for="civilite_{{loop.index}}" class="col-md-4">Civilité</label>
-                                    <div class="col-md-4"><input type="radio" id="civilite_{{loop.index}}" name="civilite_{{loop.index}}" value="MME" {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "MME" %}checked{% endif %}{% endif %}> Madame</div>
-                                    <div class="col-md-4"><input type="radio" id="civilite_{{loop.index}}" name="civilite_{{loop.index}}" value="M." {% if beneficiaire.civilite is defined %} {% if beneficiaire.civilite == "M." %}checked{% endif %}{% endif %}> Monsieur</div>
+                                    <div class="col-md-6">
+                                        <label for="siren_{{loop.index}}">SIREN</label>
+                                        <input type="text" id="siren_{{loop.index}}" name="siren_{{loop.index}}" value="">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="immatriculation_{{loop.index}}">Immatriculation au RCS du greffe de</label>
+                                        <input type="text" id="immatriculation_{{loop.index}}" name="immatriculation_{{loop.index}}" value="">
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="part">
+                                <div class="title_part">II. BENEFICIAIRE EFFECTIF (rappel)</div>
                                 <div class="a">
                                     <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
-                                    <input type="text" id="nom_naissance_{{loop.index}}" name="nom_naissance_{{loop.index}}" {% if beneficiaire.nom_patronymique is defined %}value="{{beneficiaire.nom_patronymique}}"{% endif %}>
+                                    <input type="text" id="nom_naissance_{{loop.index}}" name="nom_naissance_{{loop.index}}" value="">
                                 </div>
-                                <div class="row a">
-                                    <div class="col-md-6">
-                                        <label for="nom_usage_{{loop.index}}">Nom d'usage</label>
-                                        <input type="text" id="nom_usage_{{loop.index}}" name="nom_usage_{{loop.index}}" {% if beneficiaire.nom_marital is defined %}value="{{beneficiaire.nom_marital}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="pseudonyme_{{loop.index}}">Pseudonyme</label>
-                                        <input type="text" id="pseudonyme_{{loop.index}}" name="pseudonyme_{{loop.index}}" {% if beneficiaire.pseudonyme is defined %}value="{{beneficiaire.pseudonyme}}"{% endif %}>
-                                    </div>
+                                <div class="a">
+                                    <label for="nom_usage_{{loop.index}}">Nom d'usage</label>
+                                    <input type="text" id="nom_usage_{{loop.index}}" name="nom_usage_{{loop.index}}" value="">
                                 </div>
                                 <div class="row a">
                                     <div class="col-md-6">
                                         <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
-                                        <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" {% if beneficiaire.prenoms is defined %}value="{{beneficiaire.prenoms}}"{% endif %}>
+                                        <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="prenom_autres_{{loop.index}}">Autres prénoms</label>
                                         <input type="text" id="prenom_autres_{{loop.index}}" name="prenom_autres_{{loop.index}}" value="">
                                     </div>
                                 </div>
-                                <div class="row a">
-                                    <div class="col-md-4">
-                                        <label for="naissance_date_{{loop.index}}">Né(e) le </label>
-                                        <input type="date" id="naissance_date_{{loop.index}}" name="naissance_date_{{loop.index}}" {% if beneficiaire.date_naissance is defined %}value="{{beneficiaire.date_naissance|date('Y-m-d')}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="naissance_lieu_{{loop.index}}">à</label>
-                                        <input type="text" id="naissance_lieu_{{loop.index}}" name="naissance_lieu_{{loop.index}}" {% if beneficiaire.lieu_naissance.commune is defined %}value="{{beneficiaire.lieu_naissance.commune}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="departement_pays_{{loop.index}}">Département / Pays</label>
-                                        <input type="text" id="departement_pays_{{loop.index}}" name="departement_pays_{{loop.index}}" {% if beneficiaire.lieu_naissance.pays is defined %}value="{{beneficiaire.lieu_naissance.pays}}"{% endif %}>
-                                    </div>
-                                </div>
-                                
-                                <div class="a">
-                                    <label for="nationalite_{{loop.index}}">Nationalité</label>
-                                    <input type="text" id="nationalite_{{loop.index}}" name="nationalite_{{loop.index}}" {% if beneficiaire.nationalite is defined %}value="{{beneficiaire.nationalite}}"{% endif %}>
-                                </div>
-                                <div class="a">
-                                    <label for="adresse_domicile_{{loop.index}}">Adresse du domicile</label>
-                                    <input type="text" id="adresse_domicile_{{loop.index}}" name="adresse_domicile_{{loop.index}}" {% if beneficiaire.adresse.rue is defined %}value="{{beneficiaire.adresse.rue}}"{% endif %}>
-                                </div>
-                                <div class="row a">
-                                     <div class="col-md-4">
-                                        <label for="code_postal_domicile_{{loop.index}}"><i>Code postal</i></label>
-                                        <input type="text" id="code_postal_domicile_{{loop.index}}" name="code_postal_domicile_{{loop.index}}" {% if beneficiaire.adresse.code_postal is defined %}value="{{beneficiaire.adresse.code_postal}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="commune_domicile_{{loop.index}}"><i>Commune</i></label>
-                                        <input type="text" id="commune_domicile_{{loop.index}}" name="commune_domicile_{{loop.index}}" {% if beneficiaire.adresse.commune is defined %}value="{{beneficiaire.adresse.commune}}"{% endif %}>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="pays_domicile_{{loop.index}}"><i>Pays</i></label>
-                                        <input type="text" id="pays_domicile_{{loop.index}}" name="pays_domicile_{{loop.index}}" {% if beneficiaire.adresse.pays is defined %}value="{{beneficiaire.adresse.pays}}"{% endif %}>
-                                    </div>
-                                </div>
-                               
                             </div>
-                            <div>
-                                <div class="subtitle_part">2) Informations sur les modalités du contrôle exercé par le bénéficiaire effectif sur la société (R. 561-1 du code monétaire et financier) :</div>
-                                <div class="a" >
-                                    <label>Détention :</label>
-                                    <div class="row">
-                                        <div class="col-md-8 b">
-                                            <label for="detention_capital_{{loop.index}}">directe et/ou indirecte de plus de 25% du capital.</label>
-                                            <div class="row">
-                                                <div><input type="hidden" id="detention_capital_directe_{{loop.index}}" name="detention_capital_directe_{{loop.index}}" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_directe_{{loop.index}}" name="detention_capital_directe_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "0" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}> directe</div>
-                                                <div><input type="hidden" id="detention_capital_indirecte_{{loop.index}}" name="detention_capital_indirecte_{{loop.index}}" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_capital_indirecte_{{loop.index}}" name="detention_capital_indirecte_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_capital is defined %} {% if beneficiaire.modalite_controle.detention_capital.type == "1" or beneficiaire.modalite_controle.detention_capital.type == "3" %}checked{% endif %}{% endif %}> indirecte</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="pourcentage_capital_{{loop.index}}">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_capital_{{loop.index}}" name="pourcentage_capital_{{loop.index}}" {% if beneficiaire.modalite_controle.detention_capital.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_capital.pourcentage}}"{% endif %}>
-                                        </div>
+                            <div class="part">
+                                <div class="title_part">III. DESCRIPTION DES MODALITES DU CONTROLE EXERCE PAR LE BENEFICIAIRE EFFECTIF</div>
+                                <div class="a">
+                                    <label>1) Précisez :</label>
+                                    <div class="b">
+                                        <label for="preciser_demembrement_{{loop.index}}">En cas de démembrement de propriété</label>
+                                        <textarea id="preciser_demembrement_{{loop.index}}" name="preciser_demembrement_{{loop.index}}" value=""></textarea>
+                                    </div>
+                                    <div class="b">
+                                        <label for="preciser_detention_indirecte_{{loop.index}}">En cas de détention indirecte</label>
+                                        <textarea id="preciser_detention_indirecte_{{loop.index}}" name="preciser_detention_indirecte_{{loop.index}}" value=""></textarea>
                                     </div>
                                 </div>
                                 <div class="a">
-                                    <label>Détention :</label>
-                                    <div class="row">
-                                        <div class="col-md-8 b">
-                                            <label for="detention_droits_{{loop.index}}">directe et/ou indirecte de plus de 25% des droits de vote.</label>
-                                            <div class="row">
-                                                <div><input type="hidden" id="detention_droits_directe_{{loop.index}}" name="detention_droits_directe_{{loop.index}}" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_directe_{{loop.index}}" name="detention_droits_directe_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "0" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}> directe</div>
-                                                <div><input type="hidden" id="detention_droits_indirecte_{{loop.index}}" name="detention_droits_indirecte_{{loop.index}}" value="0"></div>
-                                                <div class="col-md-6"><input type="checkbox" id="detention_droits_indirecte_{{loop.index}}" name="detention_droits_indirecte_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.detention_votes is defined %} {% if beneficiaire.modalite_controle.detention_votes.type == "1" or beneficiaire.modalite_controle.detention_votes.type == "3" %}checked{% endif %}{% endif %}> indirecte</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="pourcentage_droits_{{loop.index}}">Pourcentage total %</label>
-                                            <input type="text" id="pourcentage_droits_{{loop.index}}" name="pourcentage_droits_{{loop.index}}" {% if beneficiaire.modalite_controle.detention_votes.pourcentage is defined %}value="{{beneficiaire.modalite_controle.detention_votes.pourcentage}}"{% endif %}>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="a">
-                                    <label>Exercice, par tout autre moyen, d'un pouvoir de contrôle</label>
-                                    <input type="text" id="exercice_{{loop.index}}" name="exercice_{{loop.index}}" {% if beneficiaire.modalite_controle.autre_moyen is defined %}value="{{beneficiaire.modalite_controle.autre_moyen.texte}}"{% endif %}>
-                                </div>
-                                <div class="a">
-                                    <div><input type="hidden" id="representant_{{loop.index}}" name="representant_{{loop.index}}" value="0"></div>
-                                    <input type="checkbox" id="representant_{{loop.index}}" name="representant_{{loop.index}}" value="1" {% if beneficiaire.modalite_controle.representant_legal is defined %} {% if beneficiaire.modalite_controle.representant_legal == "1" %}checked{% endif %}{% endif %}> <b>Représentant légal</b>
+                                    <label>2) Précisez les modalités du pouvoir de contrôle :</label>
+                                    <textarea id="preciser_modalites_du_pouvoir_{{loop.index}}" name="preciser_modalites_du_pouvoir_{{loop.index}}">{{api.joint}}</textarea>
                                 </div>
                             </div>
-                            <div>
-                                <div class="subtitle_part">3) Date à laquelle la personne est devenue bénéficiaire effectif de la société :</div>
-                                <input type="date" id="date_effect_{{loop.index}}" name="date_effect_{{loop.index}}" {% if beneficiaire.date_effet is defined %}value="{{beneficiaire.date_effet|date('Y-m-d')}}"{% endif %}>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                    {% endset %}
-                    {############################# Formulaire DBE-S-bis #############################}
-                    {% set DBE_S_bis %}
-                    {#<div id="{{loop.index}}" class="DBE-S-bis">
-                        <div class="title_table">{{loop.index}}. DBE-S-bis</div>
-                        <div class="part">
-                            <div class="title_part">I. SOCIETE DECLARANTE (rappel)</div>
-                            <div class="a">
-                                <div><label for="denomination_sociale_{{loop.index}}">Dénomination sociale</label></div>
-                                <input type="text" id="denomination_sociale_{{loop.index}}" name="denomination_sociale_{{loop.index}}" value="">
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-6">
-                                    <label for="siren_{{loop.index}}">SIREN</label>
-                                    <input type="text" id="siren_{{loop.index}}" name="siren_{{loop.index}}" value="">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="immatriculation_{{loop.index}}">Immatriculation au RCS du greffe de</label>
-                                    <input type="text" id="immatriculation_{{loop.index}}" name="immatriculation_{{loop.index}}" value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="part">
-                            <div class="title_part">II. BENEFICIAIRE EFFECTIF (rappel)</div>
-                            <div class="a">
-                                <label for="nom_naissance_{{loop.index}}">Nom de naissance</label>
-                                <input type="text" id="nom_naissance_{{loop.index}}" name="nom_naissance_{{loop.index}}" value="">
-                            </div>
-                            <div class="a">
-                                <label for="nom_usage_{{loop.index}}">Nom d'usage</label>
-                                <input type="text" id="nom_usage_{{loop.index}}" name="nom_usage_{{loop.index}}" value="">
-                            </div>
-                            <div class="row a">
-                                <div class="col-md-6">
-                                    <label for="prenom_principal_{{loop.index}}">Prénom principal</label>
-                                    <input type="text" id="prenom_principal_{{loop.index}}" name="prenom_principal_{{loop.index}}" value="">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="prenom_autres_{{loop.index}}">Autres prénoms</label>
-                                    <input type="text" id="prenom_autres_{{loop.index}}" name="prenom_autres_{{loop.index}}" value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="part">
-                            <div class="title_part">III. DESCRIPTION DES MODALITES DU CONTROLE EXERCE PAR LE BENEFICIAIRE EFFECTIF</div>
-                            <div class="a">
-                                <label>1) Précisez :</label>
-                                <div class="b">
-                                    <label for="preciser_demembrement_{{loop.index}}">En cas de démembrement de propriété</label>
-                                    <textarea id="preciser_demembrement_{{loop.index}}" name="preciser_demembrement_{{loop.index}}" value=""></textarea>
-                                </div>
-                                <div class="b">
-                                    <label for="preciser_detention_indirecte_{{loop.index}}">En cas de détention indirecte</label>
-                                    <textarea id="preciser_detention_indirecte_{{loop.index}}" name="preciser_detention_indirecte_{{loop.index}}" value=""></textarea>
-                                </div>
-                            </div>
-                            <div class="a">
-                                <label>2) Précisez les modalités du pouvoir de contrôle :</label>
-                                <textarea id="preciser_modalites_du_pouvoir_{{loop.index}}" name="preciser_modalites_du_pouvoir_{{loop.index}}">{{api.joint}}</textarea>
-                            </div>
-                        </div>
-                    </div>#}
+                        </div>#}
                     {% endset %}
 
                     {############################# Conditions Formulaire #############################}
-                    {{DBE_S_1}}
-                    {{DBE_S_2}}
+                    {{ DBE_S_1 }}
+                    {{ DBE_S_2 }}
 
+                </div>
             </div>
-        </div>
-        <div class="code_rejets text-right">
-            <label for="code_rejets">Code rejet:</label>
-            <select id="code_rejets" name="code_rejets" class="text-center">
-                <option value="0" {% if apis.rejet == 0 %}selected{% endif %}>{{'codesRejet.0'|trans}}</option>
-                <option value="112" {% if apis.rejet == 112 %}selected{% endif %}>{{'codesRejet.112'|trans}}</option>
-                <option value="113" {% if apis.rejet == 113 %}selected{% endif %}>{{'codesRejet.113'|trans}}</option>
-                <option value="114" {% if apis.rejet == 114 %}selected{% endif %}>{{'codesRejet.114'|trans}}</option>
-                <option value="115" {% if apis.rejet == 115 %}selected{% endif %}>{{'codesRejet.115'|trans}}</option>
-                <option value="131" {% if apis.rejet == 131 %}selected{% endif %}>{{'codesRejet.131'|trans}}</option>
-                <option value="132" {% if apis.rejet == 132 %}selected{% endif %}>{{'codesRejet.132'|trans}}</option>
-                <option value="133" {% if apis.rejet == 133 %}selected{% endif %}>{{'codesRejet.133'|trans}}</option>
-                <option value="140" {% if apis.rejet == 140 %}selected{% endif %}>{{'codesRejet.140'|trans}}</option>
-                <option value="141" {% if apis.rejet == 141 %}selected{% endif %}>{{'codesRejet.141'|trans}}</option>
-                <option value="142" {% if apis.rejet == 142 %}selected{% endif %}>{{'codesRejet.142'|trans}}</option>
-                <option value="143" {% if apis.rejet == 143 %}selected{% endif %}>{{'codesRejet.143'|trans}}</option>
-                <option value="144" {% if apis.rejet == 144 %}selected{% endif %}>{{'codesRejet.144'|trans}}</option>
-                <option value="145" {% if apis.rejet == 145 %}selected{% endif %}>{{'codesRejet.145'|trans}}</option>
-                <option value="146" {% if apis.rejet == 146 %}selected{% endif %}>{{'codesRejet.146'|trans}}</option>
-                <option value="147" {% if apis.rejet == 147 %}selected{% endif %}>{{'codesRejet.147'|trans}}</option>
-                <option value="148" {% if apis.rejet == 148 %}selected{% endif %}>{{'codesRejet.148'|trans}}</option>
-                <option value="149" {% if apis.rejet == 149 %}selected{% endif %}>{{'codesRejet.149'|trans}}</option>
-                <option value="150" {% if apis.rejet == 150 %}selected{% endif %}>{{'codesRejet.150'|trans}}</option>
-                <option value="151" {% if apis.rejet == 151 %}selected{% endif %}>{{'codesRejet.151'|trans}}</option>
-                <option value="152" {% if apis.rejet == 152 %}selected{% endif %}>{{'codesRejet.152'|trans}}</option>
-                <option value="153" {% if apis.rejet == 153 %}selected{% endif %}>{{'codesRejet.153'|trans}}</option>
-                <option value="154" {% if apis.rejet == 154 %}selected{% endif %}>{{'codesRejet.154'|trans}}</option>
-                <option value="155" {% if apis.rejet == 155 %}selected{% endif %}>{{'codesRejet.155'|trans}}</option>
-                <option value="156" {% if apis.rejet == 156 %}selected{% endif %}>{{'codesRejet.156'|trans}}</option>
-                <option value="157" {% if apis.rejet == 157 %}selected{% endif %}>{{'codesRejet.157'|trans}}</option>
-                <option value="501" {% if apis.rejet == 501 %}selected{% endif %}>{{'codesRejet.501'|trans}}</option>
-                <option value="502" {% if apis.rejet == 502 %}selected{% endif %}>{{'codesRejet.502'|trans}}</option>
-                <option value="531" {% if apis.rejet == 531 %}selected{% endif %}>{{'codesRejet.531'|trans}}</option>
-                <option value="532" {% if apis.rejet == 532 %}selected{% endif %}>{{'codesRejet.532'|trans}}</option>
-                <option value="541" {% if apis.rejet == 541 %}selected{% endif %}>{{'codesRejet.541'|trans}}</option>
-            </select>
-        </div>
-        <div class="confirm_check text-right">
-            <input type="checkbox" id="valider_confirm">* Êtes-vous sûr de vouloir valider la correction?
-        </div>
-        <div class="btn_compare">
-            <a href="/compare/addDBE_S_2/{{ filename }}/{{apis.beneficiaires|length}}/{{siren}}" id="add_form_DBE_S_2" class="sdpd__btn orange_btn b" onclick="javascript:return addS2()">Ajouter un DBE-S-2</a>
-            {# <a href="/compare/addDBE_S_bis/{{ filename }}/{{apis|length}}" id="add_form_DBE_S_bis" class="sdpd__btn orange_btn b">Ajouter un DBE-S-bis</a> #}
-            <a href="/" class="sdpd__btn b" onclick="javascript:return cancel()">Annuler</a>
-            <input type="submit" id="valider" class="sdpd__btn red_btn disabled b" value="Valider" disabled onclick="javascript:return valide()">
-        </div>
-    </form>
-</div>
+            <div class="code_rejets text-right">
+                <label for="code_rejets">Code rejet:</label>
+                <select id="code_rejets" name="code_rejets" class="text-center">
+                    <option value="0" {% if apis.rejet == 0 %}selected{% endif %}>{{ 'codesRejet.0'|trans }}</option>
+                    <option value="112"
+                            {% if apis.rejet == 112 %}selected{% endif %}>{{ 'codesRejet.112'|trans }}</option>
+                    <option value="113"
+                            {% if apis.rejet == 113 %}selected{% endif %}>{{ 'codesRejet.113'|trans }}</option>
+                    <option value="114"
+                            {% if apis.rejet == 114 %}selected{% endif %}>{{ 'codesRejet.114'|trans }}</option>
+                    <option value="115"
+                            {% if apis.rejet == 115 %}selected{% endif %}>{{ 'codesRejet.115'|trans }}</option>
+                    <option value="131"
+                            {% if apis.rejet == 131 %}selected{% endif %}>{{ 'codesRejet.131'|trans }}</option>
+                    <option value="132"
+                            {% if apis.rejet == 132 %}selected{% endif %}>{{ 'codesRejet.132'|trans }}</option>
+                    <option value="133"
+                            {% if apis.rejet == 133 %}selected{% endif %}>{{ 'codesRejet.133'|trans }}</option>
+                    <option value="140"
+                            {% if apis.rejet == 140 %}selected{% endif %}>{{ 'codesRejet.140'|trans }}</option>
+                    <option value="141"
+                            {% if apis.rejet == 141 %}selected{% endif %}>{{ 'codesRejet.141'|trans }}</option>
+                    <option value="142"
+                            {% if apis.rejet == 142 %}selected{% endif %}>{{ 'codesRejet.142'|trans }}</option>
+                    <option value="143"
+                            {% if apis.rejet == 143 %}selected{% endif %}>{{ 'codesRejet.143'|trans }}</option>
+                    <option value="144"
+                            {% if apis.rejet == 144 %}selected{% endif %}>{{ 'codesRejet.144'|trans }}</option>
+                    <option value="145"
+                            {% if apis.rejet == 145 %}selected{% endif %}>{{ 'codesRejet.145'|trans }}</option>
+                    <option value="146"
+                            {% if apis.rejet == 146 %}selected{% endif %}>{{ 'codesRejet.146'|trans }}</option>
+                    <option value="147"
+                            {% if apis.rejet == 147 %}selected{% endif %}>{{ 'codesRejet.147'|trans }}</option>
+                    <option value="148"
+                            {% if apis.rejet == 148 %}selected{% endif %}>{{ 'codesRejet.148'|trans }}</option>
+                    <option value="149"
+                            {% if apis.rejet == 149 %}selected{% endif %}>{{ 'codesRejet.149'|trans }}</option>
+                    <option value="150"
+                            {% if apis.rejet == 150 %}selected{% endif %}>{{ 'codesRejet.150'|trans }}</option>
+                    <option value="151"
+                            {% if apis.rejet == 151 %}selected{% endif %}>{{ 'codesRejet.151'|trans }}</option>
+                    <option value="152"
+                            {% if apis.rejet == 152 %}selected{% endif %}>{{ 'codesRejet.152'|trans }}</option>
+                    <option value="153"
+                            {% if apis.rejet == 153 %}selected{% endif %}>{{ 'codesRejet.153'|trans }}</option>
+                    <option value="154"
+                            {% if apis.rejet == 154 %}selected{% endif %}>{{ 'codesRejet.154'|trans }}</option>
+                    <option value="155"
+                            {% if apis.rejet == 155 %}selected{% endif %}>{{ 'codesRejet.155'|trans }}</option>
+                    <option value="156"
+                            {% if apis.rejet == 156 %}selected{% endif %}>{{ 'codesRejet.156'|trans }}</option>
+                    <option value="157"
+                            {% if apis.rejet == 157 %}selected{% endif %}>{{ 'codesRejet.157'|trans }}</option>
+                    <option value="501"
+                            {% if apis.rejet == 501 %}selected{% endif %}>{{ 'codesRejet.501'|trans }}</option>
+                    <option value="502"
+                            {% if apis.rejet == 502 %}selected{% endif %}>{{ 'codesRejet.502'|trans }}</option>
+                    <option value="531"
+                            {% if apis.rejet == 531 %}selected{% endif %}>{{ 'codesRejet.531'|trans }}</option>
+                    <option value="532"
+                            {% if apis.rejet == 532 %}selected{% endif %}>{{ 'codesRejet.532'|trans }}</option>
+                    <option value="541"
+                            {% if apis.rejet == 541 %}selected{% endif %}>{{ 'codesRejet.541'|trans }}</option>
+                </select>
+            </div>
+            <div class="confirm_check text-right">
+                <input type="checkbox" id="valider_confirm">* Êtes-vous sûr de vouloir valider la correction?
+            </div>
+            <div class="btn_compare">
+                <a href="/compare/addDBE_S_2/{{ filename }}/{{ apis.beneficiaires|length }}/{{ siren }}"
+                   id="add_form_DBE_S_2" class="sdpd__btn orange_btn b" onclick="javascript:return addS2()">Ajouter un
+                    DBE-S-2</a>
+                {# <a href="/compare/addDBE_S_bis/{{ filename }}/{{apis|length}}" id="add_form_DBE_S_bis" class="sdpd__btn orange_btn b">Ajouter un DBE-S-bis</a> #}
+                <a href="/" class="sdpd__btn b" onclick="javascript:return cancel()">Annuler</a>
+                <input type="submit" id="valider" class="sdpd__btn red_btn disabled b" value="Valider" disabled
+                       onclick="javascript:return valide()">
+            </div>
+        </form>
+    </div>
 {% endblock %} 
 {% block javascripts %}
-{{parent()}}
-<script>
-    function valide() { 
-        var msg = "Êtes-vous sûr de vouloir valider la correction?"; 
-        if (confirm(msg)==true){ 
-        return true; 
-        }else{ 
-        return false; 
-        } 
-    }
-    function addS2() { 
-        var msg = "Êtes-vous sûr d'ajouter un DBE S-2? \nVous perdrez toutes les modifications."; 
-        if (confirm(msg)==true){ 
-        return true; 
-        }else{ 
-        return false; 
-        } 
-    }
-    function cancel() { 
-        var msg = "Êtes-vous sûr d'annuler de corriger? \nVous perdrez toutes les modifications."; 
-        if (confirm(msg)==true){ 
-        return true; 
-        }else{ 
-        return false; 
-        } 
-    }
-    $(document).ready(function () {
-        $("span[id^='index-']").each(function() {
-            $(this).click(function() {
-                $('.index *').removeClass('active');
-                $(this).addClass('active');
-            })
-        });
-        /*$('#valider_confirm').click(function() {
-            if (this.checked) {
-                $('.compare_page #valider').removeAttr("disabled");
-                $('.compare_page #valider').removeClass('disabled');
+    {{ parent() }}
+    <script>
+        function valide() {
+            var msg = "Êtes-vous sûr de vouloir valider la correction?";
+            if (confirm(msg) == true) {
+                return true;
+            } else {
+                return false;
             }
-            else {
-                $('.compare_page #valider').attr("disabled","disabled");
-                $('.compare_page #valider').addClass('disabled');
+        }
+
+        function addS2() {
+            var msg = "Êtes-vous sûr d'ajouter un DBE S-2? \nVous perdrez toutes les modifications.";
+            if (confirm(msg) == true) {
+                return true;
+            } else {
+                return false;
             }
-        });*/
-        
-        $('input').on('input porpertychange', function() {
-            $('#valider_confirm').click(function() {
+        }
+
+        function cancel() {
+            var msg = "Êtes-vous sûr d'annuler de corriger? \nVous perdrez toutes les modifications.";
+            if (confirm(msg) == true) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $(document).ready(function () {
+            $("span[id^='index-']").each(function () {
+                $(this).click(function () {
+                    $('.index *').removeClass('active');
+                    $(this).addClass('active');
+                })
+            });
+            /*$('#valider_confirm').click(function() {
                 if (this.checked) {
                     $('.compare_page #valider').removeAttr("disabled");
                     $('.compare_page #valider').removeClass('disabled');
@@ -596,9 +842,21 @@
                     $('.compare_page #valider').attr("disabled","disabled");
                     $('.compare_page #valider').addClass('disabled');
                 }
-            });
+            });*/
+
+            $('input').on('input porpertychange', function () {
+                $('#valider_confirm').click(function () {
+                    if (this.checked) {
+                        $('.compare_page #valider').removeAttr("disabled");
+                        $('.compare_page #valider').removeClass('disabled');
+                    }
+                    else {
+                        $('.compare_page #valider').attr("disabled", "disabled");
+                        $('.compare_page #valider').addClass('disabled');
+                    }
+                });
+            })
         })
-    })
-</script>
+    </script>
 
 {% endblock %}
