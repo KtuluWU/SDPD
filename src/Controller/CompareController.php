@@ -48,9 +48,9 @@ class CompareController extends Controller
     }
 
     /**
-     * @Route("/generateXML/{filename}&{operator}", name="generateXMLpage")
+     * @Route("/generateXML/{filename}&{operator}&{nb_BE}", name="generateXMLpage")
      */
-    public function generateXML($filename, $operator)
+    public function generateXML($filename, $operator, $nb_BE)
     {
         $fileSystem = new Filesystem();
         $file_pdf = ($this->getParameter('files'))."/".$filename;
@@ -59,14 +59,14 @@ class CompareController extends Controller
             $fileSystem->remove($file_pdf);
         }
 
-        $denomination_sociale = array();
-        $siren = array();
-        $immatriculation = array();
-        $forme_juridique = array();
-        $adresse_sociale = array();
-        $code_postal_sociale = array();
-        $commune_sociale = array();
-        $pays_sociale = array();
+        $denomination_sociale = $_POST['denomination_sociale_1'];
+        $siren = $_POST['siren_1'];
+        $immatriculation = $_POST['immatriculation_1'];
+        $forme_juridique = $_POST['forme_juridique_1'];
+        $adresse_sociale = $_POST['adresse_sociale_1'];
+        $code_postal_sociale = $_POST['code_postal_sociale_1'];
+        $commune_sociale = $_POST['commune_sociale_1'];
+        $pays_sociale = $_POST['pays_sociale_1'];
         $civilite = array();
         $nom_naissance = array();
         $nom_usage = array();
@@ -87,33 +87,13 @@ class CompareController extends Controller
         $detention_droits_indirecte = array();
         $pourcentage_capital = array();
         $pourcentage_droits = array();
+        $autre_moyen_case = array();
         $exercice = array();
         $representant = array();
         $date_effect = array();
 
 
         foreach($_POST as $key => $value) {
-            if (strpos($key, 'denomination_sociale_') === 0) {
-                array_push($denomination_sociale, $value);
-            }
-            if (strpos($key, 'siren_') === 0) {
-                array_push($siren, $value);
-            }
-            if (strpos($key, 'forme_juridique_') === 0) {
-                array_push($forme_juridique, $value);
-            }
-            if (strpos($key, 'adresse_sociale_') === 0) {
-                array_push($adresse_sociale, $value);
-            }
-            if (strpos($key, 'code_postal_sociale_') === 0) {
-                array_push($code_postal_sociale, $value);
-            }
-            if (strpos($key, 'commune_sociale_') === 0) {
-                array_push($commune_sociale, $value);
-            }
-            if (strpos($key, 'pays_sociale_') === 0) {
-                array_push($pays_sociale, $value);
-            }
             if (strpos($key, 'civilite_') === 0) {
                 array_push($civilite, $value);
             }
@@ -174,6 +154,9 @@ class CompareController extends Controller
             if (strpos($key, 'pourcentage_droits_') === 0) {
                 array_push($pourcentage_droits, $value);
             }
+            if (strpos($key, 'autre_moyen_case_') === 0) {
+                array_push($autre_moyen_case, $value);
+            }
             if (strpos($key, 'exercice_') === 0) {
                 array_push($exercice, $value);
             }
@@ -185,55 +168,44 @@ class CompareController extends Controller
             }
         }
 
-        $nb_BE = count($siren);
         $infos_xml = array();
 
-        $denomination_sociale = $this->infos_check($siren, $denomination_sociale);
-        $immatriculation = $this->infos_check($siren, $immatriculation);
-        $forme_juridique = $this->infos_check($siren, $forme_juridique);
-        $adresse_sociale = $this->infos_check($siren, $adresse_sociale);
-        $code_postal_sociale = $this->infos_check($siren, $code_postal_sociale);
-        $commune_sociale = $this->infos_check($siren, $commune_sociale);
-        $pays_sociale = $this->infos_check($siren, $pays_sociale);
-        $civilite = $this->infos_check($siren, $civilite);
-        $nom_naissance = $this->infos_check($siren, $nom_naissance);
-        $nom_usage = $this->infos_check($siren, $nom_usage);
-        $pseudonyme = $this->infos_check($siren, $pseudonyme);
-        $prenom_principal = $this->infos_check($siren, $prenom_principal);
-        $prenom_autres = $this->infos_check($siren, $prenom_autres);
-        $naissance_date = $this->infos_check($siren, $naissance_date);
-        $naissance_lieu = $this->infos_check($siren, $naissance_lieu);
-        $departement_pays = $this->infos_check($siren, $departement_pays);
-        $nationalite = $this->infos_check($siren, $nationalite);
-        $adresse_domicile = $this->infos_check($siren, $adresse_domicile);
-        $code_postal_domicile = $this->infos_check($siren, $code_postal_domicile);
-        $commune_domicile = $this->infos_check($siren, $commune_domicile);
-        $pays_domicile = $this->infos_check($siren, $pays_domicile);
-        // $detention_capital_directe = $this->infos_check($siren, $detention_capital_directe);
-        // $detention_capital_indirecte = $this->infos_check($siren, $detention_capital_indirecte);
-        // $detention_droits_directe = $this->infos_check($siren, $detention_droits_directe);
-        // $detention_droits_indirecte = $this->infos_check($siren, $detention_droits_indirecte);
-        $pourcentage_capital = $this->infos_check($siren, $pourcentage_capital);
-        $pourcentage_droits = $this->infos_check($siren, $pourcentage_droits);
-        $exercice = $this->infos_check($siren, $exercice);
-        // $representant = $this->infos_check($siren, $representant);
-        $date_effect = $this->infos_check($siren, $date_effect);
+        $civilite = $this->infos_check($nb_BE, $civilite);
+        $nom_naissance = $this->infos_check($nb_BE, $nom_naissance);
+        $nom_usage = $this->infos_check($nb_BE, $nom_usage);
+        $pseudonyme = $this->infos_check($nb_BE, $pseudonyme);
+        $prenom_principal = $this->infos_check($nb_BE, $prenom_principal);
+        $prenom_autres = $this->infos_check($nb_BE, $prenom_autres);
+        $naissance_date = $this->infos_check($nb_BE, $naissance_date);
+        $naissance_lieu = $this->infos_check($nb_BE, $naissance_lieu);
+        $departement_pays = $this->infos_check($nb_BE, $departement_pays);
+        $nationalite = $this->infos_check($nb_BE, $nationalite);
+        $adresse_domicile = $this->infos_check($nb_BE, $adresse_domicile);
+        $code_postal_domicile = $this->infos_check($nb_BE, $code_postal_domicile);
+        $commune_domicile = $this->infos_check($nb_BE, $commune_domicile);
+        $pays_domicile = $this->infos_check($nb_BE, $pays_domicile);
+        $pourcentage_capital = $this->infos_check($nb_BE, $pourcentage_capital);
+        $pourcentage_droits = $this->infos_check($nb_BE, $pourcentage_droits);
+//        $autre_moyen_case = $this->infos_check($nb_BE, $autre_moyen_case);
+        $exercice = $this->infos_check($nb_BE, $exercice);
+        $date_effect = $this->infos_check($nb_BE, $date_effect);
 
         $code_rejet = $_POST['code_rejets'];
-        $detention_capital = $this->detention_capital_check($siren, $detention_capital_directe, $detention_capital_indirecte);
-        $detention_droits = $this->detention_droits_check($siren, $detention_droits_directe, $detention_droits_indirecte);
+        $detention_capital = $this->detention_capital_check($nb_BE, $detention_capital_directe, $detention_capital_indirecte);
+        $detention_droits = $this->detention_droits_check($nb_BE, $detention_droits_directe, $detention_droits_indirecte);
+
 
         for($i = 0; $i < $nb_BE; $i++) {
             array_push($infos_xml, array(
                 $i => array(
-                    'denomination_sociale' => $denomination_sociale[$i],
-                    'siren' => $siren[$i],
-                    'immatriculation' => $immatriculation[$i],
-                    'forme_juridique' => $forme_juridique[$i],
-                    'adresse_sociale' => $adresse_sociale[$i],
-                    'code_postal_sociale' => $code_postal_sociale[$i],
-                    'commune_sociale' => $commune_sociale[$i],
-                    'pays_sociale' => $pays_sociale[$i],
+                    'denomination_sociale' => $denomination_sociale,
+                    'siren' => $siren,
+                    'immatriculation' => $immatriculation,
+                    'forme_juridique' => $forme_juridique,
+                    'adresse_sociale' => $adresse_sociale,
+                    'code_postal_sociale' => $code_postal_sociale,
+                    'commune_sociale' => $commune_sociale,
+                    'pays_sociale' => $pays_sociale,
                     'civilite' => $civilite[$i],
                     'nom_naissance' => $nom_naissance[$i],
                     'nom_usage' => $nom_usage[$i],
@@ -252,6 +224,7 @@ class CompareController extends Controller
                     'pourcentage_capital' => $pourcentage_capital[$i],
                     'detention_droits' => $detention_droits[$i],
                     'pourcentage_droits' => $pourcentage_droits[$i],
+                    'autre_moyen_case' => $autre_moyen_case[$i],
                     'exercice' => $exercice[$i],
                     'representant' => $representant[$i],
                     'date_effect' => $date_effect[$i],
@@ -269,7 +242,7 @@ class CompareController extends Controller
         date_default_timezone_set("Europe/Paris");
         $dateSaisie_operator = date_create(date('Y-m-d H:i:s'));
 
-        $operator_db->setSiren($siren[0]);
+        $operator_db->setSiren($siren);
         $operator_db->setOperator($operator);
         $operator_db->setDateSaisie($dateSaisie_operator);
 
@@ -279,10 +252,10 @@ class CompareController extends Controller
         /**
          * Générer XML
          */
-        $infos_db = $this->data_TEST2($siren[0]);
+        $infos_db = $this->data_TEST2($siren);
         $res_xml = $this->XML_generator($nb_BE, $infos_xml, $operator);
-        $date_saisie = date("Ymd" ,strtotime($infos_db['dtsaisie']));
-        $file_name = "beffectifs_".$siren[0]."_".$date_saisie.".xml";
+        $date_saisie = date('Ymd' ,strtotime($infos_db['dtsaisie']));
+        $file_name = "beffectifs_".$siren."_".$date_saisie.".xml";
         $files_route = ($this->getParameter('files'))."/".$file_name;
 
         $file_xml = fopen($files_route, "w");
@@ -302,6 +275,9 @@ class CompareController extends Controller
         $siren = $this->siren_traite($infos_xml[0][0]['siren']);
         $apis = $this->data_API($siren);
         $infos_db = $this->data_TEST2($siren);
+
+        date_default_timezone_set("Europe/Paris");
+        $date_saisie = date('Y-m-d');
 
         $xw = xmlwriter_open_memory();
         xmlwriter_set_indent($xw, 1);
@@ -417,7 +393,7 @@ class CompareController extends Controller
 
                     xmlwriter_start_element($xw, 'infoSaisie');
                         xmlwriter_start_element($xw, 'dateSaisie');
-                        xmlwriter_text($xw, $infos_db['dtsaisie']);
+                        xmlwriter_text($xw, $date_saisie);
                         xmlwriter_end_element($xw);
 
                         xmlwriter_start_element($xw, 'codeRejet');
@@ -591,7 +567,7 @@ class CompareController extends Controller
                                         }
                                     xmlwriter_end_element($xw);
 
-                                    if ($infos_xml[$i][$i]['exercice'] != null) {
+                                    if ($infos_xml[$i][$i]['autre_moyen_case'] == 1) {
                                         xmlwriter_start_element($xw, 'autreMoyen');
                                         xmlwriter_text($xw, $infos_xml[$i][$i]['exercice']);
                                         xmlwriter_end_element($xw);
@@ -765,9 +741,8 @@ class CompareController extends Controller
     /**
      * @return array
      */
-    private function infos_check($siren=array(), $infos=array())
+    private function infos_check($nb_BE, $infos=array())
     {
-        $nb_BE = count($siren);
         $len_info = count($infos);
         if ( $len_info < $nb_BE ) {
             for ($i = $len_info; $i < $nb_BE; $i++) {
@@ -780,9 +755,8 @@ class CompareController extends Controller
     /**
      * @return array
      */
-    private function detention_capital_check($siren=array(), $detention_capital_directe=array(), $detention_capital_indirecte=array())
+    private function detention_capital_check($nb_BE, $detention_capital_directe=array(), $detention_capital_indirecte=array())
     {
-        $nb_BE = count($siren);
         $detention_capital = array();
 
         for ($i = 0; $i < $nb_BE; $i++) {
@@ -805,9 +779,8 @@ class CompareController extends Controller
     /**
      * @return array
      */
-    private function detention_droits_check($siren=array(), $detention_droits_directe=array(), $detention_droits_indirecte=array())
+    private function detention_droits_check($nb_BE, $detention_droits_directe=array(), $detention_droits_indirecte=array())
     {
-        $nb_BE = count($siren);
         $detention_droits = array();
 
         for ($i = 0; $i < $nb_BE; $i++) {
