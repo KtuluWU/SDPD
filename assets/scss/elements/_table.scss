@@ -1,0 +1,30 @@
+@import '../variables';
+@import "../mixins";
+
+.table_beauti {
+    width: 50%;
+    margin: 50px auto;
+    text-align: left;
+    label {
+        margin: 0 !important;
+    }
+    table {
+        width: 100%;
+        line-height: 35px;
+        margin-bottom: 50px;
+        tr {
+            border-top: 1px solid $border-grey;
+        }
+        td,
+        th {
+            padding: 6px 10px 6px 5%;
+        }
+        input {
+            border: 1px solid $border-grey;
+            border-radius: 5px;
+            width: 100%;
+            height: 35px;
+            text-align: center;
+        }
+    }
+}

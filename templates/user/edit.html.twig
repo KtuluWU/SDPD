@@ -1,0 +1,54 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="editUser_page table_beauti">
+    <form method="POST" action="/User/update/{{username}}">
+        <table>
+            <tr>
+                <th><label for="user_edit_username">{{'User.username'|trans}} * </label></th>
+                <td><input type="text" id="user_edit_username" name="user_edit_username" placeholder="{{username}}" value="{{username}}"></td>
+            </tr>
+            <tr>
+                <th><label for="user_edit_firstname">{{'User.firstname'|trans}}</label></th>
+                <td><input type="text" id="user_edit_firstname" name="user_edit_firstname" placeholder="{{firstname}}" value="{{firstname}}"></td>
+            </tr>
+            <tr>
+                <th><label for="user_edit_lastname">{{'User.lastname'|trans}}</label></th>
+                <td><input type="text" id="user_edit_lastname" name="user_edit_lastname" placeholder="{{lastname}}" value="{{lastname}}"></td>
+            </tr>
+            <tr>
+                <th><label for="user_edit_email">{{'User.email'|trans}} * </label></th>
+                <td><input type="text" id="user_edit_email" name="user_edit_email" placeholder="{{email}}" value="{{email}}"></td>
+            </tr>
+            <tr>
+                <th><label for="user_edit_roles">{{'User.role'|trans}}</label></th>
+                <td>
+                    <select id="user_edit_roles" name="user_edit_roles">
+                        {% if role[0] == "ROLE_USER" %} <option value="ROLE_USER" selected>{{'User.roles.user'|trans}}</option> {% else %} <option value="ROLE_USER">{{'User.roles.user'|trans}}</option> {% endif %}
+                        {% if role[0] == "ROLE_ADMIN" %} <option value="ROLE_ADMIN" selected>{{'User.roles.admin'|trans}}</option> {% else %} <option value="ROLE_ADMIN">{{'User.roles.admin'|trans}}</option> {% endif %}
+                        {#{% if role[0] == "ROLE_SUPER_ADMIN" %} <option value="ROLE_SUPER_ADMIN" selected>{{'variables.roles.ROLE_SUPER_ADMIN'|trans}}</option> {% else %} <option value="ROLE_SUPER_ADMIN">{{'variables.roles.ROLE_SUPER_ADMIN'|trans}}</option> {% endif %}#}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="user_edit_enable">{{'User.enable'|trans}}</label></th>
+                <td>
+                    <select id="user_edit_enable" name="user_edit_enable">
+                        {% if enable %} 
+                        <option value=1 selected>{{'variables.enable.y'|trans}}</option> 
+                        <option value=0>{{'variables.enable.n'|trans}}</option> 
+                        {% else %}
+                        <option value=1>{{'variables.enable.y'|trans}}</option> 
+                        <option value=0 selected>{{'variables.enable.n'|trans}}</option> 
+                        {% endif %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="text-center">
+            <a href="/User" class="sdpd__btn">{{'variables.back'|trans}}</a>
+            <input type="submit" class="sdpd__btn" value="{{'variables.update'|trans}}">
+        </div>
+    </form>
+</div>
+{% endblock %}

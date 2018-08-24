@@ -1,0 +1,18 @@
+{% trans_default_domain 'IFG' %}
+{% extends 'base.html.twig' %} 
+{% block content %} 
+<div class="home_page table_beauti">
+    {{ form_start(form) }}
+    <table>
+        <tr>
+            <th>{{ form_label(form.siren) }}</th>
+            <td>{{ form_errors(form.siren) }} {{ form_widget(form.siren) }}</td>
+        </tr>
+    </table>
+    {{ form_rest(form) }}
+    <div class="text-center infotosaisie_btn">
+        <input type="submit" value="{{'InfoToSaisie.submit'|trans}}" class="sdpd__btn" />
+    </div>
+    {{ form_end(form) }} 
+</div>
+{% endblock %} 

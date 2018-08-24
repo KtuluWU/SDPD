@@ -24,3 +24,9 @@ yarn-error.log
 
 ### Yun
 .DS_Store
+.idea
+.vscode
+.sass-cache
+*.map
+/public/uploads/*
+!/public/uploads/.gitkeep

@@ -1,0 +1,37 @@
+{% trans_default_domain 'IFG' %}
+{% extends "base.html.twig" %}
+{% block content %}
+<div class="editprofile_page table_beauti">
+    {{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }} 
+    <table>
+        <tr>
+            <th>{{ form_label(form.username) }}</th>
+            <td>{{ form_errors(form.username) }} {{ form_widget(form.username) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.firstname) }}</th>
+            <td>{{ form_errors(form.firstname) }} {{ form_widget(form.firstname) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.lastname) }}</th>
+            <td>{{ form_errors(form.lastname) }} {{ form_widget(form.lastname) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.email) }}</th>
+            <td>{{ form_errors(form.email) }} {{ form_widget(form.email) }}</td>
+        </tr>
+        <tr>
+            <th>{{ form_label(form.current_password) }}</th>
+            <td>{{ form_errors(form.current_password) }} {{ form_widget(form.current_password) }}</td>
+        </tr>
+    </table>
+
+    {{ form_rest(form) }}
+    
+    <div class="text-center profile_button">
+        <a href="/profile" class="sdpd__btn">{{ 'variables.back'|trans }}</a>
+        <input type="submit" value="{{ 'variables.update'|trans }}" class="sdpd__btn"/>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
