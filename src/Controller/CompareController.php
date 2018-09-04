@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
 
 /**
  * Compare controller.
@@ -262,9 +264,20 @@ class CompareController extends Controller
         fwrite($file_xml, $res_xml);
         fclose($file_xml);
 
-        return $this->render('compare/downloadXML.html.twig', [
-            'file_name' => $file_name
-        ]);
+        /**
+         * Send the XML file to OVH
+         */
+        $sftp = new SFTP('79.137.30.194');
+        $sftp_login = $sftp->login('infogreffe', '3Mg0Fs2Eg2');
+        $remote_route = '/home/infogreffe/saisies'.'/'.$file_name;
+        if (!$sftp_login) {
+            throw new \Exception('Cannot login into your server !');
+        } else {
+            $sftp->put($remote_route, $files_route, SFTP::SOURCE_LOCAL_FILE);
+            return $this->render('compare/downloadXML.html.twig', [
+                'file_name' => $file_name
+            ]);
+        }
     }
 
     /**
