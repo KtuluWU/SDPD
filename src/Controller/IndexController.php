@@ -44,7 +44,7 @@ class IndexController extends Controller
             $codegreffe = $res['codegreffe'];
             $numgestion = $res['numerogestion'];
             $numacte = $res['noacte'];
-            $numdepot = $res['numdepotgreffe'];
+            $numdepot = str_replace('/', '%2F', $res['numdepotgreffe']);
 
             $codestatut = substr($numgestion, 4, 1);
             $chrono = substr($numgestion, 5);
