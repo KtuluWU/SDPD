@@ -49,11 +49,11 @@
                     {% if infos_operator is empty %}
                         <tr class="operator">
                             <th>Opérateur:</th>
-                            <td>Nah</td>
+                            <td>{{ infos_db.operateur }}</td>
                         </tr>
                         <tr>
                             <th>Date de saisie d'opérateur:</th>
-                            <td>Nah</td>
+                            <td>{{ infos_db.dtsaisie|date('d/m/Y') }}</td>
                         </tr>
                     {% else %}
                         {% for info_operator in infos_operator %}
